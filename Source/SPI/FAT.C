@@ -447,6 +447,21 @@ unsigned char F_Read(FileInfoStruct *FileInfo,u8 *buf)
 	} 
 	return 1;//读取成功
 } 
+unsigned char F_Write(FileInfoStruct *FileInfo,u8 *buf)
+{	
+	DWORD sector;			   		  
+	sector=fatClustToSect(FileInfo->F_CurClust);//得到当前簇号对应的扇区号	   	 		    
+	if(SD_WriteSingleBlock(sector+FileInfo->F_Offset,buf))return 0;//读数错误   
+	FileInfo->F_Offset++;
+	if(FileInfo->F_Offset==SectorsPerClust)	//簇的尽头,换簇
+	{
+		FileInfo->F_Offset=0;		    
+		FileInfo->F_CurClust=FAT_NextCluster(FileInfo->F_CurClust);//读取下一个簇号
+		if((FAT32_Enable==0&&FileInfo->F_CurClust==0xffff) \
+		||FileInfo->F_CurClust==0x0ffffff8||FileInfo->F_CurClust == 0x0fffffff)return 0;//error	    
+	} 
+	return 1;//读取成功
+}
 //比较两个字符串相等不
 //相等,返回1,不相等,返回0;
 u8 mystrcmp(u8*s1,u8*s2)
