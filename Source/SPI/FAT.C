@@ -403,6 +403,9 @@ u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 							 //查找该目录下,type类型的文件个数
 							if(*count&&cont==*count)
 							{
+								//LPT: chagne filename here
+								//ChangeFileName(FileInfo,item);
+								//F_Write(FileInfo,fat_buffer);
 								CopyDirentruyItem(FileInfo,item);//复制目录项,提取详细信息  
 								return 1;//找到目标文件成功	 
 							}
@@ -580,7 +583,13 @@ FileInfoStruct F_Search(u32 cluster,unsigned char *Name,u32 type)
 	FileInfo.F_StartCluster=0;//读数错误 
 	return FileInfo;   					    
 }
-
+void ChangeFileName(FileInfoStruct *Desti,direntry *Source)
+{
+	u8 i;
+	for(i=0;i<8;i++)Desti->F_ShortName[i]=Source->deName[i];//复制短文件名
+	Source->deName[i++]='x';//add 'x' to file 															   	  								  
+	return;
+}
 
 
 

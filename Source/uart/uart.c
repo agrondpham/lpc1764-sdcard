@@ -98,7 +98,8 @@ void UART0_SendString (unsigned char *s)
 void UART2_Init (void)
 {
 	uint16_t usFdiv;
-    /* UART2 */
+    /* UART2*/
+		//LPC_PINCON->PINSEL0	|=0x00500000;
     LPC_PINCON->PINSEL0 |= (1 << 20);             /* Pin P0.10 used as TXD2 (Com2) */
     LPC_PINCON->PINSEL0 |= (1 << 22);             /* Pin P0.11 used as RXD2 (Com2) */
 
@@ -111,7 +112,30 @@ void UART2_Init (void)
     LPC_UART2->LCR  = 0x03;                       /* 锁定波特率                    */
     LPC_UART2->FCR  = 0x06;
 }
+//void UART2_Init (void)
+//{
+// #define PCUART2_POWERON (1 << 24)
+// #define PCLK_UART2 (0 << 16)// PCLK_periph = 00: CCLK/4
+// int pclk;
+// unsigned long int Fdiv;
+// //pclk = SystemCoreClock / 4;
 
+// // Turn on power to UART2
+// LPC_SC ->PCONP |= PCUART2_POWERON;
+// // Turn on UART0 peripheral clock
+// LPC_SC ->PCLKSEL1 |= PCLK_UART2;  // PCLK_periph = CCLK/4
+////
+//// // Set PINSEL0 so that P0.2 = TXD0, P0.3 = RXD0
+// LPC_PINCON ->PINSEL0 |= 0x00500000;
+// LPC_UART2 ->LCR = 0x83;  // 8 bits, no Parity, 1 Stop bit, DLAB=1
+// //Fdiv = (pclk / 16) / 9600; // Set baud rate
+// Fdiv = (FPCLK / 16) / 9600;
+// LPC_UART2 ->DLM = Fdiv / 256;
+// LPC_UART2 ->DLL = Fdiv % 256;
+// LPC_UART2 ->LCR = 0x03;  // 8 bits, no Parity, 1 Stop bit DLAB = 0
+// LPC_UART2 ->FCR = 0x07;  // Enable and reset TX and RX FIFO
+// 
+//}
 /*********************************************************************************************************
 ** Function name:       UART2_SendByte
 ** Descriptions:        从串口2发送数据

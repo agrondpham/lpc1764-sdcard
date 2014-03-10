@@ -314,5 +314,6 @@ u32 FatTab_Next_Cluster(unsigned long cluster);
 u32 FatTab_Prev_Cluster(unsigned long cluster);
 void Copy_Fat_Table(unsigned long cluster);	
 void UniToGB(u8 *pbuf);
-  
+void ChangeFileName(FileInfoStruct *Desti,direntry *Source);
+unsigned char F_Write(FileInfoStruct *FileInfo,u8 *buf);
 #endif
