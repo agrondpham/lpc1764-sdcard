@@ -510,6 +510,16 @@
             </File>
           </Files>
         </Group>
+        <Group>
+          <GroupName>Uart</GroupName>
+          <Files>
+            <File>
+              <FileName>uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\uart\uart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
       </Groups>
     </Target>
   </Targets>

@@ -47,8 +47,18 @@ const unsigned char *folderData[2]=
 FATFS Fatfs;
 DIR dir;
 
-#define	_USELCD	0 //use lcd
-#define	_USEUART	1 //use urat
+#define	_USELCD	1 //use lcd
+#define	_USEUART	0 //use urat
+
+void Delay (uint32_t Time)
+{
+    uint32_t i;
+    
+    i = 0;
+    while (Time--) {
+        for (i = 0; i < 5000; i++);
+    }
+}
 /*
 *********************************************************************************************************
 * Description: 	The function is setting font colors、brush colors and the area of clear
@@ -139,7 +149,7 @@ int main (void)
 		u32 fcluster=0;	 
 	long p1;
 	FRESULT res;
-	u16 i=2;
+	u16 i=1;
 	FileInfoStruct *FileInfo1;
 	FileInfoStruct F_Info1[3];
 //	BYTE *PIC_Name;
@@ -149,9 +159,9 @@ int main (void)
 	SPIx_Init();
 
 	ssp0_init(); //SPI init
-	FLASH_ID = SPI_Flash_ReadID();/* M45PE161的值为204515H(十六进制)   或 2113557D （十进制）  */
+	FLASH_ID = SPI_Flash_ReadID();
 	#if _USEUART == 1
-		//UART0_Init(); // Init uart0
+		//UART2_Init(); // Init uart0
 		UART2_Init(); //init uart2
 		UART2_SendString("www.Khanhoi.vn\r\n");
 		UART2_SendString("NXP1764 cdcard testing\r\n");				    	 
@@ -231,7 +241,7 @@ int main (void)
 		};
 //		p1=0;
 //		f_mount(&Fatfs,"",(BYTE)p1);
-//		res = f_opendir(&dir, "");                       /* Open the directory */
+//		res = f_opendir(&dir, "");                       
 //    if (res == FR_OK){
 //			Show_Str(60,180,"Can read direct",16,0);
 //		}
@@ -277,7 +287,7 @@ int main (void)
 		{
 						#if _USELCD == 1
 						Show_Str(30,160,"Can not find *.BMP in this folder.\n",16,0);
-						#endif
+						#endif	
 						#if _USEUART == 1
 							UART2_SendString("Can not find *.BMP in this folder.\r\n");
 						#endif		
@@ -292,14 +302,6 @@ int main (void)
 
 		}
 
-		
-	 	/*while(PIC_Display()!=0)//字体更新出错
-		{						  
-			LCD_ShowString(60,170,"SYSTEM FILE LOST");		  
-			delay_ms(500);    
-			LCD_ShowString(60,170,"Please Check....");
-			delay_ms(500);    
-		};*/
 		#if _USELCD == 1 
 		LCD_Clear(WHITE);		
 		#endif
@@ -326,9 +328,10 @@ int main (void)
 						#if _USEUART == 1
 							UART2_SendString(filename);
 						#endif		
-				//delay_ms(300);		
+				//delay_ms(3000);		
 			//}
 		 //}
 }
+
 
 
