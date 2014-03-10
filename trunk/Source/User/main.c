@@ -25,6 +25,7 @@
 #include "../Fatfs/diskio.h"
 #include "../Fatfs/ff.h"
 #include "../Fatfs/integer.h"
+#include "../uart/uart.h"
 #define  M45PE16_FLASH_ID    0x4015
 volatile unsigned long FLASH_ID = 0;
 const unsigned char *sysfile[4]=
@@ -46,6 +47,8 @@ const unsigned char *folderData[2]=
 FATFS Fatfs;
 DIR dir;
 
+#define	_USELCD	0 //use lcd
+#define	_USEUART	1 //use urat
 /*
 *********************************************************************************************************
 * Description: 	The function is setting font colors、brush colors and the area of clear
@@ -144,39 +147,83 @@ int main (void)
 	u32 temp_cluster;
 	SystemInit();
 	SPIx_Init();
-	LCD_Init();
-	ssp0_init(); //SPI初始化
 
-	Load_Drow_Dialog();
+	ssp0_init(); //SPI init
 	FLASH_ID = SPI_Flash_ReadID();/* M45PE161的值为204515H(十六进制)   或 2113557D （十进制）  */
-	Font_Init();		 
-	
+	#if _USEUART == 1
+		//UART0_Init(); // Init uart0
+		UART2_Init(); //init uart2
+		UART2_SendString("www.Khanhoi.vn\r\n");
+		UART2_SendString("NXP1764 cdcard testing\r\n");				    	 
+		UART2_SendString("Author: Pham The Long\r\n");				    	 
+		UART2_SendString("Company: Khanhhoi\r\n");				    	 
+		UART2_SendString("Copyright 2014\r\n");	
+	#endif
+	#if _USELCD == 1
+		LCD_Init();
+		Load_Drow_Dialog();
+		Font_Init();
 		POINT_COLOR=Blue;      
 		LCD_Clear(WHITE);
-		LCD_ShowString(60,30,"www.OpenMCU.com");
-		POINT_COLOR=RED;      
+		LCD_ShowString(60,30,"www.Khanhoi.vn");
+		POINT_COLOR=RED;    
 		Show_Str(30,50,"NXP1764 cdcard testing",16,0);				    	 
 		Show_Str(30,70,"Author: Pham The Long",16,0);				    	 
 		Show_Str(30,90,"Company: Khanhhoi",16,0);				    	 
-		Show_Str(30,110,"Copyright 2014",16,0);			 
+		Show_Str(30,110,"Copyright 2014",16,0);	
+	#endif
+
+
+				 
 		if(disk_initialize(0)==STA_NOINIT){
-			Show_Str(60,150,"Card can not init",16,0);			 
+			#if _USEUART == 1
+				UART2_SendString("Card can not init\r\n");	
+			#endif
+			#if _USELCD == 1
+				Show_Str(60,150,"Card can not init",16,0);	
+			#endif			
 		}else{
+			#if _USELCD == 1
 			Show_Str(60,150,"Card is ready",16,0);
-			Show_Str(30,180,"Card type: ",16,0);				    	 
+			Show_Str(30,180,"Card type: ",16,0);
+			#endif
+			#if _USEUART == 1
+				UART2_SendString("Card is ready\r\n");
+				UART2_SendString("Card type: \r\n");
+			#endif	
 			switch (SD_Type)
 			{
 					case SD_TYPE_MMC:
+						#if _USELCD == 1
 							Show_Str(30,210,"MMC\n",16,0);			
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("MMC\r\n");
+						#endif							
 							break;
 					case SD_TYPE_V1:
+						#if _USELCD == 1
 							Show_Str(30,210,"Version 1.x Standard Capacity SD card.\n",16,0);
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("Version 1.x Standard Capacity SD card.\r\n");	
+						#endif	
 							break;
 					case SD_TYPE_V2:
+						#if _USELCD == 1
 							Show_Str(30,210,"Version 2.0 or later Standard Capacity SD card.\n",16,0);	
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("Version 2.0 or later Standard Capacity SD card.\r\n");	
+						#endif	
 							break;
 					case SD_TYPE_V2HC:
+						#if _USELCD == 1
 							Show_Str(30,210,"Version 2.0 or later High/eXtended Capacity SD card.\n",16,0);
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("Version 2.0 or later High/eXtended Capacity SD card.\r\n");	
+						#endif	
 							break;
 					default:
 							break;            
@@ -191,30 +238,57 @@ int main (void)
 
 		//字体更新 
 		//SD_Init();
+		#if _USELCD == 1
 		LCD_Clear(WHITE);
+		#endif	
 	 	while(FAT_Init())//FAT 错误
 		{
+			#if _USELCD == 1
 			LCD_ShowString(60,150,"FAT SYS ERROR");  
+			#endif
+			#if _USEUART == 1
+				UART2_SendString("FAT SYS ERROR\r\n");
+			#endif		
 			i= SD_Init();
 			if(i)//SD卡初始化 
-			{						  
-				LCD_ShowString(60,170,"SD_CARD ERROR");
+			{		
+				#if _USELCD == 1				
+					LCD_ShowString(60,170,"SD_CARD ERROR");
+				#endif
+				#if _USEUART == 1
+					UART2_SendString("SD_CARD ERROR\r\n");
+				#endif		
 			}	  
 			delay_ms(500);
-			LCD_Fill(60,90,240,126,WHITE);//清除显示			  
-			delay_ms(500);  
+			//LCD_Fill(60,90,240,126,WHITE);//清除显示			  
+			//delay_ms(500);  
 		}
-  		LCD_ShowString(60,130,"FAT SYS OK!"); 
+			#if _USELCD == 1	
+				LCD_ShowString(60,130,"FAT SYS OK!"); 
+			#endif
+				#if _USEUART == 1
+					UART2_SendString("FAT SYS OK!\r\n");
+				#endif	
 
 		if(FAT32_Enable)fcluster=FirstDirClust;
 		else fcluster=0;
 		FileTemp=F_Search(fcluster,(unsigned char *)folderData[0],T_FILE);
 		if(FileTemp.F_StartCluster==0)					  //Check folder		  
 		{
-			Show_Str(30,160,"Can not find *.BMP in this folder.\n",16,0);
+						#if _USELCD == 1
+						Show_Str(30,160,"Can not find *.BMP in this folder.\n",16,0);
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("Can not find *.BMP in this folder.\r\n");
+						#endif		
 		}else{
 			PIC_Cluster=FileTemp.F_StartCluster;
-			Show_Str(30,160,"reading this folder.\n",16,0);
+						#if _USELCD == 1
+						Show_Str(30,160,"reading this folder.\n",16,0);
+						#endif
+						#if _USEUART == 1
+							UART2_SendString("reading this folder.\r\n");
+						#endif		
 
 		}
 
@@ -226,8 +300,10 @@ int main (void)
 			LCD_ShowString(60,170,"Please Check....");
 			delay_ms(500);    
 		};*/
-					 
-		LCD_Clear(WHITE);
+		#if _USELCD == 1 
+		LCD_Clear(WHITE);		
+		#endif
+
 		temp_cluster = PIC_Cluster;
 		FileInfo1=&F_Info1[0];//开辟暂存空间.
 
@@ -244,7 +320,12 @@ int main (void)
 //					F_Open(FileInfo1);
 //					F_Read(FileInfo1,jpg_buffer1);	   
 //					F_Read(FileInfo1,jpg_buffer1+512);
-					Show_Str(30,190,filename,16,0);	
+						#if _USELCD == 1
+									Show_Str(30,190,filename,16,0);	
+						#endif
+						#if _USEUART == 1
+							UART2_SendString(filename);
+						#endif		
 				//delay_ms(300);		
 			//}
 		 //}
