@@ -313,10 +313,11 @@ int main (void)
 		//{
 			//for(i=1;i<10;i++)
 			//{
-					Get_File_Info(temp_cluster,FileInfo1,T_BMP,&i);	
+					Get_File_Info(temp_cluster,FileInfo1,T_TXT,&i);	
 					//LCD_Clear(White);	
 					//CurFile=FileInfo1;
 					filename=GetFileName(FileInfo1);//ÏÔÊ¾Í¼Æ¬
+					//F_Write(FileInfo1,"123");
 					//POINT_COLOR = Red;
 					//Show_Str(0,0,FileInfo1->F_Name,16,1);	 	
 //					F_Open(FileInfo1);
