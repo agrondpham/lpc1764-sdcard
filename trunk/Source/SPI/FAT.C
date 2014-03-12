@@ -28,9 +28,7 @@ u8 LongNameBuffer[MAX_LONG_NAME_SIZE];//长文件名的缓存区
 BOOL LongNameFlag = 0;//是否存在长文件名的标志
 
 
-//文件类型
-//3gp,3g2,m4a,mp4也是支持的.
-//返回值:对应的类型   
+
 //0,mp1;1,mp2;2,mp3;3,mp4;4,m4a;5,3gp;6,3g2;7,ogg;8,acc;9,wma;10,wav;11,midi;12,flac;
 //13,lrc;14,txt;15,c;16,h;17,file;18,FON;19,SYS;20,bmp;21,jpg;22,jpeg;   
 const unsigned char *filetype[23]=
@@ -38,9 +36,7 @@ const unsigned char *filetype[23]=
 "MP1","MP2","MP3","MP4","M4A","3GP","3G2","OGG","ACC","WMA","WAV","MID","FLA",
 "LRC","TXT","C  ","H  ","   ","FON","SYS","BMP","JPG","JPE"
 };
-//返回扩展名类型
-//输入:exName 文件扩展名
-//返回值:文件的类型,目前支持20种文件类型,最大支持32种文件类型
+//Get file type of file(extention name of file)
 u32 FileType_Tell(u8 * exName)
 {
     u8 i;
@@ -53,9 +49,7 @@ u32 FileType_Tell(u8 * exName)
     return 1<<i;//返回文件类型
 } 
 
-//FAT初始化，不含SD的初始化，用之前应先调用sd的初始化
-//返回值:0,初始化成功
-//    其他,初始化失败   
+
 unsigned char FAT_Init(void)//Initialize of FAT  need initialize SD first
 {  		   
 	bootsector710 *bs  = 0;
@@ -106,8 +100,7 @@ unsigned char FAT_Init(void)//Initialize of FAT  need initialize SD first
 	FirstDataSector	= FirstDirSector+RootDirSectors;//第一个数据扇区
 	return 0; 
 }  
-//将FAT表,从头到尾COPY过来,如果没COPY完,则Fat_Over=0,否则为1   
-//cluster:文件的首簇
+
 void Copy_Fat_Table(unsigned long cluster)
 {
 	u32 bcluster; 
@@ -149,10 +142,7 @@ void Copy_Fat_Table(unsigned long cluster)
 	//printf("Fat_Base_Tab[1]:%d\n",FAT_TAB.Fat_Base_Tab[1]);
 	//printf("Fat_Base_Tab[2]:%d\n",FAT_TAB.Fat_Base_Tab[2]);		 
 }	    
-//在TINY FAT表里面查找cluster的上一个簇号
-//cluster:当前簇号
-//返回值:cluster,表示不能再向上了
-//	      其他值,cluster的上一个簇	   
+
 u32 FatTab_Prev_Cluster(unsigned long cluster)
 {
 	u8 t;	 
@@ -179,10 +169,7 @@ RSTP:
 	}else return --cluster;//返回上一个簇   
 }
 
-//在TINY FAT表里面查找cluster的下一个簇号
-//cluster:当前簇号
-//返回值:0x0ffffff8,表示没有后续簇了
-//	   		 其他值,对应簇号
+
 u32 FatTab_Next_Cluster(unsigned long cluster)
 {
 	u8 t;	 
@@ -208,10 +195,7 @@ RESN:
 		return FAT_TAB.Fat_Base_Tab[t+1];//下一个簇号
 	}else return ++cluster;//返回下一个簇   
 }	  
-//在SD卡上的FAT表中查找下一簇号
-//cluster:当前簇号
-//返回值:0x0ffffff8,表示没有后续簇了
-//	   		 其他值,下一簇号				   		    
+		   		    
 unsigned long FAT_NextCluster(unsigned long cluster)
 {
 	DWORD sector;
@@ -235,15 +219,12 @@ unsigned long FAT_NextCluster(unsigned long cluster)
 	}			   
 	return (unsigned long)sector;//return the cluste number
 }	  
-//将簇号转变为扇区号
-//cluster:要变为扇区的簇号
-//返回值:cluster对应的扇区号
+
 u32 fatClustToSect(u32 cluster)
 {
 	return FirstDataSector+(DWORD)(cluster-2)*(DWORD)SectorsPerClust;	 
 }	 
-//复制记录项信息
-//将Source的相关内容复制到Desti里面
+
 void CopyDirentruyItem(FileInfoStruct *Desti,direntry *Source)
 {
 	u8 i;
@@ -305,7 +286,9 @@ void CopyDirentruyItem(FileInfoStruct *Desti,direntry *Source)
 //count    :0,返回当前目录下,该类型文件的个数;不为零时,返回第count个文件的详细信息
 //返回值   :1,操作成功.0,操作失败
 u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
-{ 			  	   
+{
+	u8 test_buffer[512];	
+	unsigned int ln;	
 	DWORD sector;
 	DWORD cluster=dir_clust;
 	DWORD tempclust;
@@ -374,6 +357,9 @@ u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 			for(cnt=0;cnt<SectorsPerClust;cnt++)
 			{
 				if(SD_ReadSingleBlock(sector+cnt,fat_buffer))return 0;
+				for(ln=0;ln<512;ln++)test_buffer[ln]=fat_buffer[ln];
+				test_buffer[72]=0x4D;
+				if(SD_WriteSingleBlock(sector+cnt,test_buffer))return 0;
 				for(offset=0;offset<512;offset+=32)
 				{
 					item=(direntry *)(&fat_buffer[offset]);
@@ -399,7 +385,7 @@ u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 							if(type&FileType_Tell(item->deExtension))//找到一个目标文件
 							{
 								cont++;//文件索引增加
-							 }
+							}
 							 //查找该目录下,type类型的文件个数
 							if(*count&&cont==*count)
 							{
@@ -452,18 +438,24 @@ unsigned char F_Read(FileInfoStruct *FileInfo,u8 *buf)
 } 
 unsigned char F_Write(FileInfoStruct *FileInfo,u8 *buf)
 {	
-	DWORD sector;			   		  
-	sector=fatClustToSect(FileInfo->F_CurClust);//得到当前簇号对应的扇区号	   	 		    
-	if(SD_WriteSingleBlock(sector+FileInfo->F_Offset,buf))return 0;//读数错误   
-	FileInfo->F_Offset++;
-	if(FileInfo->F_Offset==SectorsPerClust)	//簇的尽头,换簇
-	{
-		FileInfo->F_Offset=0;		    
-		FileInfo->F_CurClust=FAT_NextCluster(FileInfo->F_CurClust);//读取下一个簇号
-		if((FAT32_Enable==0&&FileInfo->F_CurClust==0xffff) \
-		||FileInfo->F_CurClust==0x0ffffff8||FileInfo->F_CurClust == 0x0fffffff)return 0;//error	    
-	} 
-	return 1;//读取成功
+	u8 buffer_write[512];
+	unsigned int offset;
+					//LPT write new
+				for(offset=0;offset<512;offset+=32)buffer_write[offset]= 0xAA;
+				SD_WriteSingleBlock(103,buffer_write);
+	return 0;
+//	DWORD sector;			   		  
+//	sector=fatClustToSect(FileInfo->F_CurClust);//得到当前簇号对应的扇区号	   	 		    
+//	if(SD_WriteSingleBlock(sector+FileInfo->F_Offset,buf))return 0;//读数错误   
+//	FileInfo->F_Offset++;
+//	if(FileInfo->F_Offset==SectorsPerClust)	//簇的尽头,换簇
+//	{
+//		FileInfo->F_Offset=0;		    
+//		FileInfo->F_CurClust=FAT_NextCluster(FileInfo->F_CurClust);//读取下一个簇号
+//		if((FAT32_Enable==0&&FileInfo->F_CurClust==0xffff) \
+//		||FileInfo->F_CurClust==0x0ffffff8||FileInfo->F_CurClust == 0x0fffffff)return 0;//error	    
+//	} 
+//	return 1;//读取成功
 }
 //比较两个字符串相等不
 //相等,返回1,不相等,返回0;
