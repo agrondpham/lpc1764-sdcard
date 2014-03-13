@@ -461,36 +461,6 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>FAT</GroupName>
-          <Files>
-            <File>
-              <FileName>FAT.C</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\FAT.C</FilePath>
-            </File>
-            <File>
-              <FileName>text.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\text.c</FilePath>
-            </File>
-            <File>
-              <FileName>fontupd.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\fontupd.c</FilePath>
-            </File>
-            <File>
-              <FileName>jpegdecode.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\FAT\jpegdecode.c</FilePath>
-            </File>
-            <File>
-              <FileName>untogb.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\FAT\untogb.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>SD</GroupName>
           <Files>
             <File>

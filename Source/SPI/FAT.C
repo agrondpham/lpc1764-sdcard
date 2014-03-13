@@ -287,6 +287,7 @@ void CopyDirentruyItem(FileInfoStruct *Desti,direntry *Source)
 //返回值   :1,操作成功.0,操作失败
 u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 {
+		DWORD WriteSector;
 	u8 test_buffer[512];	
 	unsigned int ln;	
 	DWORD sector;
@@ -356,16 +357,24 @@ u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 			sector=fatClustToSect(tempclust);
 			for(cnt=0;cnt<SectorsPerClust;cnt++)
 			{
+				WriteSector=sector+cnt;
 				if(SD_ReadSingleBlock(sector+cnt,fat_buffer))return 0;
-				for(ln=0;ln<512;ln++)test_buffer[ln]=fat_buffer[ln];
-				test_buffer[72]=0x4D;
-				if(SD_WriteSingleBlock(sector+cnt,test_buffer))return 0;
+				
+				//test_buffer[72]=0x4D;
+				//if(SD_WriteSingleBlock(sector+cnt,test_buffer))return 0;
 				for(offset=0;offset<512;offset+=32)
 				{
+					//LPT
+//					if(fat_buffer[offset]==0x00){
+//						if(SD_WriteSingleBlock(sector+cnt,test_buffer))return 0;
+//					 return 1;
+//					}
 					item=(direntry *)(&fat_buffer[offset]);
+					
 					if((item->deName[0]!=0x2E)&&(item->deName[0]!=0x00)&&(item->deName[0]!=0xe5)
-					||((item->deName[0]==0x2E)&&(item->deName[1]==0x2E)))//找到一个合法文件.忽略".",使用".."
-					{				
+					||((item->deName[0]==0x2E)&&(item->deName[1]==0x2E)))//find where bitcell contain ".."  and difference "." not care
+					{	
+				
 						if(item->deAttributes == 0x0f) //得到一个长文件名
 						{
 							we = (winentry *)(&fat_buffer[offset]);
@@ -382,18 +391,23 @@ u8 Get_File_Info(u32 dir_clust,FileInfoStruct *FileInfo,u32 type,u16 *count)
 						}	  
 						else 
 						{
-							if(type&FileType_Tell(item->deExtension))//找到一个目标文件
+							if(type&FileType_Tell(item->deExtension))//check if this file is inside list of filetype is search
 							{
-								cont++;//文件索引增加
+								cont++;//Add this to number for counting number of file have same filetype
 							}
-							 //查找该目录下,type类型的文件个数
+							 //check if file number is same with file that want to get by index. add it to DerentruyItem
 							if(*count&&cont==*count)
 							{
 								//LPT: chagne filename here
 								//ChangeFileName(FileInfo,item);
 								//F_Write(FileInfo,fat_buffer);
+								item->deName[6]=0x4D;
+								for(ln=0;ln<512;ln++)test_buffer[ln]=fat_buffer[ln];
+								test_buffer[100]=0x44;
+								//cnt++;
+								
 								CopyDirentruyItem(FileInfo,item);//复制目录项,提取详细信息  
-								return 1;//找到目标文件成功	 
+								//return 1;//找到目标文件成功	 
 							}
 							LongNameFlag=0;//清空长文件名
 						}

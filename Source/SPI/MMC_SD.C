@@ -6,7 +6,17 @@
 #include "../fatfs/diskio.h"
 u8  SD_Type=0;				//SDø®µƒ¿‡–Õ
 
-
+/* RTC timer strcuture */
+typedef struct {
+    u8     sec;     /* Second value - [0,59] */
+    u8     min;     /* Minute value - [0,59] */
+    u8     hour;    /* Hour value - [0,23] */
+    u8     mday;    /* Day of the month value - [1,31] */
+	u8     wday;    /* Day of week value - [0,6] */
+	u16    yday;    /* Day of year value - [1,365] */
+    u8     mon;     /* Month value - [1,12] */
+    u16    year;    /* Year value - [0,4095] */    
+} RTCTime;
 
 static volatile DSTATUS Stat = STA_NOINIT;	/* Physical drive status */
 /*-----------------------------------------------------------------------*/
@@ -27,14 +37,79 @@ DSTATUS disk_initialize (
 	
 	return Stat;
 }
-//DRESULT disk_ioctl (
-//BYTE drv,		/* Physical drive number (0) */
-//BYTE ctrl,		/* Control code */
-//void *buff		/* Buffer to send/receive control data */
-//)
-//{
+DRESULT disk_ioctl (
+BYTE drv,		/* Physical drive number (0) */
+BYTE ctrl,		/* Control code */
+void *buff		/* Buffer to send/receive control data */
+)
+{
+DRESULT res;
+	//BYTE n, *ptr = buff;
 
-//}
+	if (drv) return RES_PARERR;
+	if (Stat & STA_NOINIT) return RES_NOTRDY;
+
+	res = RES_ERROR;
+
+	switch (ctrl) {
+	case CTRL_SYNC :		/* Make sure that no pending write process */
+        //SD_Select();
+//		if (SD_WaitForReady() == SD_TRUE)
+			res = RES_OK;
+		break;
+
+	case GET_SECTOR_COUNT :	/* Get number of sectors on the disk (DWORD) */
+//		*(DWORD*)buff = CardConfig.sectorcnt;
+		res = RES_OK;
+		break;
+
+	case GET_SECTOR_SIZE :	/* Get R/W sector size (WORD) */
+		*(WORD*)buff = 512;//CardConfig.sectorsize;
+		res = RES_OK;
+		break;
+
+	case GET_BLOCK_SIZE :	/* Get erase block size in unit of sector (DWORD) */
+//		*(DWORD*)buff = CardConfig.blocksize;
+		res = RES_OK;
+		break;
+
+	case MMC_GET_TYPE :		/* Get card type flags (1 byte) */
+//		*ptr = CardType;
+		res = RES_OK;
+		break;
+
+	case MMC_GET_CSD :		/* Receive CSD as a data block (16 bytes) */
+//		for (n=0;n<16;n++)
+//			*(ptr+n) = CardConfig.csd[n]; 
+		res = RES_OK;
+		break;
+
+	case MMC_GET_CID :		/* Receive CID as a data block (16 bytes) */
+//		for (n=0;n<16;n++)
+//			*(ptr+n) = CardConfig.cid[n];
+		res = RES_OK;
+		break;
+
+	case MMC_GET_OCR :		/* Receive OCR as an R3 resp (4 bytes) */
+//		for (n=0;n<4;n++)
+//			*(ptr+n) = CardConfig.ocr[n];
+		res = RES_OK;
+		break;
+
+	case MMC_GET_SDSTAT :	/* Receive SD status as a data block (64 bytes) */
+//		for (n=0;n<64;n++)
+//            *(ptr+n) = CardConfig.status[n]; 
+        res = RES_OK;   
+		break;
+
+	default:
+		res = RES_PARERR;
+	}
+
+    //SD_DeSelect();
+
+	return res;
+}
 /*-----------------------------------------------------------------------*/
 /* Read Sector(s)                                                        */
 /*-----------------------------------------------------------------------*/
@@ -46,11 +121,11 @@ UINT count			/* Sector count (1..255) */
 )
 {
 	if(count>1){
-	}else{
-		SD_ReadSingleBlock(drv,buff);
-		return RES_OK;
 	}
+		if(SD_ReadSingleBlock(sector,buff)==0)return RES_OK;
 		return RES_ERROR;
+	
+		
 }
 
 /*-----------------------------------------------------------------------*/
@@ -65,24 +140,62 @@ if (drv) return STA_NOINIT;		/* Supports only single drive */
 return Stat;
 }
 
-///*-----------------------------------------------------------------------*/
-///* Write Sector(s)                                                       */
-///*-----------------------------------------------------------------------*/
-//#if _READONLY == 0
-//DRESULT disk_write (
-//BYTE drv,			/* Physical drive number (0) */
-//const BYTE *buff,	/* Pointer to the data to be written */
-//DWORD sector,		/* Start sector number (LBA) */
-//BYTE count			/* Sector count (1..255) */
-//)
-//{
-//if (drv || !count) return RES_PARERR;
-//if (Stat & STA_NOINIT) return RES_NOTRDY;
+/*-----------------------------------------------------------------------*/
+/* Write Sector(s)                                                       */
+/*-----------------------------------------------------------------------*/
 
-//	return 	RES_ERROR;
+DRESULT disk_write (
+BYTE drv,			/* Physical drive number (0) */
+const BYTE *buff,	/* Pointer to the data to be written */
+DWORD sector,		/* Start sector number (LBA) */
+UINT count			/* Sector count (1..255) */
+)
+{
+if (drv || !count) return RES_PARERR;
+if (Stat & STA_NOINIT) return RES_NOTRDY;
 
-//}
-//#endif /* _READONLY == 0 */
+	if ( SD_WriteSingleBlock(sector, buff) == 0)
+		return RES_OK;
+	else
+		return 	RES_ERROR;
+
+}
+/*---------------------------------------------------------*/
+/* User Provided Timer Function for FatFs module           */
+/*---------------------------------------------------------*/
+/* This is a real time clock service to be called from     */
+/* FatFs module. Any valid time must be returned even if   */
+/* the system does not support a real time clock.          */
+/* This is not required in read-only configuration.        */
+/* Get RTC timer value */
+void rtc_gettime( RTCTime *rtc ) 
+{
+	rtc->sec    = LPC_RTC->SEC;
+	rtc->min    = LPC_RTC->MIN;
+	rtc->hour   = LPC_RTC->HOUR;
+	rtc->mday   = LPC_RTC->DOM;
+	rtc->wday   = LPC_RTC->DOW;
+	rtc->yday   = LPC_RTC->DOY;
+	rtc->mon    = LPC_RTC->MONTH;
+	rtc->year   = LPC_RTC->YEAR;   
+}
+DWORD get_fattime ()
+{
+	RTCTime rtc;
+
+	/* Get local time */
+	//LPC17xx_RTC_GetTime( rtc )
+	rtc_gettime(&rtc);
+
+	/* Pack date and time into a DWORD variable */
+	return	  ((DWORD)(rtc.year - 1980) << 25)
+			| ((DWORD)rtc.mon << 21)
+			| ((DWORD)rtc.mday << 16)
+			| ((DWORD)rtc.hour << 11)
+			| ((DWORD)rtc.min << 5)
+			| ((DWORD)rtc.sec >> 1);
+
+}
 
 
 ///*-----------------------------------------------------------------------*/
@@ -93,7 +206,12 @@ return Stat;
 //*/
 //void disk_timerproc (void)
 //{
-//					
+//	    WORD n;
+
+//	n = Timer1;						/* 100Hz decrement timer stopped at 0 */
+//	if (n) Timer1 = --n;
+//	n = Timer2;
+//	if (n) Timer2 = --n;   				
 //}
 
 /************************************************************************																										

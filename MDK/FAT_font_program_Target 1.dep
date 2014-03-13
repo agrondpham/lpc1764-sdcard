@@ -7,7 +7,7 @@ I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
 I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
 I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-F (..\Source\User\main.c)(0x531FCABA)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
+F (..\Source\User\main.c)(0x53214F88)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\LPC17xx.H)(0x5209A7DC)
 I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
@@ -22,7 +22,7 @@ I (..\Source\Lcd\exti.h)(0x4CFB5EF8)
 I (..\Source\SPI\M45PE161.h)(0x4E11756C)
 I (..\Source\SPI\text.h)(0x4D05F4AC)
 I (..\Source\SPI\MMC_SD.h)(0x5319C525)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
+I (..\Source\SPI\../Fatfs/diskio.h)(0x532009BA)
 I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
 I (..\Source\SPI\FAT.h)(0x531D9325)
 I (..\Source\SPI\fontupd.h)(0x4D0C8844)
@@ -30,7 +30,7 @@ I (..\Source\SPI\delay.h)(0x4D060D4A)
 I (..\Source\SPI\ssp0.h)(0x4E117578)
 I (..\Source\FAT\jpegbmp.h)(0x531D38A6)
 I (..\Source\User\../Fatfs/ff.h)(0x52D56672)
-I (..\Source\User\../Fatfs/ffconf.h)(0x531AC6EF)
+I (..\Source\User\../Fatfs/ffconf.h)(0x53214E58)
 I (..\Source\User\../uart/uart.h)(0x4F879270)
 F (..\Source\Lcd\Lcd.c)(0x508E4E58)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\lcd.o --omf_browse .\obj\lcd.crf --depend .\obj\lcd.d)
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h)(0x5209A7DC)
@@ -63,91 +63,12 @@ I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
 I (..\Source\SPI\M45PE161.H)(0x4E11756C)
 I (..\Source\Lcd\sys.h)(0x4E11752E)
-F (..\Source\SPI\FAT.C)(0x531FCC36)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\fat.o --omf_browse .\obj\fat.crf --depend .\obj\fat.d)
-I (..\Source\SPI\FAT.h)(0x531D9325)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\LPC17XX.H)(0x5209A7DC)
-I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
-I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
-I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\Lcd\sys.h)(0x4E11752E)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
-I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
-I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C7B744)
-F (..\Source\SPI\text.c)(0x4D0C3136)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\text.o --omf_browse .\obj\text.crf --depend .\obj\text.d)
-I (..\Source\Lcd\sys.h)(0x4E11752E)
-I (..\Source\SPI\fontupd.h)(0x4D0C8844)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h)(0x5209A7DC)
-I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
-I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
-I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-I (..\Source\SPI\fat.h)(0x531D9325)
-I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
-I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
-I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C7B744)
-I (..\Source\Lcd\lcd.h)(0x4E117E6A)
-I (..\Source\SPI\text.h)(0x4D05F4AC)
-I (..\Source\SPI\M45PE161.H)(0x4E11756C)
-F (..\Source\SPI\fontupd.c)(0x531C3BC3)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\fontupd.o --omf_browse .\obj\fontupd.crf --depend .\obj\fontupd.d)
-I (..\Source\SPI\fontupd.h)(0x4D0C8844)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h)(0x5209A7DC)
-I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
-I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
-I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-I (..\Source\SPI\fat.h)(0x531D9325)
-I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\Lcd\sys.h)(0x4E11752E)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
-I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
-I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C7B744)
-I (..\Source\SPI\M45PE161.h)(0x4E11756C)
-I (..\Source\Lcd\lcd.h)(0x4E117E6A)
-I (..\Source\SPI\delay.h)(0x4D060D4A)
-I (..\Source\SPI\TEXT.H)(0x4D05F4AC)
-I (..\Source\FAT\jpegbmp.h)(0x531D38A6)
-F (..\Source\FAT\jpegdecode.c)(0x531D39A0)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\jpegdecode.o --omf_browse .\obj\jpegdecode.crf --depend .\obj\jpegdecode.d)
-I (..\Source\FAT\jpegbmp.h)(0x531D38A6)
-I (..\Source\Lcd\sys.h)(0x4E11752E)
-I (..\Source\SPI\fat.h)(0x531D9325)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\LPC17XX.H)(0x5209A7DC)
-I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
-I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
-I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
-I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
-I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C7B744)
-I (..\Source\Lcd\lcd.h)(0x4E117E6A)
-F (..\Source\FAT\untogb.c)(0x4D11510E)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\untogb.o --omf_browse .\obj\untogb.crf --depend .\obj\untogb.d)
-I (..\Source\SPI\fat.h)(0x531D9325)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\LPC17XX.H)(0x5209A7DC)
-I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
-I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
-I (C:\Keil\ARM\CMSIS\Include\core_cmInstr.h)(0x5209A730)
-I (C:\Keil\ARM\CMSIS\Include\core_cmFunc.h)(0x5209A732)
-I (C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h)(0x5209A7DC)
-I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\Lcd\sys.h)(0x4E11752E)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
-I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
-I (C:\Keil\ARM\ARMCC\include\string.h)(0x51C7B744)
-I (..\Source\SPI\M45PE161.h)(0x4E11756C)
-I (..\Source\SPI\fontupd.h)(0x4D0C8844)
-F (..\Source\SPI\MMC_SD.C)(0x531C2F51)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\mmc_sd.o --omf_browse .\obj\mmc_sd.crf --depend .\obj\mmc_sd.d)
+F (..\Source\SPI\MMC_SD.C)(0x53214EFE)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\mmc_sd.o --omf_browse .\obj\mmc_sd.crf --depend .\obj\mmc_sd.d)
 I (..\Source\Lcd\sys.h)(0x4E11752E)
 I (..\Source\SPI\M45PE161.H)(0x4E11756C)
 I (C:\Keil\ARM\ARMCC\include\stdint.h)(0x51C7B744)
 I (..\Source\SPI\mmc_sd.h)(0x5319C525)
-I (..\Source\SPI\../Fatfs/diskio.h)(0x52D56672)
+I (..\Source\SPI\../Fatfs/diskio.h)(0x532009BA)
 I (..\Source\SPI\../Fatfs/integer.h)(0x52D56672)
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h)(0x5209A7DC)
 I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
@@ -158,8 +79,9 @@ I (..\Source\SPI\ssp0.h)(0x4E117578)
 F (..\Source\Fatfs\ff.c)(0x52D56672)(-c --cpu Cortex-M3 -D__MICROLIB -g -O0 --apcs=interwork --split_sections -I..\Source\Lcd -I..\Source\SPI -I..\Source\FAT-I C:\Keil\ARM\RV31\INC-I C:\Keil\ARM\CMSIS\Include-I C:\Keil\ARM\Inc\NXP\LPC17xx-DUSE_STDPERIPH_DRIVER -o .\obj\ff.o --omf_browse .\obj\ff.crf --depend .\obj\ff.d)
 I (..\Source\Fatfs\ff.h)(0x52D56672)
 I (..\Source\Fatfs\integer.h)(0x52D56672)
-I (..\Source\Fatfs\ffconf.h)(0x531AC6EF)
-I (..\Source\Fatfs\diskio.h)(0x52D56672)
+I (..\Source\Fatfs\ffconf.h)(0x53214E58)
+I (..\Source\Fatfs\diskio.h)(0x532009BA)
+I (C:\Keil\ARM\ARMCC\include\stdarg.h)(0x51C7B744)
 F (..\Source\uart\uart.c)(0x531D7693)()
 I (C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h)(0x5209A7DC)
 I (C:\Keil\ARM\CMSIS\Include\core_cm3.h)(0x5209A730)
