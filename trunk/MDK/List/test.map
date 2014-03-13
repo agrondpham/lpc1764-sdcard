@@ -11,29 +11,24 @@ Section Cross References
     main.o(i.Load_Drow_Dialog) refers to lcd.o(i.LCD_Clear) for LCD_Clear
     main.o(i.Load_Drow_Dialog) refers to lcd.o(i.LCD_ShowString) for LCD_ShowString
     main.o(i.Load_Drow_Dialog) refers to lcd.o(.data) for POINT_COLOR
+    main.o(i.main) refers to memcpya.o(.text) for __aeabi_memcpy4
     main.o(i.main) refers to system_lpc17xx.o(i.SystemInit) for SystemInit
     main.o(i.main) refers to spi.o(i.SPIx_Init) for SPIx_Init
     main.o(i.main) refers to ssp0.o(i.ssp0_init) for ssp0_init
-    main.o(i.main) refers to spi.o(i.SPI_Flash_ReadID) for SPI_Flash_ReadID
     main.o(i.main) refers to lcd.o(i.LCD_Init) for LCD_Init
     main.o(i.main) refers to main.o(i.Load_Drow_Dialog) for Load_Drow_Dialog
-    main.o(i.main) refers to fontupd.o(i.Font_Init) for Font_Init
     main.o(i.main) refers to lcd.o(i.LCD_Clear) for LCD_Clear
     main.o(i.main) refers to lcd.o(i.LCD_ShowString) for LCD_ShowString
-    main.o(i.main) refers to text.o(i.Show_Str) for Show_Str
     main.o(i.main) refers to mmc_sd.o(i.disk_initialize) for disk_initialize
-    main.o(i.main) refers to mmc_sd.o(i.SD_Init) for SD_Init
-    main.o(i.main) refers to delay.o(i.delay_ms) for delay_ms
-    main.o(i.main) refers to fat.o(i.FAT_Init) for FAT_Init
-    main.o(i.main) refers to fat.o(i.F_Search) for F_Search
-    main.o(i.main) refers to memcpya.o(.text) for __aeabi_memcpy4
-    main.o(i.main) refers to fat.o(i.Get_File_Info) for Get_File_Info
-    main.o(i.main) refers to jpegdecode.o(i.GetFileName) for GetFileName
-    main.o(i.main) refers to main.o(.data) for FLASH_ID
+    main.o(i.main) refers to ff.o(i.f_mount) for f_mount
+    main.o(i.main) refers to ff.o(i.f_open) for f_open
+    main.o(i.main) refers to ff.o(i.f_gets) for f_gets
+    main.o(i.main) refers to ff.o(i.f_close) for f_close
+    main.o(i.main) refers to ff.o(i.f_mkdir) for f_mkdir
+    main.o(i.main) refers to ff.o(i.f_puts) for f_puts
     main.o(i.main) refers to lcd.o(.data) for POINT_COLOR
     main.o(i.main) refers to mmc_sd.o(.data) for SD_Type
-    main.o(i.main) refers to fat.o(.data) for FAT32_Enable
-    main.o(i.main) refers to fontupd.o(.data) for PIC_Cluster
+    main.o(i.main) refers to main.o(.bss) for Fatfs
     main.o(.data) refers to main.o(.conststring) for .conststring
     lcd.o(i.Draw_Circle) refers to lcd.o(i.LCD_DrawPoint) for LCD_DrawPoint
     lcd.o(i.LCD_Bargraph) refers to lcd.o(i.wr_reg) for wr_reg
@@ -152,71 +147,6 @@ Section Cross References
     spi.o(i.SPI_Flash_Write_Page) refers to spi.o(i.SPI_FLASH_Write_Enable) for SPI_FLASH_Write_Enable
     spi.o(i.SPI_Flash_Write_Page) refers to spi.o(i.SPIx_ReadWriteByte) for SPIx_ReadWriteByte
     spi.o(i.SPI_Flash_Write_Page) refers to spi.o(i.SPI_Flash_Wait_Busy) for SPI_Flash_Wait_Busy
-    fat.o(i.CopyDirentruyItem) refers to fat.o(i.FileType_Tell) for FileType_Tell
-    fat.o(i.CopyDirentruyItem) refers to untogb.o(i.UniToGB) for UniToGB
-    fat.o(i.CopyDirentruyItem) refers to fat.o(.data) for FAT32_Enable
-    fat.o(i.CopyDirentruyItem) refers to fat.o(.bss) for LongNameBuffer
-    fat.o(i.Copy_Fat_Table) refers to fat.o(i.FAT_NextCluster) for FAT_NextCluster
-    fat.o(i.Copy_Fat_Table) refers to fat.o(.bss) for FAT_TAB
-    fat.o(i.Copy_Fat_Table) refers to fat.o(.data) for FAT32_Enable
-    fat.o(i.FAT_Init) refers to mmc_sd.o(i.SD_GetCapacity) for SD_GetCapacity
-    fat.o(i.FAT_Init) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
-    fat.o(i.FAT_Init) refers to fat.o(.bss) for fat_buffer
-    fat.o(i.FAT_Init) refers to fat.o(.data) for FAT32_Enable
-    fat.o(i.FAT_NextCluster) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
-    fat.o(i.FAT_NextCluster) refers to fat.o(.data) for FAT32_Enable
-    fat.o(i.FAT_NextCluster) refers to fat.o(.bss) for fat_buffer
-    fat.o(i.F_Read) refers to fat.o(i.fatClustToSect) for fatClustToSect
-    fat.o(i.F_Read) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
-    fat.o(i.F_Read) refers to fat.o(i.FAT_NextCluster) for FAT_NextCluster
-    fat.o(i.F_Read) refers to fat.o(.data) for SectorsPerClust
-    fat.o(i.F_Search) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
-    fat.o(i.F_Search) refers to memcpya.o(.text) for __aeabi_memcpy4
-    fat.o(i.F_Search) refers to fat.o(i.CopyDirentruyItem) for CopyDirentruyItem
-    fat.o(i.F_Search) refers to fat.o(i.mystrcmp) for mystrcmp
-    fat.o(i.F_Search) refers to fat.o(i.fatClustToSect) for fatClustToSect
-    fat.o(i.F_Search) refers to fat.o(i.FAT_NextCluster) for FAT_NextCluster
-    fat.o(i.F_Search) refers to fat.o(.data) for FAT32_Enable
-    fat.o(i.F_Search) refers to fat.o(.bss) for fat_buffer
-    fat.o(i.F_Write) refers to mmc_sd.o(i.SD_WriteSingleBlock) for SD_WriteSingleBlock
-    fat.o(i.FatTab_Next_Cluster) refers to fat.o(i.Copy_Fat_Table) for Copy_Fat_Table
-    fat.o(i.FatTab_Next_Cluster) refers to fat.o(.bss) for FAT_TAB
-    fat.o(i.FatTab_Prev_Cluster) refers to fat.o(i.Copy_Fat_Table) for Copy_Fat_Table
-    fat.o(i.FatTab_Prev_Cluster) refers to fat.o(.bss) for FAT_TAB
-    fat.o(i.FileType_Tell) refers to fat.o(.data) for filetype
-    fat.o(i.Get_File_Info) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
-    fat.o(i.Get_File_Info) refers to fat.o(i.FileType_Tell) for FileType_Tell
-    fat.o(i.Get_File_Info) refers to fat.o(i.CopyDirentruyItem) for CopyDirentruyItem
-    fat.o(i.Get_File_Info) refers to fat.o(i.fatClustToSect) for fatClustToSect
-    fat.o(i.Get_File_Info) refers to mmc_sd.o(i.SD_WriteSingleBlock) for SD_WriteSingleBlock
-    fat.o(i.Get_File_Info) refers to fat.o(i.FAT_NextCluster) for FAT_NextCluster
-    fat.o(i.Get_File_Info) refers to fat.o(.data) for LongNameFlag
-    fat.o(i.Get_File_Info) refers to fat.o(.bss) for fat_buffer
-    fat.o(i.fatClustToSect) refers to fat.o(.data) for SectorsPerClust
-    fat.o(.data) refers to fat.o(.conststring) for .conststring
-    text.o(i.Get_HzMat) refers to spi.o(i.SPI_Flash_Read) for SPI_Flash_Read
-    text.o(i.Get_HzMat) refers to fontupd.o(.data) for FONT16ADDR
-    text.o(i.Show_Font) refers to text.o(i.Get_HzMat) for Get_HzMat
-    text.o(i.Show_Font) refers to lcd.o(i.LCD_DrawPoint) for LCD_DrawPoint
-    text.o(i.Show_Font) refers to lcd.o(.data) for POINT_COLOR
-    text.o(i.Show_Str) refers to lcd.o(i.LCD_ShowChar) for LCD_ShowChar
-    text.o(i.Show_Str) refers to text.o(i.Show_Font) for Show_Font
-    text.o(i.Show_Str_Mid) refers to text.o(i.my_strlen) for my_strlen
-    text.o(i.Show_Str_Mid) refers to text.o(i.Show_Str) for Show_Str
-    fontupd.o(i.Font_Init) refers to spi.o(i.SPI_Flash_Read) for SPI_Flash_Read
-    fontupd.o(i.Font_Init) refers to fontupd.o(.data) for UNI2GBKADDR
-    fontupd.o(i.PIC_Display) refers to fat.o(i.F_Search) for F_Search
-    fontupd.o(i.PIC_Display) refers to memcpya.o(.text) for __aeabi_memcpy4
-    fontupd.o(i.PIC_Display) refers to text.o(i.Show_Str) for Show_Str
-    fontupd.o(i.PIC_Display) refers to delay.o(i.delay_ms) for delay_ms
-    fontupd.o(i.PIC_Display) refers to fat.o(.data) for FAT32_Enable
-    fontupd.o(i.PIC_Display) refers to fontupd.o(.data) for folder
-    fontupd.o(.data) refers to fontupd.o(.conststring) for .conststring
-    jpegdecode.o(i.GetFileName) refers to jpegdecode.o(.bss) for PICINFO
-    jpegdecode.o(i.GetFileName) refers to jpegdecode.o(.data) for CurFile
-    untogb.o(i.UniToGB) refers to untogb.o(i.UnicodeToGBK) for UnicodeToGBK
-    untogb.o(i.UnicodeToGBK) refers to spi.o(i.SPI_Flash_Read) for SPI_Flash_Read
-    untogb.o(i.UnicodeToGBK) refers to fontupd.o(.data) for UNI2GBKADDR
     mmc_sd.o(i.MSD_ReadBuffer) refers to mmc_sd.o(i.SD_SendCommand_NoDeassert) for SD_SendCommand_NoDeassert
     mmc_sd.o(i.MSD_ReadBuffer) refers to mmc_sd.o(i.SD_ReceiveData) for SD_ReceiveData
     mmc_sd.o(i.MSD_ReadBuffer) refers to ssp0.o(i.ssp0_send) for ssp0_send
@@ -265,19 +195,38 @@ Section Cross References
     mmc_sd.o(i.SD_WriteSingleBlock) refers to mmc_sd.o(.data) for SD_Type
     mmc_sd.o(i.disk_initialize) refers to mmc_sd.o(i.SD_Init) for SD_Init
     mmc_sd.o(i.disk_initialize) refers to mmc_sd.o(.data) for SD_Type
+    mmc_sd.o(i.disk_ioctl) refers to mmc_sd.o(.data) for Stat
     mmc_sd.o(i.disk_read) refers to mmc_sd.o(i.SD_ReadSingleBlock) for SD_ReadSingleBlock
     mmc_sd.o(i.disk_status) refers to mmc_sd.o(.data) for Stat
+    mmc_sd.o(i.disk_write) refers to mmc_sd.o(i.SD_WriteSingleBlock) for SD_WriteSingleBlock
+    mmc_sd.o(i.disk_write) refers to mmc_sd.o(.data) for Stat
+    mmc_sd.o(i.get_fattime) refers to mmc_sd.o(i.rtc_gettime) for rtc_gettime
     ff.o(i.check_fs) refers to ff.o(i.move_window) for move_window
+    ff.o(i.create_chain) refers to ff.o(i.get_fat) for get_fat
+    ff.o(i.create_chain) refers to ff.o(i.put_fat) for put_fat
     ff.o(i.create_name) refers to ff.o(i.mem_set) for mem_set
     ff.o(i.create_name) refers to ff.o(i.chk_chr) for chk_chr
+    ff.o(i.dir_alloc) refers to ff.o(i.dir_sdi) for dir_sdi
+    ff.o(i.dir_alloc) refers to ff.o(i.move_window) for move_window
+    ff.o(i.dir_alloc) refers to ff.o(i.dir_next) for dir_next
     ff.o(i.dir_find) refers to ff.o(i.dir_sdi) for dir_sdi
     ff.o(i.dir_find) refers to ff.o(i.move_window) for move_window
     ff.o(i.dir_find) refers to ff.o(i.mem_cmp) for mem_cmp
     ff.o(i.dir_find) refers to ff.o(i.dir_next) for dir_next
     ff.o(i.dir_next) refers to ff.o(i.get_fat) for get_fat
+    ff.o(i.dir_next) refers to ff.o(i.create_chain) for create_chain
+    ff.o(i.dir_next) refers to ff.o(i.sync_window) for sync_window
+    ff.o(i.dir_next) refers to ff.o(i.mem_set) for mem_set
     ff.o(i.dir_next) refers to ff.o(i.clust2sect) for clust2sect
     ff.o(i.dir_read) refers to ff.o(i.move_window) for move_window
     ff.o(i.dir_read) refers to ff.o(i.dir_next) for dir_next
+    ff.o(i.dir_register) refers to ff.o(i.dir_alloc) for dir_alloc
+    ff.o(i.dir_register) refers to ff.o(i.move_window) for move_window
+    ff.o(i.dir_register) refers to ff.o(i.mem_set) for mem_set
+    ff.o(i.dir_register) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.dir_remove) refers to ff.o(i.dir_sdi) for dir_sdi
+    ff.o(i.dir_remove) refers to ff.o(i.move_window) for move_window
+    ff.o(i.dir_remove) refers to ff.o(i.mem_set) for mem_set
     ff.o(i.dir_sdi) refers to ff.o(i.get_fat) for get_fat
     ff.o(i.dir_sdi) refers to ff.o(i.clust2sect) for clust2sect
     ff.o(i.f_chdir) refers to ff.o(i.find_volume) for find_volume
@@ -285,6 +234,10 @@ Section Cross References
     ff.o(i.f_chdir) refers to ff.o(i.ld_clust) for ld_clust
     ff.o(i.f_chdrive) refers to ff.o(i.get_ldnumber) for get_ldnumber
     ff.o(i.f_chdrive) refers to ff.o(.data) for CurrVol
+    ff.o(i.f_chmod) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_chmod) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_chmod) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_close) refers to ff.o(i.f_sync) for f_sync
     ff.o(i.f_close) refers to ff.o(i.validate) for validate
     ff.o(i.f_closedir) refers to ff.o(i.validate) for validate
     ff.o(i.f_getcwd) refers to ff.o(i.find_volume) for find_volume
@@ -294,6 +247,9 @@ Section Cross References
     ff.o(i.f_getcwd) refers to ff.o(i.dir_next) for dir_next
     ff.o(i.f_getcwd) refers to ff.o(i.get_fileinfo) for get_fileinfo
     ff.o(i.f_getcwd) refers to ff.o(.data) for CurrVol
+    ff.o(i.f_getfree) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_getfree) refers to ff.o(i.get_fat) for get_fat
+    ff.o(i.f_getfree) refers to ff.o(i.move_window) for move_window
     ff.o(i.f_getlabel) refers to ff.o(i.find_volume) for find_volume
     ff.o(i.f_getlabel) refers to ff.o(i.dir_sdi) for dir_sdi
     ff.o(i.f_getlabel) refers to ff.o(i.dir_read) for dir_read
@@ -301,36 +257,122 @@ Section Cross References
     ff.o(i.f_getlabel) refers to ff.o(i.move_window) for move_window
     ff.o(i.f_gets) refers to ff.o(i.f_read) for f_read
     ff.o(i.f_lseek) refers to ff.o(i.validate) for validate
+    ff.o(i.f_lseek) refers to ff.o(i.create_chain) for create_chain
     ff.o(i.f_lseek) refers to ff.o(i.get_fat) for get_fat
     ff.o(i.f_lseek) refers to ff.o(i.clust2sect) for clust2sect
+    ff.o(i.f_lseek) refers to mmc_sd.o(i.disk_write) for disk_write
     ff.o(i.f_lseek) refers to mmc_sd.o(i.disk_read) for disk_read
+    ff.o(i.f_mkdir) refers to mmc_sd.o(i.get_fattime) for get_fattime
+    ff.o(i.f_mkdir) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_mkdir) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_mkdir) refers to ff.o(i.create_chain) for create_chain
+    ff.o(i.f_mkdir) refers to ff.o(i.sync_window) for sync_window
+    ff.o(i.f_mkdir) refers to ff.o(i.clust2sect) for clust2sect
+    ff.o(i.f_mkdir) refers to ff.o(i.mem_set) for mem_set
+    ff.o(i.f_mkdir) refers to ff.o(i.st_clust) for st_clust
+    ff.o(i.f_mkdir) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_mkdir) refers to ff.o(i.dir_register) for dir_register
+    ff.o(i.f_mkdir) refers to ff.o(i.remove_chain) for remove_chain
+    ff.o(i.f_mkdir) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_mkfs) refers to ff.o(i.get_ldnumber) for get_ldnumber
+    ff.o(i.f_mkfs) refers to mmc_sd.o(i.disk_initialize) for disk_initialize
+    ff.o(i.f_mkfs) refers to mmc_sd.o(i.disk_ioctl) for disk_ioctl
+    ff.o(i.f_mkfs) refers to ff.o(i.mem_set) for mem_set
+    ff.o(i.f_mkfs) refers to mmc_sd.o(i.disk_write) for disk_write
+    ff.o(i.f_mkfs) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_mkfs) refers to mmc_sd.o(i.get_fattime) for get_fattime
+    ff.o(i.f_mkfs) refers to ff.o(.bss) for FatFs
+    ff.o(i.f_mkfs) refers to ff.o(.constdata) for vst
     ff.o(i.f_mount) refers to ff.o(i.get_ldnumber) for get_ldnumber
     ff.o(i.f_mount) refers to ff.o(i.find_volume) for find_volume
     ff.o(i.f_mount) refers to ff.o(.bss) for FatFs
     ff.o(i.f_open) refers to ff.o(i.find_volume) for find_volume
     ff.o(i.f_open) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_open) refers to ff.o(i.dir_register) for dir_register
+    ff.o(i.f_open) refers to mmc_sd.o(i.get_fattime) for get_fattime
     ff.o(i.f_open) refers to ff.o(i.ld_clust) for ld_clust
+    ff.o(i.f_open) refers to ff.o(i.st_clust) for st_clust
+    ff.o(i.f_open) refers to ff.o(i.remove_chain) for remove_chain
+    ff.o(i.f_open) refers to ff.o(i.move_window) for move_window
     ff.o(i.f_opendir) refers to ff.o(i.find_volume) for find_volume
     ff.o(i.f_opendir) refers to ff.o(i.follow_path) for follow_path
     ff.o(i.f_opendir) refers to ff.o(i.ld_clust) for ld_clust
     ff.o(i.f_opendir) refers to ff.o(i.dir_sdi) for dir_sdi
+    ff.o(i.f_printf) refers to ff.o(i.putc_bfd) for putc_bfd
+    ff.o(i.f_printf) refers to ff.o(i.f_write) for f_write
+    ff.o(i.f_putc) refers to ff.o(i.putc_bfd) for putc_bfd
+    ff.o(i.f_putc) refers to ff.o(i.f_write) for f_write
+    ff.o(i.f_puts) refers to ff.o(i.putc_bfd) for putc_bfd
+    ff.o(i.f_puts) refers to ff.o(i.f_write) for f_write
     ff.o(i.f_read) refers to ff.o(i.validate) for validate
     ff.o(i.f_read) refers to ff.o(i.get_fat) for get_fat
     ff.o(i.f_read) refers to ff.o(i.clust2sect) for clust2sect
     ff.o(i.f_read) refers to mmc_sd.o(i.disk_read) for disk_read
     ff.o(i.f_read) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_read) refers to mmc_sd.o(i.disk_write) for disk_write
     ff.o(i.f_readdir) refers to ff.o(i.validate) for validate
     ff.o(i.f_readdir) refers to ff.o(i.dir_sdi) for dir_sdi
     ff.o(i.f_readdir) refers to ff.o(i.dir_read) for dir_read
     ff.o(i.f_readdir) refers to ff.o(i.get_fileinfo) for get_fileinfo
     ff.o(i.f_readdir) refers to ff.o(i.dir_next) for dir_next
+    ff.o(i.f_rename) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_rename) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_rename) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_rename) refers to ff.o(i.get_ldnumber) for get_ldnumber
+    ff.o(i.f_rename) refers to ff.o(i.dir_register) for dir_register
+    ff.o(i.f_rename) refers to ff.o(i.ld_clust) for ld_clust
+    ff.o(i.f_rename) refers to ff.o(i.clust2sect) for clust2sect
+    ff.o(i.f_rename) refers to ff.o(i.move_window) for move_window
+    ff.o(i.f_rename) refers to ff.o(i.st_clust) for st_clust
+    ff.o(i.f_rename) refers to ff.o(i.dir_remove) for dir_remove
+    ff.o(i.f_rename) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_setlabel) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_setlabel) refers to ff.o(i.chk_chr) for chk_chr
+    ff.o(i.f_setlabel) refers to ff.o(i.dir_sdi) for dir_sdi
+    ff.o(i.f_setlabel) refers to ff.o(i.dir_read) for dir_read
+    ff.o(i.f_setlabel) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_setlabel) refers to mmc_sd.o(i.get_fattime) for get_fattime
+    ff.o(i.f_setlabel) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_setlabel) refers to ff.o(i.dir_alloc) for dir_alloc
+    ff.o(i.f_setlabel) refers to ff.o(i.mem_set) for mem_set
     ff.o(i.f_stat) refers to ff.o(i.find_volume) for find_volume
     ff.o(i.f_stat) refers to ff.o(i.follow_path) for follow_path
     ff.o(i.f_stat) refers to ff.o(i.get_fileinfo) for get_fileinfo
+    ff.o(i.f_sync) refers to ff.o(i.validate) for validate
+    ff.o(i.f_sync) refers to mmc_sd.o(i.disk_write) for disk_write
+    ff.o(i.f_sync) refers to ff.o(i.move_window) for move_window
+    ff.o(i.f_sync) refers to ff.o(i.st_clust) for st_clust
+    ff.o(i.f_sync) refers to mmc_sd.o(i.get_fattime) for get_fattime
+    ff.o(i.f_sync) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_truncate) refers to ff.o(i.validate) for validate
+    ff.o(i.f_truncate) refers to ff.o(i.remove_chain) for remove_chain
+    ff.o(i.f_truncate) refers to ff.o(i.get_fat) for get_fat
+    ff.o(i.f_truncate) refers to ff.o(i.put_fat) for put_fat
+    ff.o(i.f_truncate) refers to mmc_sd.o(i.disk_write) for disk_write
+    ff.o(i.f_unlink) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_unlink) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_unlink) refers to ff.o(i.ld_clust) for ld_clust
+    ff.o(i.f_unlink) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_unlink) refers to ff.o(i.dir_sdi) for dir_sdi
+    ff.o(i.f_unlink) refers to ff.o(i.dir_read) for dir_read
+    ff.o(i.f_unlink) refers to ff.o(i.dir_remove) for dir_remove
+    ff.o(i.f_unlink) refers to ff.o(i.remove_chain) for remove_chain
+    ff.o(i.f_unlink) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_utime) refers to ff.o(i.find_volume) for find_volume
+    ff.o(i.f_utime) refers to ff.o(i.follow_path) for follow_path
+    ff.o(i.f_utime) refers to ff.o(i.sync_fs) for sync_fs
+    ff.o(i.f_write) refers to ff.o(i.validate) for validate
+    ff.o(i.f_write) refers to ff.o(i.create_chain) for create_chain
+    ff.o(i.f_write) refers to mmc_sd.o(i.disk_write) for disk_write
+    ff.o(i.f_write) refers to ff.o(i.clust2sect) for clust2sect
+    ff.o(i.f_write) refers to ff.o(i.mem_cpy) for mem_cpy
+    ff.o(i.f_write) refers to mmc_sd.o(i.disk_read) for disk_read
     ff.o(i.find_volume) refers to ff.o(i.get_ldnumber) for get_ldnumber
     ff.o(i.find_volume) refers to mmc_sd.o(i.disk_status) for disk_status
     ff.o(i.find_volume) refers to mmc_sd.o(i.disk_initialize) for disk_initialize
+    ff.o(i.find_volume) refers to mmc_sd.o(i.disk_ioctl) for disk_ioctl
     ff.o(i.find_volume) refers to ff.o(i.check_fs) for check_fs
+    ff.o(i.find_volume) refers to ff.o(i.move_window) for move_window
     ff.o(i.find_volume) refers to ff.o(.bss) for FatFs
     ff.o(i.find_volume) refers to ff.o(.data) for Fsid
     ff.o(i.follow_path) refers to ff.o(i.dir_sdi) for dir_sdi
@@ -340,7 +382,17 @@ Section Cross References
     ff.o(i.get_fat) refers to ff.o(i.move_window) for move_window
     ff.o(i.get_ldnumber) refers to ff.o(.constdata) for str
     ff.o(i.get_ldnumber) refers to ff.o(.data) for CurrVol
+    ff.o(i.move_window) refers to ff.o(i.sync_window) for sync_window
     ff.o(i.move_window) refers to mmc_sd.o(i.disk_read) for disk_read
+    ff.o(i.put_fat) refers to ff.o(i.move_window) for move_window
+    ff.o(i.putc_bfd) refers to ff.o(i.f_write) for f_write
+    ff.o(i.remove_chain) refers to ff.o(i.get_fat) for get_fat
+    ff.o(i.remove_chain) refers to ff.o(i.put_fat) for put_fat
+    ff.o(i.sync_fs) refers to ff.o(i.sync_window) for sync_window
+    ff.o(i.sync_fs) refers to ff.o(i.mem_set) for mem_set
+    ff.o(i.sync_fs) refers to mmc_sd.o(i.disk_write) for disk_write
+    ff.o(i.sync_fs) refers to mmc_sd.o(i.disk_ioctl) for disk_ioctl
+    ff.o(i.sync_window) refers to mmc_sd.o(i.disk_write) for disk_write
     ff.o(i.validate) refers to mmc_sd.o(i.disk_status) for disk_status
     ff.o(.constdata) refers to ff.o(.conststring) for .conststring
     uart.o(i.UART0_SendChar) refers to uart.o(i.UART0_SendByte) for UART0_SendByte
@@ -374,7 +426,8 @@ Removing Unused input sections from the image.
     Removing main.o(.revsh_text), (4 bytes).
     Removing main.o(i.Delay), (30 bytes).
     Removing main.o(i.xatoi), (196 bytes).
-    Removing main.o(.bss), (1608 bytes).
+    Removing main.o(.conststring), (43 bytes).
+    Removing main.o(.data), (28 bytes).
     Removing lcd.o(.rev16_text), (4 bytes).
     Removing lcd.o(.revsh_text), (4 bytes).
     Removing lcd.o(i.Draw_Circle), (176 bytes).
@@ -393,6 +446,7 @@ Removing Unused input sections from the image.
     Removing lcd.o(i.LCD_Show2Num), (92 bytes).
     Removing lcd.o(i.LCD_ShowNum), (148 bytes).
     Removing lcd.o(i.mypow), (22 bytes).
+    Removing delay.o(i.delay_ms), (36 bytes).
     Removing ssp0.o(.rev16_text), (4 bytes).
     Removing ssp0.o(.revsh_text), (4 bytes).
     Removing spi.o(.rev16_text), (4 bytes).
@@ -402,84 +456,50 @@ Removing Unused input sections from the image.
     Removing spi.o(i.SPI_FLASH_Write_Enable), (28 bytes).
     Removing spi.o(i.SPI_Flash_Erase_Sector), (60 bytes).
     Removing spi.o(i.SPI_Flash_PowerDown), (32 bytes).
+    Removing spi.o(i.SPI_Flash_Read), (76 bytes).
+    Removing spi.o(i.SPI_Flash_ReadID), (72 bytes).
     Removing spi.o(i.SPI_Flash_ReadSR), (40 bytes).
     Removing spi.o(i.SPI_Flash_WAKEUP), (32 bytes).
     Removing spi.o(i.SPI_Flash_Wait_Busy), (16 bytes).
     Removing spi.o(i.SPI_Flash_Write), (180 bytes).
     Removing spi.o(i.SPI_Flash_Write_NoCheck), (66 bytes).
     Removing spi.o(i.SPI_Flash_Write_Page), (80 bytes).
+    Removing spi.o(i.SPIx_ReadWriteByte), (40 bytes).
     Removing spi.o(i.delay_us), (12 bytes).
     Removing spi.o(.bss), (4096 bytes).
-    Removing fat.o(.rev16_text), (4 bytes).
-    Removing fat.o(.revsh_text), (4 bytes).
-    Removing fat.o(i.ChangeFileName), (32 bytes).
-    Removing fat.o(i.Copy_Fat_Table), (228 bytes).
-    Removing fat.o(i.F_Open), (10 bytes).
-    Removing fat.o(i.F_Read), (112 bytes).
-    Removing fat.o(i.F_Write), (44 bytes).
-    Removing fat.o(i.FatTab_Next_Cluster), (200 bytes).
-    Removing fat.o(i.FatTab_Prev_Cluster), (160 bytes).
-    Removing text.o(.rev16_text), (4 bytes).
-    Removing text.o(.revsh_text), (4 bytes).
-    Removing text.o(i.Show_Str_Mid), (94 bytes).
-    Removing text.o(i.my_stradd), (30 bytes).
-    Removing text.o(i.my_strlen), (20 bytes).
-    Removing fontupd.o(.rev16_text), (4 bytes).
-    Removing fontupd.o(.revsh_text), (4 bytes).
-    Removing fontupd.o(i.PIC_Display), (124 bytes).
-    Removing fontupd.o(.bss), (1072 bytes).
-    Removing jpegdecode.o(.rev16_text), (4 bytes).
-    Removing jpegdecode.o(.revsh_text), (4 bytes).
-    Removing untogb.o(.rev16_text), (4 bytes).
-    Removing untogb.o(.revsh_text), (4 bytes).
     Removing mmc_sd.o(.rev16_text), (4 bytes).
     Removing mmc_sd.o(.revsh_text), (4 bytes).
     Removing mmc_sd.o(i.MSD_ReadBuffer), (148 bytes).
     Removing mmc_sd.o(i.MSD_WriteBuffer), (176 bytes).
     Removing mmc_sd.o(i.SD_GetCID), (36 bytes).
+    Removing mmc_sd.o(i.SD_GetCSD), (36 bytes).
+    Removing mmc_sd.o(i.SD_GetCapacity), (170 bytes).
     Removing mmc_sd.o(i.SD_ReadMultiBlock), (116 bytes).
     Removing mmc_sd.o(i.SD_Read_Bytes), (156 bytes).
     Removing mmc_sd.o(i.SD_WaitDataReady), (98 bytes).
     Removing mmc_sd.o(i.SD_WriteMultiBlock), (236 bytes).
-    Removing mmc_sd.o(i.disk_read), (34 bytes).
-    Removing mmc_sd.o(i.disk_status), (20 bytes).
-    Removing ff.o(i.check_fs), (88 bytes).
-    Removing ff.o(i.chk_chr), (20 bytes).
-    Removing ff.o(i.clust2sect), (26 bytes).
-    Removing ff.o(i.create_name), (436 bytes).
-    Removing ff.o(i.dir_find), (92 bytes).
-    Removing ff.o(i.dir_next), (144 bytes).
     Removing ff.o(i.dir_read), (108 bytes).
-    Removing ff.o(i.dir_sdi), (158 bytes).
+    Removing ff.o(i.dir_remove), (54 bytes).
     Removing ff.o(i.f_chdir), (84 bytes).
     Removing ff.o(i.f_chdrive), (32 bytes).
-    Removing ff.o(i.f_close), (22 bytes).
+    Removing ff.o(i.f_chmod), (96 bytes).
     Removing ff.o(i.f_closedir), (22 bytes).
     Removing ff.o(i.f_getcwd), (296 bytes).
+    Removing ff.o(i.f_getfree), (234 bytes).
     Removing ff.o(i.f_getlabel), (150 bytes).
-    Removing ff.o(i.f_gets), (86 bytes).
-    Removing ff.o(i.f_lseek), (252 bytes).
-    Removing ff.o(i.f_mount), (92 bytes).
-    Removing ff.o(i.f_open), (116 bytes).
+    Removing ff.o(i.f_lseek), (410 bytes).
+    Removing ff.o(i.f_mkfs), (1296 bytes).
     Removing ff.o(i.f_opendir), (110 bytes).
-    Removing ff.o(i.f_read), (338 bytes).
+    Removing ff.o(i.f_printf), (628 bytes).
+    Removing ff.o(i.f_putc), (64 bytes).
     Removing ff.o(i.f_readdir), (88 bytes).
+    Removing ff.o(i.f_rename), (296 bytes).
+    Removing ff.o(i.f_setlabel), (448 bytes).
     Removing ff.o(i.f_stat), (60 bytes).
-    Removing ff.o(i.find_volume), (540 bytes).
-    Removing ff.o(i.follow_path), (174 bytes).
-    Removing ff.o(i.get_fat), (212 bytes).
+    Removing ff.o(i.f_truncate), (184 bytes).
+    Removing ff.o(i.f_unlink), (190 bytes).
+    Removing ff.o(i.f_utime), (86 bytes).
     Removing ff.o(i.get_fileinfo), (80 bytes).
-    Removing ff.o(i.get_ldnumber), (168 bytes).
-    Removing ff.o(i.ld_clust), (18 bytes).
-    Removing ff.o(i.mem_cmp), (38 bytes).
-    Removing ff.o(i.mem_cpy), (46 bytes).
-    Removing ff.o(i.mem_set), (20 bytes).
-    Removing ff.o(i.move_window), (38 bytes).
-    Removing ff.o(i.validate), (54 bytes).
-    Removing ff.o(.bss), (32 bytes).
-    Removing ff.o(.constdata), (32 bytes).
-    Removing ff.o(.conststring), (35 bytes).
-    Removing ff.o(.data), (3 bytes).
     Removing uart.o(.rev16_text), (4 bytes).
     Removing uart.o(.revsh_text), (4 bytes).
     Removing uart.o(i.UART0_GetChar), (24 bytes).
@@ -492,7 +512,7 @@ Removing Unused input sections from the image.
     Removing uart.o(i.UART2_SendByte), (28 bytes).
     Removing uart.o(i.UART2_SendString), (22 bytes).
 
-124 unused section(s) (total 16056 bytes) removed from the image.
+92 unused section(s) (total 13435 bytes) removed from the image.
 
 ==============================================================================
 
@@ -503,46 +523,36 @@ Image Symbol Table
     Symbol Name                              Value     Ov Type        Size  Object(Section)
 
     RESET                                    0x00000000   Section      204  startup_lpc17xx.o(RESET)
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry5.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11a.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8a.o ABSOLUTE
-    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry7b.o ABSOLUTE
     ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10b.o ABSOLUTE
-    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry10a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry2.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry9a.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry8b.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry.o ABSOLUTE
+    ../clib/microlib/init/entry.s            0x00000000   Number         0  entry11b.o ABSOLUTE
     ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpyb.o ABSOLUTE
+    ../clib/microlib/string/memcpy.c         0x00000000   Number         0  memcpya.o ABSOLUTE
     ..\LPC17xx\startup_LPC17xx.s             0x00000000   Number         0  startup_lpc17xx.o ABSOLUTE
     ..\LPC17xx\system_LPC17xx.c              0x00000000   Number         0  system_lpc17xx.o ABSOLUTE
-    ..\Source\FAT\jpegdecode.c               0x00000000   Number         0  jpegdecode.o ABSOLUTE
-    ..\Source\FAT\untogb.c                   0x00000000   Number         0  untogb.o ABSOLUTE
     ..\Source\Fatfs\ff.c                     0x00000000   Number         0  ff.o ABSOLUTE
     ..\Source\Lcd\Lcd.c                      0x00000000   Number         0  lcd.o ABSOLUTE
-    ..\Source\SPI\FAT.C                      0x00000000   Number         0  fat.o ABSOLUTE
     ..\Source\SPI\MMC_SD.C                   0x00000000   Number         0  mmc_sd.o ABSOLUTE
     ..\Source\SPI\SPI.C                      0x00000000   Number         0  spi.o ABSOLUTE
     ..\Source\SPI\SSP0.C                     0x00000000   Number         0  ssp0.o ABSOLUTE
     ..\Source\SPI\delay.c                    0x00000000   Number         0  delay.o ABSOLUTE
-    ..\Source\SPI\fontupd.c                  0x00000000   Number         0  fontupd.o ABSOLUTE
-    ..\Source\SPI\text.c                     0x00000000   Number         0  text.o ABSOLUTE
     ..\Source\User\main.c                    0x00000000   Number         0  main.o ABSOLUTE
     ..\Source\uart\uart.c                    0x00000000   Number         0  uart.o ABSOLUTE
     ..\\LPC17xx\\system_LPC17xx.c            0x00000000   Number         0  system_lpc17xx.o ABSOLUTE
-    ..\\Source\\FAT\\jpegdecode.c            0x00000000   Number         0  jpegdecode.o ABSOLUTE
-    ..\\Source\\FAT\\untogb.c                0x00000000   Number         0  untogb.o ABSOLUTE
     ..\\Source\\Lcd\\Lcd.c                   0x00000000   Number         0  lcd.o ABSOLUTE
-    ..\\Source\\SPI\\FAT.C                   0x00000000   Number         0  fat.o ABSOLUTE
     ..\\Source\\SPI\\MMC_SD.C                0x00000000   Number         0  mmc_sd.o ABSOLUTE
     ..\\Source\\SPI\\SPI.C                   0x00000000   Number         0  spi.o ABSOLUTE
     ..\\Source\\SPI\\SSP0.C                  0x00000000   Number         0  ssp0.o ABSOLUTE
-    ..\\Source\\SPI\\fontupd.c               0x00000000   Number         0  fontupd.o ABSOLUTE
-    ..\\Source\\SPI\\text.c                  0x00000000   Number         0  text.o ABSOLUTE
     ..\\Source\\User\\main.c                 0x00000000   Number         0  main.o ABSOLUTE
     ..\\Source\\uart\\uart.c                 0x00000000   Number         0  uart.o ABSOLUTE
     dc.s                                     0x00000000   Number         0  dc.o ABSOLUTE
@@ -562,95 +572,140 @@ Image Symbol Table
     .text                                    0x000000e4   Section       28  startup_lpc17xx.o(.text)
     .text                                    0x00000100   Section        0  memcpya.o(.text)
     .text                                    0x00000124   Section       36  init.o(.text)
-    i.CopyDirentruyItem                      0x00000148   Section        0  fat.o(i.CopyDirentruyItem)
-    i.FAT_NextCluster                        0x00000264   Section        0  fat.o(i.FAT_NextCluster)
-    i.GetFileName                            0x000002c0   Section        0  jpegdecode.o(i.GetFileName)
-    i.LCD_WriteRAM_Prepare                   0x000002dc   Section        0  lcd.o(i.LCD_WriteRAM_Prepare)
-    i.__scatterload_copy                     0x000002e6   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x000002f4   Section        2  handlers.o(i.__scatterload_null)
-    .conststring                             0x000002f6   Section        5  fontupd.o(.conststring)
+    i.LCD_Clear                              0x00000148   Section        0  lcd.o(i.LCD_Clear)
+    i.LCD_DrawPoint                          0x00000190   Section        0  lcd.o(i.LCD_DrawPoint)
+    i.LCD_DrawPoint1                         0x000001d4   Section        0  lcd.o(i.LCD_DrawPoint1)
+    i.LCD_SetCursor                          0x00000214   Section        0  lcd.o(i.LCD_SetCursor)
+    i.LCD_ShowString                         0x0000025c   Section        0  lcd.o(i.LCD_ShowString)
+    i.LCD_WriteRAM_Prepare                   0x000002a6   Section        0  lcd.o(i.LCD_WriteRAM_Prepare)
+    i.Load_Drow_Dialog                       0x000002b0   Section        0  main.o(i.Load_Drow_Dialog)
+    i.__scatterload_copy                     0x000002e0   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x000002ee   Section        2  handlers.o(i.__scatterload_null)
+    i.st_clust                               0x000002f0   Section        0  ff.o(i.st_clust)
+    st_clust                                 0x000002f1   Thumb Code     8  ff.o(i.st_clust)
     .ARM.__at_0x02FC                         0x000002fc   Section        4  startup_lpc17xx.o(.ARM.__at_0x02FC)
-    i.FAT_Init                               0x00000300   Section        0  fat.o(i.FAT_Init)
-    i.F_Search                               0x0000042c   Section        0  fat.o(i.F_Search)
-    i.FileType_Tell                          0x000005a0   Section        0  fat.o(i.FileType_Tell)
-    i.Font_Init                              0x000005e0   Section        0  fontupd.o(i.Font_Init)
-    i.Get_File_Info                          0x0000063c   Section        0  fat.o(i.Get_File_Info)
-    i.Get_HzMat                              0x00000934   Section        0  text.o(i.Get_HzMat)
-    i.LCD_Clear                              0x000009d0   Section        0  lcd.o(i.LCD_Clear)
-    i.LCD_DrawPoint                          0x00000a18   Section        0  lcd.o(i.LCD_DrawPoint)
-    i.LCD_DrawPoint1                         0x00000a5c   Section        0  lcd.o(i.LCD_DrawPoint1)
-    i.LCD_Init                               0x00000a9c   Section        0  lcd.o(i.LCD_Init)
-    i.LCD_SetCursor                          0x00000f9c   Section        0  lcd.o(i.LCD_SetCursor)
-    i.LCD_ShowChar                           0x00000fe4   Section        0  lcd.o(i.LCD_ShowChar)
-    i.LCD_ShowString                         0x0000113c   Section        0  lcd.o(i.LCD_ShowString)
-    i.LCD_WindowMax                          0x00001188   Section        0  lcd.o(i.LCD_WindowMax)
-    i.Load_Drow_Dialog                       0x000011f0   Section        0  main.o(i.Load_Drow_Dialog)
-    i.SD_GetCSD                              0x00001220   Section        0  mmc_sd.o(i.SD_GetCSD)
-    i.SD_GetCapacity                         0x00001244   Section        0  mmc_sd.o(i.SD_GetCapacity)
-    i.SD_GetResponse                         0x000012ee   Section        0  mmc_sd.o(i.SD_GetResponse)
-    i.SD_Idle_Sta                            0x00001314   Section        0  mmc_sd.o(i.SD_Idle_Sta)
-    i.SD_Init                                0x00001360   Section        0  mmc_sd.o(i.SD_Init)
-    i.SD_ReadSingleBlock                     0x00001524   Section        0  mmc_sd.o(i.SD_ReadSingleBlock)
-    i.SD_ReceiveData                         0x00001568   Section        0  mmc_sd.o(i.SD_ReceiveData)
-    i.SD_SendCommand                         0x000015c8   Section        0  mmc_sd.o(i.SD_SendCommand)
-    i.SD_SendCommand_NoDeassert              0x00001654   Section        0  mmc_sd.o(i.SD_SendCommand_NoDeassert)
-    i.SD_WriteSingleBlock                    0x000016c4   Section        0  mmc_sd.o(i.SD_WriteSingleBlock)
-    i.SPI_Flash_Read                         0x00001790   Section        0  spi.o(i.SPI_Flash_Read)
-    i.SPI_Flash_ReadID                       0x000017dc   Section        0  spi.o(i.SPI_Flash_ReadID)
-    i.SPIx_Init                              0x00001824   Section        0  spi.o(i.SPIx_Init)
-    i.SPIx_ReadWriteByte                     0x00001860   Section        0  spi.o(i.SPIx_ReadWriteByte)
-    i.SPIx_SetSpeed                          0x00001888   Section        0  ssp0.o(i.SPIx_SetSpeed)
-    i.Show_Font                              0x000018d0   Section        0  text.o(i.Show_Font)
-    i.Show_Str                               0x000019c0   Section        0  text.o(i.Show_Str)
-    i.SystemInit                             0x00001a74   Section        0  system_lpc17xx.o(i.SystemInit)
-    i.UniToGB                                0x00001c90   Section        0  untogb.o(i.UniToGB)
-    i.UnicodeToGBK                           0x00001d1c   Section        0  untogb.o(i.UnicodeToGBK)
-    i.__scatterload_zeroinit                 0x00001d84   Section       14  handlers.o(i.__scatterload_zeroinit)
-    i.delay                                  0x00001d92   Section        0  lcd.o(i.delay)
-    delay                                    0x00001d93   Thumb Code    14  lcd.o(i.delay)
-    i.delay_ms                               0x00001da0   Section        0  delay.o(i.delay_ms)
-    i.disk_initialize                        0x00001dc4   Section        0  mmc_sd.o(i.disk_initialize)
-    i.fatClustToSect                         0x00001dfc   Section        0  fat.o(i.fatClustToSect)
-    i.lcd_send                               0x00001e18   Section        0  lcd.o(i.lcd_send)
-    lcd_send                                 0x00001e19   Thumb Code    56  lcd.o(i.lcd_send)
-    i.main                                   0x00001e54   Section        0  main.o(i.main)
-    i.mystrcmp                               0x00002204   Section        0  fat.o(i.mystrcmp)
-    i.rd_dat                                 0x00002250   Section        0  lcd.o(i.rd_dat)
-    rd_dat                                   0x00002251   Thumb Code    98  lcd.o(i.rd_dat)
-    i.rd_reg                                 0x000022b8   Section        0  lcd.o(i.rd_reg)
-    rd_reg                                   0x000022b9   Thumb Code    38  lcd.o(i.rd_reg)
-    i.ssp0_init                              0x000022e4   Section        0  ssp0.o(i.ssp0_init)
-    i.ssp0_send                              0x0000239c   Section        0  ssp0.o(i.ssp0_send)
-    i.wait_delay                             0x000023bc   Section        0  lcd.o(i.wait_delay)
-    i.wr_cmd                                 0x000023c8   Section        0  lcd.o(i.wr_cmd)
-    wr_cmd                                   0x000023c9   Thumb Code    44  lcd.o(i.wr_cmd)
-    i.wr_dat                                 0x000023f8   Section        0  lcd.o(i.wr_dat)
-    wr_dat                                   0x000023f9   Thumb Code    44  lcd.o(i.wr_dat)
-    i.wr_dat_only                            0x00002428   Section        0  lcd.o(i.wr_dat_only)
-    wr_dat_only                              0x00002429   Thumb Code    32  lcd.o(i.wr_dat_only)
-    i.wr_dat_start                           0x0000244c   Section        0  lcd.o(i.wr_dat_start)
-    wr_dat_start                             0x0000244d   Thumb Code    10  lcd.o(i.wr_dat_start)
-    i.wr_dat_stop                            0x0000245c   Section        0  lcd.o(i.wr_dat_stop)
-    wr_dat_stop                              0x0000245d   Thumb Code    10  lcd.o(i.wr_dat_stop)
-    i.wr_reg                                 0x0000246c   Section        0  lcd.o(i.wr_reg)
-    wr_reg                                   0x0000246d   Thumb Code    36  lcd.o(i.wr_reg)
-    .constdata                               0x00002494   Section     8036  lcd.o(.constdata)
-    .conststring                             0x000043f8   Section       43  main.o(.conststring)
-    .conststring                             0x00004423   Section       88  fat.o(.conststring)
+    i.LCD_Init                               0x00000300   Section        0  lcd.o(i.LCD_Init)
+    i.LCD_ShowChar                           0x00000800   Section        0  lcd.o(i.LCD_ShowChar)
+    i.LCD_WindowMax                          0x00000958   Section        0  lcd.o(i.LCD_WindowMax)
+    i.SD_GetResponse                         0x000009c0   Section        0  mmc_sd.o(i.SD_GetResponse)
+    i.SD_Idle_Sta                            0x000009e6   Section        0  mmc_sd.o(i.SD_Idle_Sta)
+    i.SD_Init                                0x00000a30   Section        0  mmc_sd.o(i.SD_Init)
+    i.SD_ReadSingleBlock                     0x00000bf4   Section        0  mmc_sd.o(i.SD_ReadSingleBlock)
+    i.SD_ReceiveData                         0x00000c38   Section        0  mmc_sd.o(i.SD_ReceiveData)
+    i.SD_SendCommand                         0x00000c98   Section        0  mmc_sd.o(i.SD_SendCommand)
+    i.SD_SendCommand_NoDeassert              0x00000d24   Section        0  mmc_sd.o(i.SD_SendCommand_NoDeassert)
+    i.SD_WriteSingleBlock                    0x00000d94   Section        0  mmc_sd.o(i.SD_WriteSingleBlock)
+    i.SPIx_Init                              0x00000e60   Section        0  spi.o(i.SPIx_Init)
+    i.SPIx_SetSpeed                          0x00000e9c   Section        0  ssp0.o(i.SPIx_SetSpeed)
+    i.SystemInit                             0x00000ee4   Section        0  system_lpc17xx.o(i.SystemInit)
+    i.__scatterload_zeroinit                 0x00001100   Section       14  handlers.o(i.__scatterload_zeroinit)
+    i.check_fs                               0x00001110   Section        0  ff.o(i.check_fs)
+    check_fs                                 0x00001111   Thumb Code    84  ff.o(i.check_fs)
+    i.chk_chr                                0x00001168   Section        0  ff.o(i.chk_chr)
+    chk_chr                                  0x00001169   Thumb Code    20  ff.o(i.chk_chr)
+    i.clust2sect                             0x0000117c   Section        0  ff.o(i.clust2sect)
+    i.create_chain                           0x00001196   Section        0  ff.o(i.create_chain)
+    create_chain                             0x00001197   Thumb Code   214  ff.o(i.create_chain)
+    i.create_name                            0x0000126c   Section        0  ff.o(i.create_name)
+    create_name                              0x0000126d   Thumb Code   418  ff.o(i.create_name)
+    i.delay                                  0x00001420   Section        0  lcd.o(i.delay)
+    delay                                    0x00001421   Thumb Code    14  lcd.o(i.delay)
+    i.dir_alloc                              0x0000142e   Section        0  ff.o(i.dir_alloc)
+    dir_alloc                                0x0000142f   Thumb Code    92  ff.o(i.dir_alloc)
+    i.dir_find                               0x0000148a   Section        0  ff.o(i.dir_find)
+    dir_find                                 0x0000148b   Thumb Code    92  ff.o(i.dir_find)
+    i.dir_next                               0x000014e6   Section        0  ff.o(i.dir_next)
+    dir_next                                 0x000014e7   Thumb Code   316  ff.o(i.dir_next)
+    i.dir_register                           0x00001622   Section        0  ff.o(i.dir_register)
+    dir_register                             0x00001623   Thumb Code    58  ff.o(i.dir_register)
+    i.dir_sdi                                0x0000165c   Section        0  ff.o(i.dir_sdi)
+    dir_sdi                                  0x0000165d   Thumb Code   200  ff.o(i.dir_sdi)
+    i.disk_initialize                        0x00001724   Section        0  mmc_sd.o(i.disk_initialize)
+    i.disk_ioctl                             0x0000175c   Section        0  mmc_sd.o(i.disk_ioctl)
+    i.disk_read                              0x000017c8   Section        0  mmc_sd.o(i.disk_read)
+    i.disk_status                            0x000017e8   Section        0  mmc_sd.o(i.disk_status)
+    i.disk_write                             0x000017fc   Section        0  mmc_sd.o(i.disk_write)
+    i.f_close                                0x00001838   Section        0  ff.o(i.f_close)
+    i.f_gets                                 0x00001858   Section        0  ff.o(i.f_gets)
+    i.f_mkdir                                0x000018ae   Section        0  ff.o(i.f_mkdir)
+    i.f_mount                                0x00001a00   Section        0  ff.o(i.f_mount)
+    i.f_open                                 0x00001a5c   Section        0  ff.o(i.f_open)
+    i.f_puts                                 0x00001b88   Section        0  ff.o(i.f_puts)
+    i.f_read                                 0x00001bd2   Section        0  ff.o(i.f_read)
+    i.f_sync                                 0x00001da2   Section        0  ff.o(i.f_sync)
+    i.f_write                                0x00001e2e   Section        0  ff.o(i.f_write)
+    i.find_volume                            0x00002044   Section        0  ff.o(i.find_volume)
+    find_volume                              0x00002045   Thumb Code   702  ff.o(i.find_volume)
+    i.follow_path                            0x00002314   Section        0  ff.o(i.follow_path)
+    follow_path                              0x00002315   Thumb Code   174  ff.o(i.follow_path)
+    i.get_fat                                0x000023c2   Section        0  ff.o(i.get_fat)
+    i.get_fattime                            0x000024e0   Section        0  mmc_sd.o(i.get_fattime)
+    i.get_ldnumber                           0x0000251c   Section        0  ff.o(i.get_ldnumber)
+    get_ldnumber                             0x0000251d   Thumb Code   160  ff.o(i.get_ldnumber)
+    i.lcd_send                               0x000025c4   Section        0  lcd.o(i.lcd_send)
+    lcd_send                                 0x000025c5   Thumb Code    56  lcd.o(i.lcd_send)
+    i.ld_clust                               0x00002600   Section        0  ff.o(i.ld_clust)
+    ld_clust                                 0x00002601   Thumb Code    18  ff.o(i.ld_clust)
+    i.main                                   0x00002614   Section        0  main.o(i.main)
+    i.mem_cmp                                0x000028f8   Section        0  ff.o(i.mem_cmp)
+    mem_cmp                                  0x000028f9   Thumb Code    38  ff.o(i.mem_cmp)
+    i.mem_cpy                                0x0000291e   Section        0  ff.o(i.mem_cpy)
+    mem_cpy                                  0x0000291f   Thumb Code    46  ff.o(i.mem_cpy)
+    i.mem_set                                0x0000294c   Section        0  ff.o(i.mem_set)
+    mem_set                                  0x0000294d   Thumb Code    20  ff.o(i.mem_set)
+    i.move_window                            0x00002960   Section        0  ff.o(i.move_window)
+    move_window                              0x00002961   Thumb Code    50  ff.o(i.move_window)
+    i.put_fat                                0x00002992   Section        0  ff.o(i.put_fat)
+    i.putc_bfd                               0x00002ae6   Section        0  ff.o(i.putc_bfd)
+    putc_bfd                                 0x00002ae7   Thumb Code    78  ff.o(i.putc_bfd)
+    i.rd_dat                                 0x00002b34   Section        0  lcd.o(i.rd_dat)
+    rd_dat                                   0x00002b35   Thumb Code    98  lcd.o(i.rd_dat)
+    i.rd_reg                                 0x00002b9c   Section        0  lcd.o(i.rd_reg)
+    rd_reg                                   0x00002b9d   Thumb Code    38  lcd.o(i.rd_reg)
+    i.remove_chain                           0x00002bc8   Section        0  ff.o(i.remove_chain)
+    remove_chain                             0x00002bc9   Thumb Code   108  ff.o(i.remove_chain)
+    i.rtc_gettime                            0x00002c34   Section        0  mmc_sd.o(i.rtc_gettime)
+    i.ssp0_init                              0x00002c78   Section        0  ssp0.o(i.ssp0_init)
+    i.ssp0_send                              0x00002d30   Section        0  ssp0.o(i.ssp0_send)
+    i.sync_fs                                0x00002d50   Section        0  ff.o(i.sync_fs)
+    sync_fs                                  0x00002d51   Thumb Code   110  ff.o(i.sync_fs)
+    i.sync_window                            0x00002dc8   Section        0  ff.o(i.sync_window)
+    sync_window                              0x00002dc9   Thumb Code    76  ff.o(i.sync_window)
+    i.validate                               0x00002e14   Section        0  ff.o(i.validate)
+    validate                                 0x00002e15   Thumb Code    54  ff.o(i.validate)
+    i.wait_delay                             0x00002e4a   Section        0  lcd.o(i.wait_delay)
+    i.wr_cmd                                 0x00002e58   Section        0  lcd.o(i.wr_cmd)
+    wr_cmd                                   0x00002e59   Thumb Code    44  lcd.o(i.wr_cmd)
+    i.wr_dat                                 0x00002e88   Section        0  lcd.o(i.wr_dat)
+    wr_dat                                   0x00002e89   Thumb Code    44  lcd.o(i.wr_dat)
+    i.wr_dat_only                            0x00002eb8   Section        0  lcd.o(i.wr_dat_only)
+    wr_dat_only                              0x00002eb9   Thumb Code    32  lcd.o(i.wr_dat_only)
+    i.wr_dat_start                           0x00002edc   Section        0  lcd.o(i.wr_dat_start)
+    wr_dat_start                             0x00002edd   Thumb Code    10  lcd.o(i.wr_dat_start)
+    i.wr_dat_stop                            0x00002eec   Section        0  lcd.o(i.wr_dat_stop)
+    wr_dat_stop                              0x00002eed   Thumb Code    10  lcd.o(i.wr_dat_stop)
+    i.wr_reg                                 0x00002efc   Section        0  lcd.o(i.wr_reg)
+    wr_reg                                   0x00002efd   Thumb Code    36  lcd.o(i.wr_reg)
+    .constdata                               0x00002f24   Section     8036  lcd.o(.constdata)
+    .constdata                               0x00004e88   Section       76  ff.o(.constdata)
+    str                                      0x00004e88   Data          32  ff.o(.constdata)
+    vst                                      0x00004ea8   Data          22  ff.o(.constdata)
+    cst                                      0x00004ebe   Data          22  ff.o(.constdata)
+    .conststring                             0x00004ed4   Section       35  ff.o(.conststring)
     .data                                    0x10000000   Section        4  system_lpc17xx.o(.data)
-    .data                                    0x10000004   Section       28  main.o(.data)
-    .data                                    0x10000020   Section       10  lcd.o(.data)
-    TextColor                                0x10000024   Data           2  lcd.o(.data)
-    BackColor                                0x10000026   Data           2  lcd.o(.data)
-    DeviceCode                               0x10000028   Data           2  lcd.o(.data)
-    .data                                    0x1000002c   Section      140  fat.o(.data)
-    .data                                    0x100000b8   Section       24  fontupd.o(.data)
-    .data                                    0x100000d0   Section        4  jpegdecode.o(.data)
-    .data                                    0x100000d4   Section        2  mmc_sd.o(.data)
-    Stat                                     0x100000d5   Data           1  mmc_sd.o(.data)
-    .bss                                     0x100000d8   Section     1032  fat.o(.bss)
-    .bss                                     0x100004e0   Section     1060  jpegdecode.o(.bss)
-    STACK                                    0x10000908   Section      512  startup_lpc17xx.o(STACK)
+    .data                                    0x10000004   Section       10  lcd.o(.data)
+    TextColor                                0x10000008   Data           2  lcd.o(.data)
+    BackColor                                0x1000000a   Data           2  lcd.o(.data)
+    DeviceCode                               0x1000000c   Data           2  lcd.o(.data)
+    .data                                    0x1000000e   Section        2  mmc_sd.o(.data)
+    Stat                                     0x1000000f   Data           1  mmc_sd.o(.data)
+    .data                                    0x10000010   Section        3  ff.o(.data)
+    Fsid                                     0x10000010   Data           2  ff.o(.data)
+    CurrVol                                  0x10000012   Data           1  ff.o(.data)
+    .bss                                     0x10000014   Section     5748  main.o(.bss)
+    .bss                                     0x10001688   Section       32  ff.o(.bss)
+    FatFs                                    0x10001688   Data          32  ff.o(.bss)
+    STACK                                    0x100016a8   Section      512  startup_lpc17xx.o(STACK)
 
     Global Symbols
 
@@ -724,94 +779,68 @@ Image Symbol Table
     __aeabi_memcpy8                          0x00000101   Thumb Code     0  memcpya.o(.text)
     __scatterload                            0x00000125   Thumb Code    28  init.o(.text)
     __scatterload_rt2                        0x00000125   Thumb Code     0  init.o(.text)
-    CopyDirentruyItem                        0x00000149   Thumb Code   266  fat.o(i.CopyDirentruyItem)
-    FAT_NextCluster                          0x00000265   Thumb Code    74  fat.o(i.FAT_NextCluster)
-    GetFileName                              0x000002c1   Thumb Code    20  jpegdecode.o(i.GetFileName)
-    LCD_WriteRAM_Prepare                     0x000002dd   Thumb Code    10  lcd.o(i.LCD_WriteRAM_Prepare)
-    __scatterload_copy                       0x000002e7   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x000002f5   Thumb Code     2  handlers.o(i.__scatterload_null)
-    FAT_Init                                 0x00000301   Thumb Code   254  fat.o(i.FAT_Init)
-    F_Search                                 0x0000042d   Thumb Code   348  fat.o(i.F_Search)
-    FileType_Tell                            0x000005a1   Thumb Code    60  fat.o(i.FileType_Tell)
-    Font_Init                                0x000005e1   Thumb Code    80  fontupd.o(i.Font_Init)
-    Get_File_Info                            0x0000063d   Thumb Code   730  fat.o(i.Get_File_Info)
-    Get_HzMat                                0x00000935   Thumb Code   146  text.o(i.Get_HzMat)
-    LCD_Clear                                0x000009d1   Thumb Code    68  lcd.o(i.LCD_Clear)
-    LCD_DrawPoint                            0x00000a19   Thumb Code    60  lcd.o(i.LCD_DrawPoint)
-    LCD_DrawPoint1                           0x00000a5d   Thumb Code    60  lcd.o(i.LCD_DrawPoint1)
-    LCD_Init                                 0x00000a9d   Thumb Code  1280  lcd.o(i.LCD_Init)
-    LCD_SetCursor                            0x00000f9d   Thumb Code    66  lcd.o(i.LCD_SetCursor)
-    LCD_ShowChar                             0x00000fe5   Thumb Code   328  lcd.o(i.LCD_ShowChar)
-    LCD_ShowString                           0x0000113d   Thumb Code    74  lcd.o(i.LCD_ShowString)
-    LCD_WindowMax                            0x00001189   Thumb Code    98  lcd.o(i.LCD_WindowMax)
-    Load_Drow_Dialog                         0x000011f1   Thumb Code    38  main.o(i.Load_Drow_Dialog)
-    SD_GetCSD                                0x00001221   Thumb Code    36  mmc_sd.o(i.SD_GetCSD)
-    SD_GetCapacity                           0x00001245   Thumb Code   170  mmc_sd.o(i.SD_GetCapacity)
-    SD_GetResponse                           0x000012ef   Thumb Code    38  mmc_sd.o(i.SD_GetResponse)
-    SD_Idle_Sta                              0x00001315   Thumb Code    74  mmc_sd.o(i.SD_Idle_Sta)
-    SD_Init                                  0x00001361   Thumb Code   444  mmc_sd.o(i.SD_Init)
-    SD_ReadSingleBlock                       0x00001525   Thumb Code    62  mmc_sd.o(i.SD_ReadSingleBlock)
-    SD_ReceiveData                           0x00001569   Thumb Code    90  mmc_sd.o(i.SD_ReceiveData)
-    SD_SendCommand                           0x000015c9   Thumb Code   134  mmc_sd.o(i.SD_SendCommand)
-    SD_SendCommand_NoDeassert                0x00001655   Thumb Code   106  mmc_sd.o(i.SD_SendCommand_NoDeassert)
-    SD_WriteSingleBlock                      0x000016c5   Thumb Code   194  mmc_sd.o(i.SD_WriteSingleBlock)
-    SPI_Flash_Read                           0x00001791   Thumb Code    70  spi.o(i.SPI_Flash_Read)
-    SPI_Flash_ReadID                         0x000017dd   Thumb Code    66  spi.o(i.SPI_Flash_ReadID)
-    SPIx_Init                                0x00001825   Thumb Code    46  spi.o(i.SPIx_Init)
-    SPIx_ReadWriteByte                       0x00001861   Thumb Code    34  spi.o(i.SPIx_ReadWriteByte)
-    SPIx_SetSpeed                            0x00001889   Thumb Code    64  ssp0.o(i.SPIx_SetSpeed)
-    Show_Font                                0x000018d1   Thumb Code   232  text.o(i.Show_Font)
-    Show_Str                                 0x000019c1   Thumb Code   180  text.o(i.Show_Str)
-    SystemInit                               0x00001a75   Thumb Code   478  system_lpc17xx.o(i.SystemInit)
-    UniToGB                                  0x00001c91   Thumb Code   140  untogb.o(i.UniToGB)
-    UnicodeToGBK                             0x00001d1d   Thumb Code   100  untogb.o(i.UnicodeToGBK)
-    __scatterload_zeroinit                   0x00001d85   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    delay_ms                                 0x00001da1   Thumb Code    36  delay.o(i.delay_ms)
-    disk_initialize                          0x00001dc5   Thumb Code    46  mmc_sd.o(i.disk_initialize)
-    fatClustToSect                           0x00001dfd   Thumb Code    18  fat.o(i.fatClustToSect)
-    main                                     0x00001e55   Thumb Code   508  main.o(i.main)
-    mystrcmp                                 0x00002205   Thumb Code    76  fat.o(i.mystrcmp)
-    ssp0_init                                0x000022e5   Thumb Code   160  ssp0.o(i.ssp0_init)
-    ssp0_send                                0x0000239d   Thumb Code    26  ssp0.o(i.ssp0_send)
-    wait_delay                               0x000023bd   Thumb Code    12  lcd.o(i.wait_delay)
-    Font_24x16                               0x00002494   Data        5376  lcd.o(.constdata)
-    asc2_1206                                0x00003994   Data        1140  lcd.o(.constdata)
-    asc2_1608                                0x00003e08   Data        1520  lcd.o(.constdata)
-    Region$$Table$$Base                      0x0000447c   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x0000449c   Number         0  anon$$obj.o(Region$$Table)
+    LCD_Clear                                0x00000149   Thumb Code    68  lcd.o(i.LCD_Clear)
+    LCD_DrawPoint                            0x00000191   Thumb Code    60  lcd.o(i.LCD_DrawPoint)
+    LCD_DrawPoint1                           0x000001d5   Thumb Code    60  lcd.o(i.LCD_DrawPoint1)
+    LCD_SetCursor                            0x00000215   Thumb Code    66  lcd.o(i.LCD_SetCursor)
+    LCD_ShowString                           0x0000025d   Thumb Code    74  lcd.o(i.LCD_ShowString)
+    LCD_WriteRAM_Prepare                     0x000002a7   Thumb Code    10  lcd.o(i.LCD_WriteRAM_Prepare)
+    Load_Drow_Dialog                         0x000002b1   Thumb Code    38  main.o(i.Load_Drow_Dialog)
+    __scatterload_copy                       0x000002e1   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x000002ef   Thumb Code     2  handlers.o(i.__scatterload_null)
+    LCD_Init                                 0x00000301   Thumb Code  1280  lcd.o(i.LCD_Init)
+    LCD_ShowChar                             0x00000801   Thumb Code   328  lcd.o(i.LCD_ShowChar)
+    LCD_WindowMax                            0x00000959   Thumb Code    98  lcd.o(i.LCD_WindowMax)
+    SD_GetResponse                           0x000009c1   Thumb Code    38  mmc_sd.o(i.SD_GetResponse)
+    SD_Idle_Sta                              0x000009e7   Thumb Code    74  mmc_sd.o(i.SD_Idle_Sta)
+    SD_Init                                  0x00000a31   Thumb Code   444  mmc_sd.o(i.SD_Init)
+    SD_ReadSingleBlock                       0x00000bf5   Thumb Code    62  mmc_sd.o(i.SD_ReadSingleBlock)
+    SD_ReceiveData                           0x00000c39   Thumb Code    90  mmc_sd.o(i.SD_ReceiveData)
+    SD_SendCommand                           0x00000c99   Thumb Code   134  mmc_sd.o(i.SD_SendCommand)
+    SD_SendCommand_NoDeassert                0x00000d25   Thumb Code   106  mmc_sd.o(i.SD_SendCommand_NoDeassert)
+    SD_WriteSingleBlock                      0x00000d95   Thumb Code   194  mmc_sd.o(i.SD_WriteSingleBlock)
+    SPIx_Init                                0x00000e61   Thumb Code    46  spi.o(i.SPIx_Init)
+    SPIx_SetSpeed                            0x00000e9d   Thumb Code    64  ssp0.o(i.SPIx_SetSpeed)
+    SystemInit                               0x00000ee5   Thumb Code   478  system_lpc17xx.o(i.SystemInit)
+    __scatterload_zeroinit                   0x00001101   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    clust2sect                               0x0000117d   Thumb Code    26  ff.o(i.clust2sect)
+    disk_initialize                          0x00001725   Thumb Code    46  mmc_sd.o(i.disk_initialize)
+    disk_ioctl                               0x0000175d   Thumb Code   102  mmc_sd.o(i.disk_ioctl)
+    disk_read                                0x000017c9   Thumb Code    32  mmc_sd.o(i.disk_read)
+    disk_status                              0x000017e9   Thumb Code    14  mmc_sd.o(i.disk_status)
+    disk_write                               0x000017fd   Thumb Code    54  mmc_sd.o(i.disk_write)
+    f_close                                  0x00001839   Thumb Code    32  ff.o(i.f_close)
+    f_gets                                   0x00001859   Thumb Code    86  ff.o(i.f_gets)
+    f_mkdir                                  0x000018af   Thumb Code   336  ff.o(i.f_mkdir)
+    f_mount                                  0x00001a01   Thumb Code    86  ff.o(i.f_mount)
+    f_open                                   0x00001a5d   Thumb Code   300  ff.o(i.f_open)
+    f_puts                                   0x00001b89   Thumb Code    74  ff.o(i.f_puts)
+    f_read                                   0x00001bd3   Thumb Code   464  ff.o(i.f_read)
+    f_sync                                   0x00001da3   Thumb Code   140  ff.o(i.f_sync)
+    f_write                                  0x00001e2f   Thumb Code   532  ff.o(i.f_write)
+    get_fat                                  0x000023c3   Thumb Code   286  ff.o(i.get_fat)
+    get_fattime                              0x000024e1   Thumb Code    60  mmc_sd.o(i.get_fattime)
+    main                                     0x00002615   Thumb Code   334  main.o(i.main)
+    put_fat                                  0x00002993   Thumb Code   340  ff.o(i.put_fat)
+    rtc_gettime                              0x00002c35   Thumb Code    62  mmc_sd.o(i.rtc_gettime)
+    ssp0_init                                0x00002c79   Thumb Code   160  ssp0.o(i.ssp0_init)
+    ssp0_send                                0x00002d31   Thumb Code    26  ssp0.o(i.ssp0_send)
+    wait_delay                               0x00002e4b   Thumb Code    12  lcd.o(i.wait_delay)
+    Font_24x16                               0x00002f24   Data        5376  lcd.o(.constdata)
+    asc2_1206                                0x00004424   Data        1140  lcd.o(.constdata)
+    asc2_1608                                0x00004898   Data        1520  lcd.o(.constdata)
+    Region$$Table$$Base                      0x00004ef8   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x00004f18   Number         0  anon$$obj.o(Region$$Table)
     SystemFrequency                          0x10000000   Data           4  system_lpc17xx.o(.data)
-    FLASH_ID                                 0x10000004   Data           4  main.o(.data)
-    sysfile                                  0x10000008   Data          16  main.o(.data)
-    folderData                               0x10000018   Data           8  main.o(.data)
-    POINT_COLOR                              0x10000020   Data           2  lcd.o(.data)
-    BACK_COLOR                               0x10000022   Data           2  lcd.o(.data)
-    LongNameFlag                             0x1000002c   Data           4  fat.o(.data)
-    filetype                                 0x10000030   Data          92  fat.o(.data)
-    FirstDirClust                            0x1000008c   Data           4  fat.o(.data)
-    FirstDataSector                          0x10000090   Data           4  fat.o(.data)
-    BytesPerSector                           0x10000094   Data           2  fat.o(.data)
-    FATsectors                               0x10000098   Data           4  fat.o(.data)
-    SectorsPerClust                          0x1000009c   Data           2  fat.o(.data)
-    FirstFATSector                           0x100000a0   Data           4  fat.o(.data)
-    FirstDirSector                           0x100000a4   Data           4  fat.o(.data)
-    RootDirSectors                           0x100000a8   Data           4  fat.o(.data)
-    RootDirCount                             0x100000ac   Data           4  fat.o(.data)
-    FAT32_Enable                             0x100000b0   Data           1  fat.o(.data)
-    Cur_Dir_Cluster                          0x100000b4   Data           4  fat.o(.data)
-    PIC_Cluster                              0x100000b8   Data           4  fontupd.o(.data)
-    folder                                   0x100000bc   Data           8  fontupd.o(.data)
-    FONT16ADDR                               0x100000c4   Data           4  fontupd.o(.data)
-    FONT12ADDR                               0x100000c8   Data           4  fontupd.o(.data)
-    UNI2GBKADDR                              0x100000cc   Data           4  fontupd.o(.data)
-    CurFile                                  0x100000d0   Data           4  jpegdecode.o(.data)
-    SD_Type                                  0x100000d4   Data           1  mmc_sd.o(.data)
-    FAT_TAB                                  0x100000d8   Data         102  fat.o(.bss)
-    F_Info                                   0x10000140   Data         336  fat.o(.bss)
-    fat_buffer                               0x10000290   Data         512  fat.o(.bss)
-    LongNameBuffer                           0x10000490   Data          80  fat.o(.bss)
-    PICINFO                                  0x100004e0   Data          36  jpegdecode.o(.bss)
-    jpg_buffer                               0x10000504   Data        1024  jpegdecode.o(.bss)
-    __initial_sp                             0x10000b08   Data           0  startup_lpc17xx.o(STACK)
+    POINT_COLOR                              0x10000004   Data           2  lcd.o(.data)
+    BACK_COLOR                               0x10000006   Data           2  lcd.o(.data)
+    SD_Type                                  0x1000000e   Data           1  mmc_sd.o(.data)
+    jpg_buffer1                              0x10000014   Data        1024  main.o(.bss)
+    file                                     0x10000414   Data        2084  main.o(.bss)
+    buffer_data                              0x10000c38   Data         512  main.o(.bss)
+    Fatfs                                    0x10000e38   Data        2100  main.o(.bss)
+    dir                                      0x1000166c   Data          28  main.o(.bss)
+    __initial_sp                             0x100018a8   Data           0  startup_lpc17xx.o(STACK)
 
 
 
@@ -821,115 +850,132 @@ Memory Map of the image
 
   Image Entry point : 0x000000cd
 
-  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00004574, Max: 0x00080000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x00004f2c, Max: 0x00080000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Base: 0x00000000, Size: 0x0000449c, Max: 0x00080000, ABSOLUTE)
+    Execution Region ER_IROM1 (Base: 0x00000000, Size: 0x00004f18, Max: 0x00080000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x000000cc   Data   RO            3    RESET               startup_lpc17xx.o
-    0x000000cc   0x00000000   Code   RO         1251  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x000000cc   0x00000004   Code   RO         1258    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x000000d0   0x00000004   Code   RO         1261    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x000000d4   0x00000000   Code   RO         1263    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x000000d4   0x00000000   Code   RO         1265    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x000000d4   0x00000008   Code   RO         1266    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x000000dc   0x00000000   Code   RO         1268    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x000000dc   0x00000000   Code   RO         1270    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x000000dc   0x00000004   Code   RO         1259    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x000000cc   0x00000000   Code   RO         1151  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x000000cc   0x00000004   Code   RO         1158    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x000000d0   0x00000004   Code   RO         1161    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x000000d4   0x00000000   Code   RO         1163    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x000000d4   0x00000000   Code   RO         1165    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x000000d4   0x00000008   Code   RO         1166    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x000000dc   0x00000000   Code   RO         1168    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x000000dc   0x00000000   Code   RO         1170    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x000000dc   0x00000004   Code   RO         1159    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x000000e0   0x00000004   Code   RO          168    .emb_text           lcd.o
     0x000000e4   0x0000001c   Code   RO            5    .text               startup_lpc17xx.o
-    0x00000100   0x00000024   Code   RO         1254    .text               mc_w.l(memcpya.o)
-    0x00000124   0x00000024   Code   RO         1272    .text               mc_w.l(init.o)
-    0x00000148   0x0000011c   Code   RO          577    i.CopyDirentruyItem  fat.o
-    0x00000264   0x0000005c   Code   RO          580    i.FAT_NextCluster   fat.o
-    0x000002c0   0x0000001c   Code   RO          788    i.GetFileName       jpegdecode.o
-    0x000002dc   0x0000000a   Code   RO          192    i.LCD_WriteRAM_Prepare  lcd.o
-    0x000002e6   0x0000000e   Code   RO         1276    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x000002f4   0x00000002   Code   RO         1277    i.__scatterload_null  mc_w.l(handlers.o)
-    0x000002f6   0x00000005   Data   RO          754    .conststring        fontupd.o
-    0x000002fb   0x00000001   PAD
+    0x00000100   0x00000024   Code   RO         1154    .text               mc_w.l(memcpya.o)
+    0x00000124   0x00000024   Code   RO         1172    .text               mc_w.l(init.o)
+    0x00000148   0x00000048   Code   RO          172    i.LCD_Clear         lcd.o
+    0x00000190   0x00000044   Code   RO          178    i.LCD_DrawPoint     lcd.o
+    0x000001d4   0x00000040   Code   RO          179    i.LCD_DrawPoint1    lcd.o
+    0x00000214   0x00000048   Code   RO          185    i.LCD_SetCursor     lcd.o
+    0x0000025c   0x0000004a   Code   RO          190    i.LCD_ShowString    lcd.o
+    0x000002a6   0x0000000a   Code   RO          192    i.LCD_WriteRAM_Prepare  lcd.o
+    0x000002b0   0x00000030   Code   RO           60    i.Load_Drow_Dialog  main.o
+    0x000002e0   0x0000000e   Code   RO         1176    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x000002ee   0x00000002   Code   RO         1177    i.__scatterload_null  mc_w.l(handlers.o)
+    0x000002f0   0x00000008   Code   RO          791    i.st_clust          ff.o
+    0x000002f8   0x00000004   PAD
     0x000002fc   0x00000004   Code   RO            4    .ARM.__at_0x02FC    startup_lpc17xx.o
-    0x00000300   0x0000012c   Code   RO          579    i.FAT_Init          fat.o
-    0x0000042c   0x00000174   Code   RO          583    i.F_Search          fat.o
-    0x000005a0   0x00000040   Code   RO          587    i.FileType_Tell     fat.o
-    0x000005e0   0x0000005c   Code   RO          751    i.Font_Init         fontupd.o
-    0x0000063c   0x000002f8   Code   RO          588    i.Get_File_Info     fat.o
-    0x00000934   0x0000009c   Code   RO          693    i.Get_HzMat         text.o
-    0x000009d0   0x00000048   Code   RO          172    i.LCD_Clear         lcd.o
-    0x00000a18   0x00000044   Code   RO          178    i.LCD_DrawPoint     lcd.o
-    0x00000a5c   0x00000040   Code   RO          179    i.LCD_DrawPoint1    lcd.o
-    0x00000a9c   0x00000500   Code   RO          182    i.LCD_Init          lcd.o
-    0x00000f9c   0x00000048   Code   RO          185    i.LCD_SetCursor     lcd.o
-    0x00000fe4   0x00000158   Code   RO          188    i.LCD_ShowChar      lcd.o
-    0x0000113c   0x0000004a   Code   RO          190    i.LCD_ShowString    lcd.o
-    0x00001186   0x00000002   PAD
-    0x00001188   0x00000068   Code   RO          191    i.LCD_WindowMax     lcd.o
-    0x000011f0   0x00000030   Code   RO           60    i.Load_Drow_Dialog  main.o
-    0x00001220   0x00000024   Code   RO          841    i.SD_GetCSD         mmc_sd.o
-    0x00001244   0x000000aa   Code   RO          842    i.SD_GetCapacity    mmc_sd.o
-    0x000012ee   0x00000026   Code   RO          843    i.SD_GetResponse    mmc_sd.o
-    0x00001314   0x0000004a   Code   RO          844    i.SD_Idle_Sta       mmc_sd.o
-    0x0000135e   0x00000002   PAD
-    0x00001360   0x000001c4   Code   RO          845    i.SD_Init           mmc_sd.o
-    0x00001524   0x00000044   Code   RO          847    i.SD_ReadSingleBlock  mmc_sd.o
-    0x00001568   0x00000060   Code   RO          849    i.SD_ReceiveData    mmc_sd.o
-    0x000015c8   0x0000008c   Code   RO          850    i.SD_SendCommand    mmc_sd.o
-    0x00001654   0x00000070   Code   RO          851    i.SD_SendCommand_NoDeassert  mmc_sd.o
-    0x000016c4   0x000000cc   Code   RO          854    i.SD_WriteSingleBlock  mmc_sd.o
-    0x00001790   0x0000004c   Code   RO          458    i.SPI_Flash_Read    spi.o
-    0x000017dc   0x00000048   Code   RO          459    i.SPI_Flash_ReadID  spi.o
-    0x00001824   0x0000003c   Code   RO          466    i.SPIx_Init         spi.o
-    0x00001860   0x00000028   Code   RO          467    i.SPIx_ReadWriteByte  spi.o
-    0x00001888   0x00000048   Code   RO          421    i.SPIx_SetSpeed     ssp0.o
-    0x000018d0   0x000000f0   Code   RO          694    i.Show_Font         text.o
-    0x000019c0   0x000000b4   Code   RO          695    i.Show_Str          text.o
-    0x00001a74   0x0000021c   Code   RO           15    i.SystemInit        system_lpc17xx.o
-    0x00001c90   0x0000008c   Code   RO          812    i.UniToGB           untogb.o
-    0x00001d1c   0x00000068   Code   RO          813    i.UnicodeToGBK      untogb.o
-    0x00001d84   0x0000000e   Code   RO         1278    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x00001d92   0x0000000e   Code   RO          193    i.delay             lcd.o
-    0x00001da0   0x00000024   Code   RO          407    i.delay_ms          delay.o
-    0x00001dc4   0x00000038   Code   RO          855    i.disk_initialize   mmc_sd.o
-    0x00001dfc   0x0000001c   Code   RO          589    i.fatClustToSect    fat.o
-    0x00001e18   0x0000003c   Code   RO          194    i.lcd_send          lcd.o
-    0x00001e54   0x000003b0   Code   RO           61    i.main              main.o
-    0x00002204   0x0000004c   Code   RO          590    i.mystrcmp          fat.o
-    0x00002250   0x00000068   Code   RO          196    i.rd_dat            lcd.o
-    0x000022b8   0x0000002c   Code   RO          197    i.rd_reg            lcd.o
-    0x000022e4   0x000000b8   Code   RO          422    i.ssp0_init         ssp0.o
-    0x0000239c   0x00000020   Code   RO          423    i.ssp0_send         ssp0.o
-    0x000023bc   0x0000000c   Code   RO          198    i.wait_delay        lcd.o
-    0x000023c8   0x00000030   Code   RO          199    i.wr_cmd            lcd.o
-    0x000023f8   0x00000030   Code   RO          200    i.wr_dat            lcd.o
-    0x00002428   0x00000024   Code   RO          201    i.wr_dat_only       lcd.o
-    0x0000244c   0x00000010   Code   RO          202    i.wr_dat_start      lcd.o
-    0x0000245c   0x00000010   Code   RO          203    i.wr_dat_stop       lcd.o
-    0x0000246c   0x00000028   Code   RO          204    i.wr_reg            lcd.o
-    0x00002494   0x00001f64   Data   RO          205    .constdata          lcd.o
-    0x000043f8   0x0000002b   Data   RO           64    .conststring        main.o
-    0x00004423   0x00000058   Data   RO          592    .conststring        fat.o
-    0x0000447b   0x00000001   PAD
-    0x0000447c   0x00000020   Data   RO         1274    Region$$Table       anon$$obj.o
+    0x00000300   0x00000500   Code   RO          182    i.LCD_Init          lcd.o
+    0x00000800   0x00000158   Code   RO          188    i.LCD_ShowChar      lcd.o
+    0x00000958   0x00000068   Code   RO          191    i.LCD_WindowMax     lcd.o
+    0x000009c0   0x00000026   Code   RO          581    i.SD_GetResponse    mmc_sd.o
+    0x000009e6   0x0000004a   Code   RO          582    i.SD_Idle_Sta       mmc_sd.o
+    0x00000a30   0x000001c4   Code   RO          583    i.SD_Init           mmc_sd.o
+    0x00000bf4   0x00000044   Code   RO          585    i.SD_ReadSingleBlock  mmc_sd.o
+    0x00000c38   0x00000060   Code   RO          587    i.SD_ReceiveData    mmc_sd.o
+    0x00000c98   0x0000008c   Code   RO          588    i.SD_SendCommand    mmc_sd.o
+    0x00000d24   0x00000070   Code   RO          589    i.SD_SendCommand_NoDeassert  mmc_sd.o
+    0x00000d94   0x000000cc   Code   RO          592    i.SD_WriteSingleBlock  mmc_sd.o
+    0x00000e60   0x0000003c   Code   RO          466    i.SPIx_Init         spi.o
+    0x00000e9c   0x00000048   Code   RO          421    i.SPIx_SetSpeed     ssp0.o
+    0x00000ee4   0x0000021c   Code   RO           15    i.SystemInit        system_lpc17xx.o
+    0x00001100   0x0000000e   Code   RO         1178    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x0000110e   0x00000002   PAD
+    0x00001110   0x00000058   Code   RO          738    i.check_fs          ff.o
+    0x00001168   0x00000014   Code   RO          739    i.chk_chr           ff.o
+    0x0000117c   0x0000001a   Code   RO          740    i.clust2sect        ff.o
+    0x00001196   0x000000d6   Code   RO          741    i.create_chain      ff.o
+    0x0000126c   0x000001b4   Code   RO          742    i.create_name       ff.o
+    0x00001420   0x0000000e   Code   RO          193    i.delay             lcd.o
+    0x0000142e   0x0000005c   Code   RO          743    i.dir_alloc         ff.o
+    0x0000148a   0x0000005c   Code   RO          744    i.dir_find          ff.o
+    0x000014e6   0x0000013c   Code   RO          745    i.dir_next          ff.o
+    0x00001622   0x0000003a   Code   RO          747    i.dir_register      ff.o
+    0x0000165c   0x000000c8   Code   RO          749    i.dir_sdi           ff.o
+    0x00001724   0x00000038   Code   RO          593    i.disk_initialize   mmc_sd.o
+    0x0000175c   0x0000006c   Code   RO          594    i.disk_ioctl        mmc_sd.o
+    0x000017c8   0x00000020   Code   RO          595    i.disk_read         mmc_sd.o
+    0x000017e8   0x00000014   Code   RO          596    i.disk_status       mmc_sd.o
+    0x000017fc   0x0000003c   Code   RO          597    i.disk_write        mmc_sd.o
+    0x00001838   0x00000020   Code   RO          753    i.f_close           ff.o
+    0x00001858   0x00000056   Code   RO          758    i.f_gets            ff.o
+    0x000018ae   0x00000150   Code   RO          760    i.f_mkdir           ff.o
+    0x000019fe   0x00000002   PAD
+    0x00001a00   0x0000005c   Code   RO          762    i.f_mount           ff.o
+    0x00001a5c   0x0000012c   Code   RO          763    i.f_open            ff.o
+    0x00001b88   0x0000004a   Code   RO          767    i.f_puts            ff.o
+    0x00001bd2   0x000001d0   Code   RO          768    i.f_read            ff.o
+    0x00001da2   0x0000008c   Code   RO          773    i.f_sync            ff.o
+    0x00001e2e   0x00000214   Code   RO          777    i.f_write           ff.o
+    0x00002042   0x00000002   PAD
+    0x00002044   0x000002d0   Code   RO          778    i.find_volume       ff.o
+    0x00002314   0x000000ae   Code   RO          779    i.follow_path       ff.o
+    0x000023c2   0x0000011e   Code   RO          780    i.get_fat           ff.o
+    0x000024e0   0x0000003c   Code   RO          598    i.get_fattime       mmc_sd.o
+    0x0000251c   0x000000a8   Code   RO          782    i.get_ldnumber      ff.o
+    0x000025c4   0x0000003c   Code   RO          194    i.lcd_send          lcd.o
+    0x00002600   0x00000012   Code   RO          783    i.ld_clust          ff.o
+    0x00002612   0x00000002   PAD
+    0x00002614   0x000002e4   Code   RO           61    i.main              main.o
+    0x000028f8   0x00000026   Code   RO          784    i.mem_cmp           ff.o
+    0x0000291e   0x0000002e   Code   RO          785    i.mem_cpy           ff.o
+    0x0000294c   0x00000014   Code   RO          786    i.mem_set           ff.o
+    0x00002960   0x00000032   Code   RO          787    i.move_window       ff.o
+    0x00002992   0x00000154   Code   RO          788    i.put_fat           ff.o
+    0x00002ae6   0x0000004e   Code   RO          789    i.putc_bfd          ff.o
+    0x00002b34   0x00000068   Code   RO          196    i.rd_dat            lcd.o
+    0x00002b9c   0x0000002c   Code   RO          197    i.rd_reg            lcd.o
+    0x00002bc8   0x0000006c   Code   RO          790    i.remove_chain      ff.o
+    0x00002c34   0x00000044   Code   RO          599    i.rtc_gettime       mmc_sd.o
+    0x00002c78   0x000000b8   Code   RO          422    i.ssp0_init         ssp0.o
+    0x00002d30   0x00000020   Code   RO          423    i.ssp0_send         ssp0.o
+    0x00002d50   0x00000078   Code   RO          792    i.sync_fs           ff.o
+    0x00002dc8   0x0000004c   Code   RO          793    i.sync_window       ff.o
+    0x00002e14   0x00000036   Code   RO          794    i.validate          ff.o
+    0x00002e4a   0x0000000c   Code   RO          198    i.wait_delay        lcd.o
+    0x00002e56   0x00000002   PAD
+    0x00002e58   0x00000030   Code   RO          199    i.wr_cmd            lcd.o
+    0x00002e88   0x00000030   Code   RO          200    i.wr_dat            lcd.o
+    0x00002eb8   0x00000024   Code   RO          201    i.wr_dat_only       lcd.o
+    0x00002edc   0x00000010   Code   RO          202    i.wr_dat_start      lcd.o
+    0x00002eec   0x00000010   Code   RO          203    i.wr_dat_stop       lcd.o
+    0x00002efc   0x00000028   Code   RO          204    i.wr_reg            lcd.o
+    0x00002f24   0x00001f64   Data   RO          205    .constdata          lcd.o
+    0x00004e88   0x0000004c   Data   RO          796    .constdata          ff.o
+    0x00004ed4   0x00000023   Data   RO          797    .conststring        ff.o
+    0x00004ef7   0x00000001   PAD
+    0x00004ef8   0x00000020   Data   RO         1174    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Base: 0x10000000, Size: 0x00000b08, Max: 0x00008000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Base: 0x10000000, Size: 0x000018a8, Max: 0x00008000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x10000000   0x00000004   Data   RW           16    .data               system_lpc17xx.o
-    0x10000004   0x0000001c   Data   RW           65    .data               main.o
-    0x10000020   0x0000000a   Data   RW          206    .data               lcd.o
-    0x1000002a   0x00000002   PAD
-    0x1000002c   0x0000008c   Data   RW          593    .data               fat.o
-    0x100000b8   0x00000018   Data   RW          755    .data               fontupd.o
-    0x100000d0   0x00000004   Data   RW          790    .data               jpegdecode.o
-    0x100000d4   0x00000002   Data   RW          858    .data               mmc_sd.o
-    0x100000d6   0x00000002   PAD
-    0x100000d8   0x00000408   Zero   RW          591    .bss                fat.o
-    0x100004e0   0x00000424   Zero   RW          789    .bss                jpegdecode.o
-    0x10000904   0x00000004   PAD
-    0x10000908   0x00000200   Zero   RW            1    STACK               startup_lpc17xx.o
+    0x10000004   0x0000000a   Data   RW          206    .data               lcd.o
+    0x1000000e   0x00000002   Data   RW          600    .data               mmc_sd.o
+    0x10000010   0x00000003   Data   RW          798    .data               ff.o
+    0x10000013   0x00000001   PAD
+    0x10000014   0x00001674   Zero   RW           63    .bss                main.o
+    0x10001688   0x00000020   Zero   RW          795    .bss                ff.o
+    0x100016a8   0x00000200   Zero   RW            1    STACK               startup_lpc17xx.o
 
 
 ==============================================================================
@@ -939,24 +985,19 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-        36          0          0          0          0        531   delay.o
-      1976        150         88        140       1032      12762   fat.o
-        92         12          5         24          0       1396   fontupd.o
-        28          8          0          4       1060       1275   jpegdecode.o
+      5902         64        111          3         32      33479   ff.o
       2530         96       8036         10          0      12784   lcd.o
-       992        446         43         28          0      12120   main.o
-      1446         52          0          2          0       8103   mmc_sd.o
-       248         32          0          0          0       2517   spi.o
+       788        416          0          0       5748       7543   main.o
+      1588         92          0          2          0      10226   mmc_sd.o
+        60         14          0          0          0        404   spi.o
        288         44          0          0          0       1356   ssp0.o
         32          8        204          0        512        964   startup_lpc17xx.o
        540         62          0          4          0       4975   system_lpc17xx.o
-       576         18          0          0          0       7645   text.o
-       244          4          0          0          0       1609   untogb.o
 
     ----------------------------------------------------------------------
-      9032        932       8410        216       2608      68037   Object Totals
+     11740        796       8384         20       6292      71731   Object Totals
          0          0         32          0          0          0   (incl. Generated)
-         4          0          2          4          4          0   (incl. Padding)
+        12          0          1          1          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -975,8 +1016,8 @@ Image component sizes
         36          0          0          0          0         68   memcpya.o
 
     ----------------------------------------------------------------------
-       122         16          0          0          0        136   Library Totals
-         0          0          0          0          0          0   (incl. Padding)
+       124         16          0          0          0        136   Library Totals
+         2          0          0          0          0          0   (incl. Padding)
 
     ----------------------------------------------------------------------
 
@@ -985,7 +1026,7 @@ Image component sizes
        122         16          0          0          0        136   mc_w.l
 
     ----------------------------------------------------------------------
-       122         16          0          0          0        136   Library Totals
+       124         16          0          0          0        136   Library Totals
 
     ----------------------------------------------------------------------
 
@@ -994,15 +1035,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-      9154        948       8410        216       2608      65261   Grand Totals
-      9154        948       8410        216       2608      65261   ELF Image Totals
-      9154        948       8410        216          0          0   ROM Totals
+     11864        812       8384         20       6292      67915   Grand Totals
+     11864        812       8384         20       6292      67915   ELF Image Totals
+     11864        812       8384         20          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                17564 (  17.15kB)
-    Total RW  Size (RW Data + ZI Data)              2824 (   2.76kB)
-    Total ROM Size (Code + RO Data + RW Data)      17780 (  17.36kB)
+    Total RO  Size (Code + RO Data)                20248 (  19.77kB)
+    Total RW  Size (RW Data + ZI Data)              6312 (   6.16kB)
+    Total ROM Size (Code + RO Data + RW Data)      20268 (  19.79kB)
 
 ==============================================================================
 

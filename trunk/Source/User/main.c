@@ -42,7 +42,8 @@ const unsigned char *folderData[2]=
 "MUSIC2",	  
 };
  		unsigned char jpg_buffer1[1024];
-
+FIL file;
+u8 buffer_data[512];
 
 FATFS Fatfs;
 DIR dir;
@@ -143,23 +144,26 @@ int xatoi (			/* 0:Failed, 1:Successful */
 */
 int main (void)                       
 {
-	u8* filename;
+	char text[]="\nhello\n test test test";
+	char line[82];
+	FRESULT fr;
+//	u8* filename;
 	//FileInfoStruct *CurFile;
-	FileInfoStruct FileTemp;
-		u32 fcluster=0;	 
-	long p1;
+//	FileInfoStruct FileTemp;
+//		u32 fcluster=0;	 
+//	long p1;
 	FRESULT res;
-	u16 i=1;
-	FileInfoStruct *FileInfo1;
-	FileInfoStruct F_Info1[3];
+//	u16 i=2;
+//	FileInfoStruct *FileInfo1;
+//	FileInfoStruct F_Info1[3];
 //	BYTE *PIC_Name;
 //	FileInfoStruct FileTemp;
-	u32 temp_cluster;
+//	u32 temp_cluster;
 	SystemInit();
 	SPIx_Init();
 
 	ssp0_init(); //SPI init
-	FLASH_ID = SPI_Flash_ReadID();
+	//FLASH_ID = SPI_Flash_ReadID();
 	#if _USEUART == 1
 		//UART2_Init(); // Init uart0
 		UART2_Init(); //init uart2
@@ -172,15 +176,15 @@ int main (void)
 	#if _USELCD == 1
 		LCD_Init();
 		Load_Drow_Dialog();
-		Font_Init();
+		//Font_Init();
 		POINT_COLOR=Blue;      
 		LCD_Clear(WHITE);
 		LCD_ShowString(60,30,"www.Khanhoi.vn");
 		POINT_COLOR=RED;    
-		Show_Str(30,50,"NXP1764 cdcard testing",16,0);				    	 
-		Show_Str(30,70,"Author: Pham The Long",16,0);				    	 
-		Show_Str(30,90,"Company: Khanhhoi",16,0);				    	 
-		Show_Str(30,110,"Copyright 2014",16,0);	
+		LCD_ShowString(30,50,"NXP1764 cdcard testing");				    	 
+		LCD_ShowString(30,70,"Author: Pham The Long");				    	 
+		LCD_ShowString(30,90,"Company: Khanhhoi");				    	 
+		LCD_ShowString(30,110,"Copyright 2014");	
 	#endif
 
 
@@ -190,12 +194,12 @@ int main (void)
 				UART2_SendString("Card can not init\r\n");	
 			#endif
 			#if _USELCD == 1
-				Show_Str(60,150,"Card can not init",16,0);	
+				LCD_ShowString(60,150,"Card can not init");	
 			#endif			
 		}else{
 			#if _USELCD == 1
-			Show_Str(60,150,"Card is ready",16,0);
-			Show_Str(30,180,"Card type: ",16,0);
+			LCD_ShowString(60,150,"Card is ready");
+			LCD_ShowString(30,180,"Card type: ");
 			#endif
 			#if _USEUART == 1
 				UART2_SendString("Card is ready\r\n");
@@ -205,7 +209,7 @@ int main (void)
 			{
 					case SD_TYPE_MMC:
 						#if _USELCD == 1
-							Show_Str(30,210,"MMC\n",16,0);			
+							LCD_ShowString(30,210,"MMC\n");			
 						#endif
 						#if _USEUART == 1
 							UART2_SendString("MMC\r\n");
@@ -213,7 +217,7 @@ int main (void)
 							break;
 					case SD_TYPE_V1:
 						#if _USELCD == 1
-							Show_Str(30,210,"Version 1.x Standard Capacity SD card.\n",16,0);
+							LCD_ShowString(30,210,"Version 1.x Standard Capacity SD card.\n");
 						#endif
 						#if _USEUART == 1
 							UART2_SendString("Version 1.x Standard Capacity SD card.\r\n");	
@@ -221,7 +225,7 @@ int main (void)
 							break;
 					case SD_TYPE_V2:
 						#if _USELCD == 1
-							Show_Str(30,210,"Version 2.0 or later Standard Capacity SD card.\n",16,0);	
+							LCD_ShowString(30,210,"Version 2.0 or later Standard Capacity SD card.\n");	
 						#endif
 						#if _USEUART == 1
 							UART2_SendString("Version 2.0 or later Standard Capacity SD card.\r\n");	
@@ -229,7 +233,7 @@ int main (void)
 							break;
 					case SD_TYPE_V2HC:
 						#if _USELCD == 1
-							Show_Str(30,210,"Version 2.0 or later High/eXtended Capacity SD card.\n",16,0);
+							LCD_ShowString(30,210,"Version 2.0 or later High/eXtended Capacity SD card.\n");
 						#endif
 						#if _USEUART == 1
 							UART2_SendString("Version 2.0 or later High/eXtended Capacity SD card.\r\n");	
@@ -239,99 +243,33 @@ int main (void)
 							break;            
 			}
 		};
-//		p1=0;
-//		f_mount(&Fatfs,"",(BYTE)p1);
-//		res = f_opendir(&dir, "");                       
-//    if (res == FR_OK){
-//			Show_Str(60,180,"Can read direct",16,0);
-//		}
-
-		//字体更新 
-		//SD_Init();
 		#if _USELCD == 1
 		LCD_Clear(WHITE);
 		#endif	
-	 	while(FAT_Init())//FAT 错误
-		{
-			#if _USELCD == 1
-			LCD_ShowString(60,150,"FAT SYS ERROR");  
-			#endif
-			#if _USEUART == 1
-				UART2_SendString("FAT SYS ERROR\r\n");
-			#endif		
-			i= SD_Init();
-			if(i)//SD卡初始化 
-			{		
-				#if _USELCD == 1				
-					LCD_ShowString(60,170,"SD_CARD ERROR");
-				#endif
-				#if _USEUART == 1
-					UART2_SendString("SD_CARD ERROR\r\n");
-				#endif		
-			}	  
-			delay_ms(500);
-			//LCD_Fill(60,90,240,126,WHITE);//清除显示			  
-			//delay_ms(500);  
-		}
-			#if _USELCD == 1	
-				LCD_ShowString(60,130,"FAT SYS OK!"); 
-			#endif
-				#if _USEUART == 1
-					UART2_SendString("FAT SYS OK!\r\n");
-				#endif	
+		f_mount(&Fatfs, "0:", 0);
+		fr = f_open(&file,"0:/MUSIC/Home.txt",FA_READ);
+		if (fr) return (int)fr;
+		/* Read all lines and display it */
+    while (f_gets(line, sizeof line, &file))
+        LCD_ShowString(30,160,line);
 
-		if(FAT32_Enable)fcluster=FirstDirClust;
-		else fcluster=0;
-		FileTemp=F_Search(fcluster,(unsigned char *)folderData[0],T_FILE);
-		if(FileTemp.F_StartCluster==0)					  //Check folder		  
-		{
-						#if _USELCD == 1
-						Show_Str(30,160,"Can not find *.BMP in this folder.\n",16,0);
-						#endif	
-						#if _USEUART == 1
-							UART2_SendString("Can not find *.BMP in this folder.\r\n");
-						#endif		
+    /* Close the file */
+    f_close(&file);
+		
+		/*Create folder*/
+		f_mkdir("12032014");
+		
+		/*Open file to write infor if file does not exist create new file*/
+		fr = f_open(&file,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
+		if (fr) return (int)fr;
+		//line="abc xyz";
+		if(f_puts(text,&file)!=-1){
+		while(1){}		
 		}else{
-			PIC_Cluster=FileTemp.F_StartCluster;
-						#if _USELCD == 1
-						Show_Str(30,160,"reading this folder.\n",16,0);
-						#endif
-						#if _USEUART == 1
-							UART2_SendString("reading this folder.\r\n");
-						#endif		
 
 		}
+		//res = f_write(&file, text, strlen(text), &bw);
 
-		#if _USELCD == 1 
-		LCD_Clear(WHITE);		
-		#endif
-
-		temp_cluster = PIC_Cluster;
-		FileInfo1=&F_Info1[0];//开辟暂存空间.
-
-		//while(1)
-		//{
-			//for(i=1;i<10;i++)
-			//{
-					Get_File_Info(temp_cluster,FileInfo1,T_TXT,&i);	
-					//LCD_Clear(White);	
-					//CurFile=FileInfo1;
-					filename=GetFileName(FileInfo1);//显示图片
-					//F_Write(FileInfo1,"123");
-					//POINT_COLOR = Red;
-					//Show_Str(0,0,FileInfo1->F_Name,16,1);	 	
-//					F_Open(FileInfo1);
-//					F_Read(FileInfo1,jpg_buffer1);	   
-//					F_Read(FileInfo1,jpg_buffer1+512);
-						#if _USELCD == 1
-									Show_Str(30,190,filename,16,0);	
-						#endif
-						#if _USEUART == 1
-							UART2_SendString(filename);
-						#endif		
-				//delay_ms(3000);		
-			//}
-		 //}
 }
 
 
