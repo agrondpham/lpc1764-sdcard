@@ -12,13 +12,13 @@
       <ToolsetName>ARM-ADS</ToolsetName>
       <TargetOption>
         <TargetCommonOption>
-          <Device>LPC1768</Device>
+          <Device>LPC1764</Device>
           <Vendor>NXP (founded by Philips)</Vendor>
-          <Cpu>IRAM(0x10000000-0x10007FFF) IRAM2(0x2007C000-0x20083FFF) IROM(0-0x7FFFF) CLOCK(12000000) CPUTYPE("Cortex-M3")</Cpu>
+          <Cpu>IRAM(0x10000000-0x10003FFF) IRAM2(0x2007C000-0x2007FFFF) IROM(0-0x1FFFF) CLOCK(12000000) CPUTYPE("Cortex-M3")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
           <StartupFile>"STARTUP\NXP\LPC17xx\startup_LPC17xx.s" ("NXP LPC17xx Startup Code")</StartupFile>
-          <FlashDriverDll>UL2CM3(-O463 -S0 -C0 -FO7 -FD10000000 -FC800 -FN1 -FF0LPC_IAP_512 -FS00 -FL080000)</FlashDriverDll>
-          <DeviceId>4868</DeviceId>
+          <FlashDriverDll>UL2CM3(-O463 -S0 -C0 -FO7 -FD10000000 -FC800 -FN1 -FF0LPC_IAP_128 -FS00 -FL040000)</FlashDriverDll>
+          <DeviceId>4870</DeviceId>
           <RegisterFile>LPC17xx.H</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
@@ -104,11 +104,11 @@
           <SimDllName>SARMCM3.DLL</SimDllName>
           <SimDllArguments>-MPU</SimDllArguments>
           <SimDlgDll>DARMP1.DLL</SimDlgDll>
-          <SimDlgDllArguments>-pLPC1768</SimDlgDllArguments>
+          <SimDlgDllArguments>-pLPC1764</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
           <TargetDllArguments>-MPU</TargetDllArguments>
           <TargetDlgDll>TARMP1.DLL</TargetDlgDll>
-          <TargetDlgDllArguments>-pLPC1768</TargetDlgDllArguments>
+          <TargetDlgDllArguments>-pLPC1764</TargetDlgDllArguments>
         </DllOption>
         <DebugOption>
           <OPTHX>
@@ -141,7 +141,7 @@
             <RestoreTracepoints>0</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
-          <TargetSelection>7</TargetSelection>
+          <TargetSelection>1</TargetSelection>
           <SimDlls>
             <CpuDll></CpuDll>
             <CpuDllArguments></CpuDllArguments>
@@ -155,7 +155,7 @@
             <PeripheralDll></PeripheralDll>
             <PeripheralDllArguments></PeripheralDllArguments>
             <InitializationFile></InitializationFile>
-            <Driver>Segger\JL2CM3.dll</Driver>
+            <Driver>BIN\UL2CM3.DLL</Driver>
           </TargetDlls>
         </DebugOption>
         <Utilities>
@@ -165,11 +165,11 @@
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
             <Capability>1</Capability>
-            <DriverSelection>4098</DriverSelection>
+            <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
           <Flash2>BIN\UL2CM3.DLL</Flash2>
-          <Flash3></Flash3>
+          <Flash3>"" ()</Flash3>
           <Flash4></Flash4>
           <pFcarmOut></pFcarmOut>
           <pFcarmGrp></pFcarmGrp>
@@ -274,12 +274,12 @@
               <IRAM>
                 <Type>0</Type>
                 <StartAddress>0x10000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </IRAM>
               <IROM>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x20000</Size>
               </IROM>
               <XRAM>
                 <Type>0</Type>
@@ -304,7 +304,7 @@
               <OCR_RVCT4>
                 <Type>1</Type>
                 <StartAddress>0x0</StartAddress>
-                <Size>0x80000</Size>
+                <Size>0x20000</Size>
               </OCR_RVCT4>
               <OCR_RVCT5>
                 <Type>1</Type>
@@ -329,12 +329,12 @@
               <OCR_RVCT9>
                 <Type>0</Type>
                 <StartAddress>0x10000000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </OCR_RVCT9>
               <OCR_RVCT10>
                 <Type>0</Type>
                 <StartAddress>0x2007c000</StartAddress>
-                <Size>0x8000</Size>
+                <Size>0x4000</Size>
               </OCR_RVCT10>
             </OnChipMemories>
             <RvctStartVector></RvctStartVector>
@@ -357,7 +357,7 @@
               <MiscControls></MiscControls>
               <Define>USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\Source\Lcd;..\Source\SPI;..\Source\FAT</IncludePath>
+              <IncludePath>..\Source\Lcd;..\Source\sdcard;..\Source\sdcard\Fatfs;..\Source\uart</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -418,6 +418,11 @@
               <FileType>1</FileType>
               <FilePath>..\Source\User\main.c</FilePath>
             </File>
+            <File>
+              <FileName>delay.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\User\delay.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -431,47 +436,32 @@
           </Files>
         </Group>
         <Group>
-          <GroupName>SPI</GroupName>
-          <Files>
-            <File>
-              <FileName>delay.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\delay.c</FilePath>
-            </File>
-            <File>
-              <FileName>SPI.C</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\SPI.C</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>SD</GroupName>
-          <Files>
-            <File>
-              <FileName>MMC_SD.C</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\SPI\MMC_SD.C</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
-          <GroupName>Fatfs</GroupName>
-          <Files>
-            <File>
-              <FileName>ff.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>..\Source\Fatfs\ff.c</FilePath>
-            </File>
-          </Files>
-        </Group>
-        <Group>
           <GroupName>Uart</GroupName>
           <Files>
             <File>
               <FileName>uart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Source\uart\uart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Sdcard</GroupName>
+          <Files>
+            <File>
+              <FileName>ff.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\sdcard\Fatfs\ff.c</FilePath>
+            </File>
+            <File>
+              <FileName>sd.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\sdcard\sd.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\sdcard\spi.c</FilePath>
             </File>
           </Files>
         </Group>
