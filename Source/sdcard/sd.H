@@ -1,20 +1,41 @@
-#ifndef _MMC_SD_H_
-#define _MMC_SD_H_
+/****************************************Copyright (c)**************************************************
+**                               			Khanhhoi Co.,LTD.
+**
+**--------------File Info-------------------------------------------------------------------------------
+** File Name: 			Spi.h
+** Last modified Date: 	14-03-2014
+** Last Version: 		1.1
+** Descriptions: 		SPI for sdcard in board L32LPC
+**
+**------------------------------------------------------------------------------------------------------
+** Created 	 By: 		Agrond
+** Created date: 		14-03-2014
+** Version: 				1.0
+** Descriptions: 		First version
+**
+**------------------------------------------------------------------------------------------------------
+** Modified by: 		
+** Modified date: 	
+** Version:					
+** Descriptions:  	
+**
+********************************************************************************************************/
+
+#ifndef _SD_H_
+#define _SD_H_
 #include "sys.h"
 #include "stdint.h"	
-#include "../Fatfs/diskio.h"
-//SD卡 驱动 
-//2010/6/13	
+#include "Fatfs/diskio.h"
 
-//SD传输数据结束后是否释放总线宏定义  
+//SD data status 
 #define NO_RELEASE      0
 #define RELEASE         1		 
-// SD卡类型定义  
+// SD card type
 #define SD_TYPE_MMC     0
 #define SD_TYPE_V1      1
 #define SD_TYPE_V2      2
 #define SD_TYPE_V2HC    4	   
-// SD卡指令表  	   
+// SD card command  	   
 #define CMD0    0       //卡复位
 #define CMD1    1
 #define CMD9    9       //命令9 ，读CSD数据
@@ -57,18 +78,11 @@ u8 SD_Init(void);                               //SD卡初始化
 u8 SD_Idle_Sta(void);                           //设置SD卡到挂起模式
 
 u8 SD_ReceiveData(u8 *data, u16 len, u8 release);//SD卡读数据
-u8 SD_GetCID(u8 *cid_data);                     //读SD卡CID
-u8 SD_GetCSD(u8 *csd_data);                     //读SD卡CSD
-u32 SD_GetCapacity(void);                       //取SD卡容量
-//USB 读卡器 SD卡操作函数
-u8 MSD_WriteBuffer(u8* pBuffer, u32 WriteAddr, u32 NumByteToWrite);
-u8 MSD_ReadBuffer(u8* pBuffer, u32 ReadAddr, u32 NumByteToRead);
 
-u8 SD_ReadSingleBlock(u32 sector, u8 *buffer);  //读一个sector
-u8 SD_WriteSingleBlock(u32 sector, const u8 *buffer); 		//写一个sector
-u8 SD_ReadMultiBlock(u32 sector, u8 *buffer, u8 count); 	//读多个sector
-u8 SD_WriteMultiBlock(u32 sector, const u8 *data, u8 count);//写多个sector
-u8 SD_Read_Bytes(unsigned long address,unsigned char *buf,unsigned int offset,unsigned int bytes);//读取一byte
+u8 SD_ReadSingleBlock(u32 sector, u8 *buffer);  //Read single block
+u8 SD_WriteSingleBlock(u32 sector, const u8 *buffer); 		//Write single block
+u8 SD_ReadMultiBlock(u32 sector, u8 *buffer, u8 count); 	//read multi Block
+u8 SD_WriteMultiBlock(u32 sector, const u8 *data, u8 count);//write multi block
 #endif
 
 

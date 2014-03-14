@@ -1,12 +1,3 @@
-/******************************************************************************/
-/* Blinky.c: LED Flasher and graphic demo                                     */
-/******************************************************************************/
-/* This file is part of the uVision/ARM development tools.                    */
-/* Copyright (c) 2005-2009 Keil Software. All rights reserved.                */
-/* This software may only be used under the terms of a valid, current,        */
-/* end user licence from KEIL for a compatible version of KEIL software       */
-/* development tools. Nothing else gives you the right to use this software.  */
-/******************************************************************************/                  
 #include <LPC17xx.H>                    				//NXP LPC17xx definitions 
 #include "LCD.h"
 #include "string.h"
@@ -14,11 +5,11 @@
 #include "lcd.h"
 #include "touch.h"
 #include "exti.h"
-#include "SPI.h"
-#include "MMC_SD.h"
+#include "../sdcard/SPI.h"
+#include "../sdcard/SD.h"
 #include "delay.h"
-#include "../Fatfs/diskio.h"
-#include "../Fatfs/ff.h"
+#include "../sdcard/Fatfs/diskio.h"
+#include "../sdcard/Fatfs/ff.h"
 #include "../uart/uart.h"
 
 FIL file,file2;
@@ -69,9 +60,9 @@ int main (void)
 	FRESULT fr;
 	FRESULT res;
 	SystemInit();
-	SPIx_Init();
+	SPI0_Init();
 
-	ssp0_init(); //SPI init
+	//ssp0_init(); //SPI init
 	#if _USEUART == 1
 		UART2_Init(); //init uart2
 		UART2_SendString("www.Khanhoi.vn\r\n");
@@ -93,7 +84,7 @@ int main (void)
 		LCD_ShowString(30,90,"Company: Khanhhoi");				    	 
 		LCD_ShowString(30,110,"Copyright 2014");	
 	#endif
-			 
+		 
 		if(disk_initialize(0)==STA_NOINIT){
 			#if _USEUART == 1
 				UART2_SendString("Card can not init\r\n");	
