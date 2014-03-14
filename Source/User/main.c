@@ -5,15 +5,19 @@
 #include "lcd.h"
 #include "touch.h"
 #include "exti.h"
-#include "../sdcard/SPI.h"
-#include "../sdcard/SD.h"
-#include "delay.h"
-#include "../sdcard/Fatfs/diskio.h"
-#include "../sdcard/Fatfs/ff.h"
-#include "../uart/uart.h"
 
+//#include "delay.h"
+//Include for uart; Remember change compiler part to ../source/uart
+#include "uart.h"
+//End Include
+//Include for sdcard; Remember change compiler part to ../source/sdcard;../source/sdcard/Fatfs;
+#include "spi.h"
+#include "SD.h"
+#include "diskio.h"
+#include "ff.h"
+//End Include
 FIL file,file2;
-u8 buffer_data[512];
+//u8 buffer_data[512];
 
 FATFS Fatfs;
 DIR dir;
@@ -55,13 +59,14 @@ void Load_Drow_Dialog(void)
 */
 int main (void)                       
 {
+
 	char text[]="\nhello\n test test test";
 	char line[82];
 	FRESULT fr;
-	FRESULT res;
+	//FRESULT res;
 	SystemInit();
 	SPI0_Init();
-
+	Delay(100);
 	//ssp0_init(); //SPI init
 	#if _USEUART == 1
 		UART2_Init(); //init uart2
