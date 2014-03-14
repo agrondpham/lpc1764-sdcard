@@ -30,7 +30,7 @@ void delay_us(int count)
 ** Output: void
 ** 															
 *******************************************************************************************/
-void  SPIx_Init(void)
+void  SPI0_Init(void)
 {  
 	/* */
 	LPC_PINCON->PINSEL0 	=	0;		
@@ -47,6 +47,39 @@ void  SPIx_Init(void)
  				(1 << 5) |				// MSTR = 1, SPI 
  				(0 << 6) |				// LSBF = 0, SPI 
  				(0 << 7);				// SPIE = 0, SPI	
+}
+/************************************************************************																										
+** Description: Set speed of SPI	
+** input: str1:speed 	    		
+** output: void		
+** Note: SPI_SPEED_2   2   (SPI 36M@sys 72M)
+**			 SPI_SPEED_4   4   (SPI 18M@sys 72M)
+**			 SPI_SPEED_8   8   (SPI 9M@sys 72M)
+**			 SPI_SPEED_16  16  (SPI 4.5M@sys 72M)
+**			 SPI_SPEED_256 256 (SPI 281.25K@sys 72M)
+************************************************************************/ 
+
+void SPI0_SetSpeed(u8 SpeedSet)
+{
+	   	LPC_SPI->SPCCR =	0xFE;			//Fsck=Fcpu/128*2
+	switch(SpeedSet)
+	{
+		case SPI_SPEED_2://8
+			LPC_SSP0->CPSR = 2;//Fsck=Fpclk/2=36Mhz
+			break;
+		case SPI_SPEED_4://8
+			LPC_SSP0->CPSR = 4;//Fsck=Fpclk/4=18Mhz
+			break;
+		case SPI_SPEED_8://
+			LPC_SSP0->CPSR = 8;//Fsck=Fpclk/8=9Mhz
+			break;
+		case SPI_SPEED_16://
+			LPC_SSP0->CPSR = 16;//Fsck=Fpclk/16=4.5Mhz
+			break;
+		case SPI_SPEED_256://256
+			LPC_SSP0->CPSR = 250;//Fsck=Fpclk/256=281.25Khz
+			break;
+	}		 	  
 }
 void ssp0_init (void) 
 {
@@ -76,39 +109,6 @@ void ssp0_init (void)
                                               /* maximum of 18MHz is possible*/    
   LPC_SSP0->CR0  = 0x0007;                    /* 8Bit, CPOL=0, CPHA=0        */
   LPC_SSP0->CR1  = 0x0002;                    /* SSP0 enable, master         */
-}
-/************************************************************************																										
-** Description: Set speed of SPI	
-** input: str1:speed 	    		
-** output: void		
-** Note: SPI_SPEED_2   2   (SPI 36M@sys 72M)
-**			 SPI_SPEED_4   4   (SPI 18M@sys 72M)
-**			 SPI_SPEED_8   8   (SPI 9M@sys 72M)
-**			 SPI_SPEED_16  16  (SPI 4.5M@sys 72M)
-**			 SPI_SPEED_256 256 (SPI 281.25K@sys 72M)
-************************************************************************/ 
-
-void SPIx_SetSpeed(u8 SpeedSet)
-{
-	   	LPC_SPI->SPCCR =	0xFE;			//Fsck=Fcpu/128*2
-	switch(SpeedSet)
-	{
-		case SPI_SPEED_2://8
-			LPC_SSP0->CPSR = 2;//Fsck=Fpclk/2=36Mhz
-			break;
-		case SPI_SPEED_4://8
-			LPC_SSP0->CPSR = 4;//Fsck=Fpclk/4=18Mhz
-			break;
-		case SPI_SPEED_8://
-			LPC_SSP0->CPSR = 8;//Fsck=Fpclk/8=9Mhz
-			break;
-		case SPI_SPEED_16://
-			LPC_SSP0->CPSR = 16;//Fsck=Fpclk/16=4.5Mhz
-			break;
-		case SPI_SPEED_256://256
-			LPC_SSP0->CPSR = 250;//Fsck=Fpclk/256=281.25Khz
-			break;
-	}		 	  
 }
 u8 ssp0_send (u8 outb) 
 {

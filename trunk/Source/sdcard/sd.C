@@ -1,8 +1,8 @@
 #include "sys.h"
-#include "SPI.H"
-#include "mmc_sd.h"
+#include "spi.h"
+#include "sd.h"
 #include "lpc17xx.h"
-#include "../fatfs/diskio.h"
+#include "fatfs/diskio.h"
 u8  SD_Type=0;				//SD card type
 
 /* RTC timer strcuture */
@@ -347,10 +347,8 @@ u8 SD_Init(void)
     u8 r1;     //return value is card type by bit
     u16 retry;  
     u8 buff[6];
-
-	//Init SSP0
-	ssp0_init();
- 	SPIx_SetSpeed(SPI_SPEED_256);//设置到低速模式		 
+	ssp0_init();//Init SSP0
+ 	SPI0_SetSpeed(SPI_SPEED_256);//Set spi speec 256 
 	SD_CS(1);	
   if(SD_Idle_Sta()) return 1;//Card fail can not read	  
  	SD_CS(0);	
@@ -387,7 +385,7 @@ u8 SD_Init(void)
         }
         //----------MMC卡额外初始化操作结束------------	    
         //设置SPI为高速模式
-        SPIx_SetSpeed(SPI_SPEED_4);   
+        SPI0_SetSpeed(SPI_SPEED_4);   
 		ssp0_send(0xFF);	 
         //禁止CRC校验	   
 		r1 = SD_SendCommand(CMD59, 0, 0x95);
@@ -442,7 +440,7 @@ u8 SD_Init(void)
             else SD_Type = SD_TYPE_V2;	    
             //-----------鉴别SD2.0卡版本结束----------- 
             //设置SPI为高速模式
-            SPIx_SetSpeed(SPI_SPEED_4);  
+            SPI0_SetSpeed(SPI_SPEED_4);  
         }	    
     }
     return r1;
@@ -489,7 +487,7 @@ u8 SD_ReadSingleBlock(u32 sector, u8 *buffer)
 {
 	u8 r1;	    
     //设置为高速模式
-    SPIx_SetSpeed(SPI_SPEED_4);  		   
+    SPI0_SetSpeed(SPI_SPEED_4);  		   
     //如果不是SDHC，给定的是sector地址，将其转换成byte地址
     if(SD_Type!=SD_TYPE_V2HC)
     {
@@ -518,7 +516,7 @@ u8 SD_WriteSingleBlock(u32 sector, const u8 *data)
     u16 retry;
 
     //设置为高速模式
-    //SPIx_SetSpeed(SPI_SPEED_HIGH);	   
+    //SPI0_SetSpeed(SPI_SPEED_HIGH);	   
     //如果不是SDHC，给定的是sector地址，将其转换成byte地址
     if(SD_Type!=SD_TYPE_V2HC)
     {
@@ -583,7 +581,7 @@ u8 SD_WriteSingleBlock(u32 sector, const u8 *data)
 u8 SD_ReadMultiBlock(u32 sector, u8 *buffer, u8 count)
 {
     u8 r1;	 			 
-    //SPIx_SetSpeed(SPI_SPEED_HIGH);//设置为高速模式  
+    //SPI0_SetSpeed(SPI_SPEED_HIGH);//设置为高速模式  
  	//如果不是SDHC，将sector地址转成byte地址
     if(SD_Type!=SD_TYPE_V2HC)sector = sector<<9;  
     //SD_WaitDataReady();
@@ -614,7 +612,7 @@ u8 SD_WriteMultiBlock(u32 sector, const u8 *data, u8 count)
 {
     u8 r1;
     u16 i;	 		 
-    //SPIx_SetSpeed(SPI_SPEED_HIGH);//设置为高速模式	 
+    //SPI0_SetSpeed(SPI_SPEED_HIGH);//设置为高速模式	 
     if(SD_Type != SD_TYPE_V2HC)sector = sector<<9;//如果不是SDHC，给定的是sector地址，将其转换成byte地址  
     if(SD_Type != SD_TYPE_MMC) r1 = SD_SendCommand(ACMD23, count, 0x00);//如果目标卡不是MMC卡，启用ACMD23指令使能预擦除   
     r1 = SD_SendCommand(CMD25, sector, 0x00);//发多块写入指令
