@@ -14,42 +14,21 @@
 #include "lcd.h"
 #include "touch.h"
 #include "exti.h"
-#include "M45PE161.h"
-#include "text.h"
+#include "SPI.h"
 #include "MMC_SD.h"
-#include "FAT.h"
-#include "fontupd.h"
 #include "delay.h"
-#include "ssp0.h"
-#include "jpegbmp.h"
 #include "../Fatfs/diskio.h"
 #include "../Fatfs/ff.h"
-#include "../Fatfs/integer.h"
 #include "../uart/uart.h"
-#define  M45PE16_FLASH_ID    0x4015
-volatile unsigned long FLASH_ID = 0;
-const unsigned char *sysfile[4]=
-{			  
-"0.BMP",
-"4.BMP",
-"320_216.BMP",
-"1.BMP",	  
-};
 
-const unsigned char *folderData[2]=
-{
-"MUSIC",
-"MUSIC2",	  
-};
- 		unsigned char jpg_buffer1[1024];
-FIL file;
+FIL file,file2;
 u8 buffer_data[512];
 
 FATFS Fatfs;
 DIR dir;
 
-#define	_USELCD	1 //use lcd
-#define	_USEUART	0 //use urat
+#define	_USELCD	0 //use lcd
+#define	_USEUART	1 //use urat
 
 void Delay (uint32_t Time)
 {
@@ -67,6 +46,7 @@ void Delay (uint32_t Time)
 * Returns    : 	None
 *********************************************************************************************************
 */
+#if _USELCD == 1
 void Load_Drow_Dialog(void)
 {
 	LCD_Clear(WHITE);   
@@ -74,67 +54,7 @@ void Load_Drow_Dialog(void)
 	LCD_ShowString(216,0,"RST");						//Displaying screen clear area
   	POINT_COLOR=RED;									//Setting brush color 
 }
-int xatoi (			/* 0:Failed, 1:Successful */
-	char **str,		/* Pointer to pointer to the string */
-	long *res		/* Pointer to the valiable to store the value */
-)
-{
-	unsigned long val;
-	unsigned char c, r, s = 0;
-
-
-	*res = 0;
-
-	while ((c = **str) == ' ') (*str)++;	/* Skip leading spaces */
-
-	if (c == '-') {		/* negative? */
-		s = 1;
-		c = *(++(*str));
-	}
-
-	if (c == '0') {
-		c = *(++(*str));
-		switch (c) {
-		case 'x':		/* hexdecimal */
-			r = 16; c = *(++(*str));
-			break;
-		case 'b':		/* binary */
-			r = 2; c = *(++(*str));
-			break;
-		default:
-			if (c <= ' ') return 1;	/* single zero */
-			if (c < '0' || c > '9') return 0;	/* invalid char */
-			r = 8;		/* octal */
-		}
-	} else {
-		if (c < '0' || c > '9') return 0;	/* EOL or invalid char */
-		r = 10;			/* decimal */
-	}
-
-	val = 0;
-	while (c > ' ') {
-		if (c >= 'a') c -= 0x20;
-		c -= '0';
-		if (c >= 17) {
-			c -= 7;
-			if (c <= 9) return 0;	/* invalid char */
-		}
-		if (c >= r) return 0;		/* invalid char for current radix */
-		val = val * r + c;
-		c = *(++(*str));
-	}
-	if (s) val = 0 - val;			/* apply sign if needed */
-
-	*res = val;
-	return 1;
-}
-
-/*
-
-
-
-*/
-
+#endif
 /*
 *********************************************************************************************************
 * Description: 	Main function
@@ -147,25 +67,12 @@ int main (void)
 	char text[]="\nhello\n test test test";
 	char line[82];
 	FRESULT fr;
-//	u8* filename;
-	//FileInfoStruct *CurFile;
-//	FileInfoStruct FileTemp;
-//		u32 fcluster=0;	 
-//	long p1;
 	FRESULT res;
-//	u16 i=2;
-//	FileInfoStruct *FileInfo1;
-//	FileInfoStruct F_Info1[3];
-//	BYTE *PIC_Name;
-//	FileInfoStruct FileTemp;
-//	u32 temp_cluster;
 	SystemInit();
 	SPIx_Init();
 
 	ssp0_init(); //SPI init
-	//FLASH_ID = SPI_Flash_ReadID();
 	#if _USEUART == 1
-		//UART2_Init(); // Init uart0
 		UART2_Init(); //init uart2
 		UART2_SendString("www.Khanhoi.vn\r\n");
 		UART2_SendString("NXP1764 cdcard testing\r\n");				    	 
@@ -186,9 +93,7 @@ int main (void)
 		LCD_ShowString(30,90,"Company: Khanhhoi");				    	 
 		LCD_ShowString(30,110,"Copyright 2014");	
 	#endif
-
-
-				 
+			 
 		if(disk_initialize(0)==STA_NOINIT){
 			#if _USEUART == 1
 				UART2_SendString("Card can not init\r\n");	
@@ -251,7 +156,13 @@ int main (void)
 		if (fr) return (int)fr;
 		/* Read all lines and display it */
     while (f_gets(line, sizeof line, &file))
-        LCD_ShowString(30,160,line);
+			#if _USELCD == 1
+				LCD_ShowString(30,160,line);
+			#endif
+			#if _USEUART == 1
+				UART2_SendString(line);	
+			#endif	
+        
 
     /* Close the file */
     f_close(&file);
@@ -260,15 +171,14 @@ int main (void)
 		f_mkdir("12032014");
 		
 		/*Open file to write infor if file does not exist create new file*/
-		fr = f_open(&file,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
+		fr = f_open(&file2,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
 		if (fr) return (int)fr;
 		//line="abc xyz";
-		if(f_puts(text,&file)!=-1){
-		while(1){}		
-		}else{
-
-		}
-		//res = f_write(&file, text, strlen(text), &bw);
+		f_puts(text,&file2);
+		
+				f_putc('c',&file2);
+		f_close(&file2);
+				while(1){}		
 
 }
 
