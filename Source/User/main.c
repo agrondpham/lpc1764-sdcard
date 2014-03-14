@@ -66,7 +66,6 @@ int main (void)
 	//FRESULT res;
 	SystemInit();
 	SPI0_Init();
-	Delay(100);
 	//ssp0_init(); //SPI init
 	#if _USEUART == 1
 		UART2_Init(); //init uart2
