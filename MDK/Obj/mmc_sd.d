@@ -1,0 +1,12 @@
+.\obj\mmc_sd.o: ..\Source\SPI\MMC_SD.C
+.\obj\mmc_sd.o: ..\Source\Lcd\sys.h
+.\obj\mmc_sd.o: ..\Source\SPI\SPI.H
+.\obj\mmc_sd.o: C:\Keil\ARM\ARMCC\bin\..\include\stdint.h
+.\obj\mmc_sd.o: ..\Source\SPI\mmc_sd.h
+.\obj\mmc_sd.o: ..\Source\SPI\../Fatfs/diskio.h
+.\obj\mmc_sd.o: ..\Source\SPI\../Fatfs/integer.h
+.\obj\mmc_sd.o: C:\Keil\ARM\Inc\NXP\LPC17xx\lpc17xx.h
+.\obj\mmc_sd.o: C:\Keil\ARM\CMSIS\Include\core_cm3.h
+.\obj\mmc_sd.o: C:\Keil\ARM\CMSIS\Include\core_cmInstr.h
+.\obj\mmc_sd.o: C:\Keil\ARM\CMSIS\Include\core_cmFunc.h
+.\obj\mmc_sd.o: C:\Keil\ARM\Inc\NXP\LPC17xx\system_LPC17xx.h
