@@ -15,15 +15,18 @@
 #include "SD.h"
 #include "diskio.h"
 #include "ff.h"
+#include "../GPIO/gpio.h"
+#include "khn_gsht.h"
 //End Include
-FIL file,file2;
+
 //u8 buffer_data[512];
 
-FATFS Fatfs;
-DIR dir;
+//FATFS Fatfs;
+//DIR dir;
 
 #define	_USELCD	0 //use lcd
 #define	_USEUART	1 //use urat
+#define  PWR_SD   3,26
 
 void Delay (uint32_t Time)
 {
@@ -50,6 +53,7 @@ void Load_Drow_Dialog(void)
   	POINT_COLOR=RED;									//Setting brush color 
 }
 #endif
+	//extern FIL file;
 /*
 *********************************************************************************************************
 * Description: 	Main function
@@ -60,12 +64,15 @@ void Load_Drow_Dialog(void)
 int main (void)                       
 {
 
-	char text[]="\nhello\n test test test";
+	char text[300]="\r\n the gioi nay rong lon qua \r\n";
 	char line[82];
 	FRESULT fr;
 	//FRESULT res;
 	SystemInit();
 	SPI0_Init();
+	Delay(1000);
+	spi0_on();
+	//GPIOSetValue(PWR_SD, HIGH);
 	//ssp0_init(); //SPI init
 	#if _USEUART == 1
 		UART2_Init(); //init uart2
@@ -146,35 +153,62 @@ int main (void)
 		#if _USELCD == 1
 		LCD_Clear(WHITE);
 		#endif	
-		f_mount(&Fatfs, "0:", 0);
-		fr = f_open(&file,"0:/MUSIC/Home.txt",FA_READ);
-		if (fr) return (int)fr;
-		/* Read all lines and display it */
-    while (f_gets(line, sizeof line, &file))
-			#if _USELCD == 1
-				LCD_ShowString(30,160,line);
-			#endif
-			#if _USEUART == 1
-				UART2_SendString(line);	
-			#endif	
+//		sprintf(text,"0:/%d/%d.txt",17032014,161100);
+//		UART2_SendString(text);		
+//		f_mount(&Fatfs, "0:", 0);
+//		fr = f_open(&file,text,FA_READ);
+//		if (fr) return (int)fr;
+//		/* Read all lines and display it */
+//    while (f_gets(line, sizeof line, &file)){
+//			#if _USELCD == 1
+//				LCD_ShowString(30,160,line);
+//			#endif
+//			#if _USEUART == 1
+//				UART2_SendString(line);	
+//				UART2_SendString("\r\n");
+//			#endif	
+//		}
         
 
-    /* Close the file */
-    f_close(&file);
-		
-		/*Create folder*/
-		f_mkdir("12032014");
-		
-		/*Open file to write infor if file does not exist create new file*/
-		fr = f_open(&file2,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
-		if (fr) return (int)fr;
-		//line="abc xyz";
-		f_puts(text,&file2);
-		
-				f_putc('c',&file2);
-		f_close(&file2);
-				while(1){}		
-
+////    /* Close the file */
+//    f_close(&file);
+//		
+//		/*Create folder*/
+//		f_mkdir("12032014");
+//		
+//		/*Open file to write infor if file does not exist create new file*/
+//		fr = f_open(&file2,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
+//		if (fr) return (int)fr;
+//		//line="abc xyz";
+//		f_puts(text,&file2);
+//		
+//				f_putc('c',&file2);
+//		f_close(&file2);
+			//sprintf(text,"0:/%d/%d.txt",17032014,161100);	
+			//UART2_SendString(text);	
+			// This line of code will return Fil data in &file.Data is in Folder 117032014, filename 16110
+			if(ReadData(1,17032014,161100)) return 0;
+			while (f_gets(line, sizeof line, &file)){
+			#if _USEUART == 1
+				UART2_SendString(line);	
+				UART2_SendString("\r\n");
+			#endif	
+			}
+			//remeber close file
+			Close();
+				//while(1){}
+			switch(WriteData(1,17022014,160000))	{
+				case 1:
+					UART2_SendString("Can not create folder \r\n");
+					break;
+				case 2:			
+					UART2_SendString("Can not write file \r\n");
+				break;
+			}		
+			f_puts("$GSHT,2,xx,<NGUYEN VAN A,AN234343,00:01:29;105.34344,21.34343,21.34343,04:02:13,105.3464433,21.32343,80>,xxx#\r\n",&file);
+			
+			//f_puts(" The gioi that rong lon\r\n",&file);
+			Close();
 }
 
 

@@ -116,7 +116,7 @@ void ssp0_init (void)
  
   /* P3.26 is SD Card Power Supply Enable Pin */
   LPC_GPIO3->FIODIR   |=  (1<<26);            /* P3.26 is output             */
-  LPC_GPIO3->FIOPIN   &= ~(1<<26);            /* set P3.26 low(enable power) */
+  //LPC_GPIO3->FIOPIN   &= ~(1<<26);            /* set P3.26 low(enable power) */
 
   /* SCK, MISO, MOSI are SSP pins. */
   LPC_PINCON->PINSEL3 &= ~(3<<8);              /* P1.20 cleared               */
@@ -139,4 +139,11 @@ u8 ssp0_send (u8 outb)
   LPC_SSP0->DR = outb;
   while (LPC_SSP0->SR & 0x10);                 /* Wait for transfer to finish */
   return (LPC_SSP0->DR);                      /* Return received value       */
+}
+void spi0_on(){
+	LPC_GPIO3->FIOSET = (1<<26);
+	//LPC_GPIO3->FIOPIN   &= ~(1<<26);
+}
+void spi0_off(){
+	LPC_GPIO3->FIOCLR = (1<<26);
 }
