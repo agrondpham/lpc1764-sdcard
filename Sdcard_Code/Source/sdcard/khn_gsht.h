@@ -21,18 +21,14 @@
 **
 ********************************************************************************************************/
 
-#ifndef __SPI_H 
-#define __SPI_H
-#include "stdint.h"
-#include "sys.h"
-
-
-void  SPI0_Init(void);
-void SPI0_SetSpeed(u8 SpeedSet);
-void ssp0_init (void);
-u8 ssp0_send (u8 outb);
-void spi0_on();
-void spi0_off();
-
-
+#ifndef __KHN_GSHT_H 
+#define __KHN_GSHT_H
+#include "spi.h"
+#include "SD.h"
+#include "diskio.h"
+#include "ff.h"
+extern FIL file;
+int ReadData(int,int,int);
+int WriteData(int ,int ,int );
+void Close(void);
 #endif
