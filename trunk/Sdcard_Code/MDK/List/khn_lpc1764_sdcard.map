@@ -1116,113 +1116,113 @@ Memory Map of the image
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
     0x00000000   0x000000cc   Data   RO           54    RESET               startup_lpc17xx.o
-    0x000000cc   0x00000000   Code   RO         1033  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
-    0x000000cc   0x00000004   Code   RO         1303    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
-    0x000000d0   0x00000004   Code   RO         1306    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
-    0x000000d4   0x00000000   Code   RO         1308    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
-    0x000000d4   0x00000000   Code   RO         1310    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
-    0x000000d4   0x00000008   Code   RO         1311    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
-    0x000000dc   0x00000000   Code   RO         1313    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
-    0x000000dc   0x00000000   Code   RO         1315    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
-    0x000000dc   0x00000004   Code   RO         1304    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
+    0x000000cc   0x00000000   Code   RO         1030  * .ARM.Collect$$$$00000000  mc_w.l(entry.o)
+    0x000000cc   0x00000004   Code   RO         1300    .ARM.Collect$$$$00000001  mc_w.l(entry2.o)
+    0x000000d0   0x00000004   Code   RO         1303    .ARM.Collect$$$$00000004  mc_w.l(entry5.o)
+    0x000000d4   0x00000000   Code   RO         1305    .ARM.Collect$$$$00000008  mc_w.l(entry7b.o)
+    0x000000d4   0x00000000   Code   RO         1307    .ARM.Collect$$$$0000000A  mc_w.l(entry8b.o)
+    0x000000d4   0x00000008   Code   RO         1308    .ARM.Collect$$$$0000000B  mc_w.l(entry9a.o)
+    0x000000dc   0x00000000   Code   RO         1310    .ARM.Collect$$$$0000000D  mc_w.l(entry10a.o)
+    0x000000dc   0x00000000   Code   RO         1312    .ARM.Collect$$$$0000000F  mc_w.l(entry11a.o)
+    0x000000dc   0x00000004   Code   RO         1301    .ARM.Collect$$$$00002712  mc_w.l(entry2.o)
     0x000000e0   0x00000024   Code   RO           56    .text               startup_lpc17xx.o
-    0x00000104   0x00000024   Code   RO         1038    .text               mc_w.l(memcpya.o)
-    0x00000128   0x0000002c   Code   RO         1320    .text               mc_w.l(uidiv.o)
-    0x00000154   0x00000024   Code   RO         1337    .text               mc_w.l(init.o)
-    0x00000178   0x00000010   Code   RO         1003    i.Close             khn_gsht.o
+    0x00000104   0x00000024   Code   RO         1035    .text               mc_w.l(memcpya.o)
+    0x00000128   0x0000002c   Code   RO         1317    .text               mc_w.l(uidiv.o)
+    0x00000154   0x00000024   Code   RO         1334    .text               mc_w.l(init.o)
+    0x00000178   0x00000010   Code   RO         1000    i.Close             khn_gsht.o
     0x00000188   0x0000001e   Code   RO           64    i.Delay             main.o
     0x000001a6   0x00000002   PAD
-    0x000001a8   0x00000058   Code   RO         1004    i.ReadData          khn_gsht.o
-    0x00000200   0x00000026   Code   RO          811    i.SD_GetResponse    sd.o
-    0x00000226   0x0000004a   Code   RO          812    i.SD_Idle_Sta       sd.o
-    0x00000270   0x00000044   Code   RO          815    i.SD_ReadSingleBlock  sd.o
-    0x000002b4   0x0000003c   Code   RO          939    i.SPI0_Init         spi.o
-    0x000002f0   0x00000002   Code   RO         1348    i.__scatterload_null  mc_w.l(handlers.o)
-    0x000002f2   0x0000000a   Code   RO         1096    i._sputc            mc_w.l(printf1.o)
+    0x000001a8   0x00000058   Code   RO         1001    i.ReadData          khn_gsht.o
+    0x00000200   0x00000026   Code   RO          808    i.SD_GetResponse    sd.o
+    0x00000226   0x0000004a   Code   RO          809    i.SD_Idle_Sta       sd.o
+    0x00000270   0x00000044   Code   RO          812    i.SD_ReadSingleBlock  sd.o
+    0x000002b4   0x0000003c   Code   RO          936    i.SPI0_Init         spi.o
+    0x000002f0   0x00000002   Code   RO         1345    i.__scatterload_null  mc_w.l(handlers.o)
+    0x000002f2   0x0000000a   Code   RO         1093    i._sputc            mc_w.l(printf1.o)
     0x000002fc   0x00000004   Code   RO           55    .ARM.__at_0x02FC    startup_lpc17xx.o
-    0x00000300   0x000001c4   Code   RO          813    i.SD_Init           sd.o
-    0x000004c4   0x00000060   Code   RO          816    i.SD_ReceiveData    sd.o
-    0x00000524   0x0000008c   Code   RO          817    i.SD_SendCommand    sd.o
-    0x000005b0   0x00000070   Code   RO          818    i.SD_SendCommand_NoDeassert  sd.o
-    0x00000620   0x000000cc   Code   RO          821    i.SD_WriteSingleBlock  sd.o
-    0x000006ec   0x00000048   Code   RO          940    i.SPI0_SetSpeed     spi.o
+    0x00000300   0x000001c4   Code   RO          810    i.SD_Init           sd.o
+    0x000004c4   0x00000060   Code   RO          813    i.SD_ReceiveData    sd.o
+    0x00000524   0x0000008c   Code   RO          814    i.SD_SendCommand    sd.o
+    0x000005b0   0x00000070   Code   RO          815    i.SD_SendCommand_NoDeassert  sd.o
+    0x00000620   0x000000cc   Code   RO          818    i.SD_WriteSingleBlock  sd.o
+    0x000006ec   0x00000048   Code   RO          937    i.SPI0_SetSpeed     spi.o
     0x00000734   0x00000150   Code   RO            4    i.SystemInit        system_lpc17xx.o
-    0x00000884   0x0000005c   Code   RO          410    i.UART2_Init        uart.o
-    0x000008e0   0x0000001c   Code   RO          411    i.UART2_SendByte    uart.o
-    0x000008fc   0x00000016   Code   RO          412    i.UART2_SendString  uart.o
+    0x00000884   0x0000005c   Code   RO          407    i.UART2_Init        uart.o
+    0x000008e0   0x0000001c   Code   RO          408    i.UART2_SendByte    uart.o
+    0x000008fc   0x00000016   Code   RO          409    i.UART2_SendString  uart.o
     0x00000912   0x00000002   PAD
-    0x00000914   0x00000080   Code   RO         1005    i.WriteData         khn_gsht.o
-    0x00000994   0x00000028   Code   RO         1089    i.__0sprintf$1      mc_w.l(printf1.o)
-    0x000009bc   0x0000000e   Code   RO         1347    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x000009ca   0x0000000e   Code   RO         1349    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x000009d8   0x00000154   Code   RO         1094    i._printf_core      mc_w.l(printf1.o)
-    0x00000b2c   0x00000058   Code   RO          470    i.check_fs          ff.o
-    0x00000b84   0x00000014   Code   RO          471    i.chk_chr           ff.o
-    0x00000b98   0x0000001a   Code   RO          472    i.clust2sect        ff.o
-    0x00000bb2   0x000000d6   Code   RO          473    i.create_chain      ff.o
-    0x00000c88   0x000001b4   Code   RO          474    i.create_name       ff.o
-    0x00000e3c   0x0000005c   Code   RO          475    i.dir_alloc         ff.o
-    0x00000e98   0x0000005c   Code   RO          476    i.dir_find          ff.o
-    0x00000ef4   0x0000013c   Code   RO          477    i.dir_next          ff.o
-    0x00001030   0x0000003a   Code   RO          479    i.dir_register      ff.o
-    0x0000106a   0x000000c8   Code   RO          481    i.dir_sdi           ff.o
+    0x00000914   0x00000080   Code   RO         1002    i.WriteData         khn_gsht.o
+    0x00000994   0x00000028   Code   RO         1086    i.__0sprintf$1      mc_w.l(printf1.o)
+    0x000009bc   0x0000000e   Code   RO         1344    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x000009ca   0x0000000e   Code   RO         1346    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x000009d8   0x00000154   Code   RO         1091    i._printf_core      mc_w.l(printf1.o)
+    0x00000b2c   0x00000058   Code   RO          467    i.check_fs          ff.o
+    0x00000b84   0x00000014   Code   RO          468    i.chk_chr           ff.o
+    0x00000b98   0x0000001a   Code   RO          469    i.clust2sect        ff.o
+    0x00000bb2   0x000000d6   Code   RO          470    i.create_chain      ff.o
+    0x00000c88   0x000001b4   Code   RO          471    i.create_name       ff.o
+    0x00000e3c   0x0000005c   Code   RO          472    i.dir_alloc         ff.o
+    0x00000e98   0x0000005c   Code   RO          473    i.dir_find          ff.o
+    0x00000ef4   0x0000013c   Code   RO          474    i.dir_next          ff.o
+    0x00001030   0x0000003a   Code   RO          476    i.dir_register      ff.o
+    0x0000106a   0x000000c8   Code   RO          478    i.dir_sdi           ff.o
     0x00001132   0x00000002   PAD
-    0x00001134   0x00000038   Code   RO          822    i.disk_initialize   sd.o
-    0x0000116c   0x0000006c   Code   RO          823    i.disk_ioctl        sd.o
-    0x000011d8   0x00000020   Code   RO          824    i.disk_read         sd.o
-    0x000011f8   0x00000014   Code   RO          825    i.disk_status       sd.o
-    0x0000120c   0x0000003c   Code   RO          826    i.disk_write        sd.o
-    0x00001248   0x00000020   Code   RO          485    i.f_close           ff.o
-    0x00001268   0x00000056   Code   RO          490    i.f_gets            ff.o
-    0x000012be   0x0000019a   Code   RO          491    i.f_lseek           ff.o
-    0x00001458   0x00000150   Code   RO          492    i.f_mkdir           ff.o
-    0x000015a8   0x0000005c   Code   RO          494    i.f_mount           ff.o
-    0x00001604   0x0000012c   Code   RO          495    i.f_open            ff.o
-    0x00001730   0x0000004a   Code   RO          499    i.f_puts            ff.o
-    0x0000177a   0x000001d0   Code   RO          500    i.f_read            ff.o
-    0x0000194a   0x0000008c   Code   RO          505    i.f_sync            ff.o
-    0x000019d6   0x00000214   Code   RO          509    i.f_write           ff.o
+    0x00001134   0x00000038   Code   RO          819    i.disk_initialize   sd.o
+    0x0000116c   0x0000006c   Code   RO          820    i.disk_ioctl        sd.o
+    0x000011d8   0x00000020   Code   RO          821    i.disk_read         sd.o
+    0x000011f8   0x00000014   Code   RO          822    i.disk_status       sd.o
+    0x0000120c   0x0000003c   Code   RO          823    i.disk_write        sd.o
+    0x00001248   0x00000020   Code   RO          482    i.f_close           ff.o
+    0x00001268   0x00000056   Code   RO          487    i.f_gets            ff.o
+    0x000012be   0x0000019a   Code   RO          488    i.f_lseek           ff.o
+    0x00001458   0x00000150   Code   RO          489    i.f_mkdir           ff.o
+    0x000015a8   0x0000005c   Code   RO          491    i.f_mount           ff.o
+    0x00001604   0x0000012c   Code   RO          492    i.f_open            ff.o
+    0x00001730   0x0000004a   Code   RO          496    i.f_puts            ff.o
+    0x0000177a   0x000001d0   Code   RO          497    i.f_read            ff.o
+    0x0000194a   0x0000008c   Code   RO          502    i.f_sync            ff.o
+    0x000019d6   0x00000214   Code   RO          506    i.f_write           ff.o
     0x00001bea   0x00000002   PAD
-    0x00001bec   0x000002d0   Code   RO          510    i.find_volume       ff.o
-    0x00001ebc   0x000000ae   Code   RO          511    i.follow_path       ff.o
-    0x00001f6a   0x0000011e   Code   RO          512    i.get_fat           ff.o
-    0x00002088   0x0000003c   Code   RO          827    i.get_fattime       sd.o
-    0x000020c4   0x000000a8   Code   RO          514    i.get_ldnumber      ff.o
-    0x0000216c   0x00000012   Code   RO          515    i.ld_clust          ff.o
+    0x00001bec   0x000002d0   Code   RO          507    i.find_volume       ff.o
+    0x00001ebc   0x000000ae   Code   RO          508    i.follow_path       ff.o
+    0x00001f6a   0x0000011e   Code   RO          509    i.get_fat           ff.o
+    0x00002088   0x0000003c   Code   RO          824    i.get_fattime       sd.o
+    0x000020c4   0x000000a8   Code   RO          511    i.get_ldnumber      ff.o
+    0x0000216c   0x00000012   Code   RO          512    i.ld_clust          ff.o
     0x0000217e   0x00000002   PAD
     0x00002180   0x0000029c   Code   RO           65    i.main              main.o
-    0x0000241c   0x00000026   Code   RO          516    i.mem_cmp           ff.o
-    0x00002442   0x0000002e   Code   RO          517    i.mem_cpy           ff.o
-    0x00002470   0x00000014   Code   RO          518    i.mem_set           ff.o
-    0x00002484   0x00000032   Code   RO          519    i.move_window       ff.o
-    0x000024b6   0x00000154   Code   RO          520    i.put_fat           ff.o
-    0x0000260a   0x0000004e   Code   RO          521    i.putc_bfd          ff.o
-    0x00002658   0x0000006c   Code   RO          522    i.remove_chain      ff.o
-    0x000026c4   0x00000044   Code   RO          828    i.rtc_gettime       sd.o
-    0x00002708   0x00000010   Code   RO          943    i.spi0_on           spi.o
-    0x00002718   0x000000b0   Code   RO          944    i.ssp0_init         spi.o
-    0x000027c8   0x00000020   Code   RO          945    i.ssp0_send         spi.o
-    0x000027e8   0x00000008   Code   RO          523    i.st_clust          ff.o
-    0x000027f0   0x00000078   Code   RO          524    i.sync_fs           ff.o
-    0x00002868   0x0000004c   Code   RO          525    i.sync_window       ff.o
-    0x000028b4   0x00000036   Code   RO          526    i.validate          ff.o
+    0x0000241c   0x00000026   Code   RO          513    i.mem_cmp           ff.o
+    0x00002442   0x0000002e   Code   RO          514    i.mem_cpy           ff.o
+    0x00002470   0x00000014   Code   RO          515    i.mem_set           ff.o
+    0x00002484   0x00000032   Code   RO          516    i.move_window       ff.o
+    0x000024b6   0x00000154   Code   RO          517    i.put_fat           ff.o
+    0x0000260a   0x0000004e   Code   RO          518    i.putc_bfd          ff.o
+    0x00002658   0x0000006c   Code   RO          519    i.remove_chain      ff.o
+    0x000026c4   0x00000044   Code   RO          825    i.rtc_gettime       sd.o
+    0x00002708   0x00000010   Code   RO          940    i.spi0_on           spi.o
+    0x00002718   0x000000b0   Code   RO          941    i.ssp0_init         spi.o
+    0x000027c8   0x00000020   Code   RO          942    i.ssp0_send         spi.o
+    0x000027e8   0x00000008   Code   RO          520    i.st_clust          ff.o
+    0x000027f0   0x00000078   Code   RO          521    i.sync_fs           ff.o
+    0x00002868   0x0000004c   Code   RO          522    i.sync_window       ff.o
+    0x000028b4   0x00000036   Code   RO          523    i.validate          ff.o
     0x000028ea   0x00000002   PAD
     0x000028ec   0x0000019c   Data   RO           66    .constdata          main.o
-    0x00002a88   0x0000004c   Data   RO          528    .constdata          ff.o
-    0x00002ad4   0x00000023   Data   RO          529    .conststring        ff.o
+    0x00002a88   0x0000004c   Data   RO          525    .constdata          ff.o
+    0x00002ad4   0x00000023   Data   RO          526    .conststring        ff.o
     0x00002af7   0x00000001   PAD
-    0x00002af8   0x00000020   Data   RO         1345    Region$$Table       anon$$obj.o
+    0x00002af8   0x00000020   Data   RO         1342    Region$$Table       anon$$obj.o
 
 
     Execution Region RW_IRAM1 (Base: 0x10000000, Size: 0x000013c8, Max: 0x00004000, ABSOLUTE)
 
     Base Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x10000000   0x00000003   Data   RW          530    .data               ff.o
-    0x10000003   0x00000002   Data   RW          829    .data               sd.o
+    0x10000000   0x00000003   Data   RW          527    .data               ff.o
+    0x10000003   0x00000002   Data   RW          826    .data               sd.o
     0x10000005   0x00000003   PAD
-    0x10000008   0x00000020   Zero   RW          527    .bss                ff.o
-    0x10000028   0x000011a0   Zero   RW         1006    .bss                khn_gsht.o
+    0x10000008   0x00000020   Zero   RW          524    .bss                ff.o
+    0x10000028   0x000011a0   Zero   RW         1003    .bss                khn_gsht.o
     0x100011c8   0x00000200   Zero   RW           52    STACK               startup_lpc17xx.o
 
 
@@ -1234,7 +1234,7 @@ Image component sizes
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
       6312         64        111          3         32      35713   ff.o
-       232         74          0          0       4512       2329   khn_gsht.o
+       232         74          0          0       4512       2333   khn_gsht.o
        698        408        412          0          0       6307   main.o
       1588         92          0          2          0      10366   sd.o
        356         66          0          0          0       2246   spi.o
@@ -1243,7 +1243,7 @@ Image component sizes
        142         28          0          0          0       1461   uart.o
 
     ----------------------------------------------------------------------
-      9716        810        760          8       5056      64191   Object Totals
+      9716        810        760          8       5056      64195   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         12          0          1          3          0          0   (incl. Padding)
 
@@ -1285,8 +1285,8 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     10272        838        760          8       5056      61171   Grand Totals
-     10272        838        760          8       5056      61171   ELF Image Totals
+     10272        838        760          8       5056      61175   Grand Totals
+     10272        838        760          8       5056      61175   ELF Image Totals
      10272        838        760          8          0          0   ROM Totals
 
 ==============================================================================

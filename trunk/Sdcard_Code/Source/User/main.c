@@ -15,7 +15,6 @@
 #include "SD.h"
 #include "diskio.h"
 #include "ff.h"
-#include "../GPIO/gpio.h"
 #include "khn_gsht.h"
 //End Include
 
@@ -63,7 +62,7 @@ void Load_Drow_Dialog(void)
 */
 int main (void)                       
 {
-
+ char c;
 	char text[300]="\r\n the gioi nay rong lon qua \r\n";
 	char line[82];
 	FRESULT fr;
@@ -153,39 +152,7 @@ int main (void)
 		#if _USELCD == 1
 		LCD_Clear(WHITE);
 		#endif	
-//		sprintf(text,"0:/%d/%d.txt",17032014,161100);
-//		UART2_SendString(text);		
-//		f_mount(&Fatfs, "0:", 0);
-//		fr = f_open(&file,text,FA_READ);
-//		if (fr) return (int)fr;
-//		/* Read all lines and display it */
-//    while (f_gets(line, sizeof line, &file)){
-//			#if _USELCD == 1
-//				LCD_ShowString(30,160,line);
-//			#endif
-//			#if _USEUART == 1
-//				UART2_SendString(line);	
-//				UART2_SendString("\r\n");
-//			#endif	
-//		}
-        
 
-////    /* Close the file */
-//    f_close(&file);
-//		
-//		/*Create folder*/
-//		f_mkdir("12032014");
-//		
-//		/*Open file to write infor if file does not exist create new file*/
-//		fr = f_open(&file2,"0:/12032014/132260.txt",FA_CREATE_ALWAYS | FA_WRITE);
-//		if (fr) return (int)fr;
-//		//line="abc xyz";
-//		f_puts(text,&file2);
-//		
-//				f_putc('c',&file2);
-//		f_close(&file2);
-			//sprintf(text,"0:/%d/%d.txt",17032014,161100);	
-			//UART2_SendString(text);	
 			// This line of code will return Fil data in &file.Data is in Folder 117032014, filename 16110
 			if(ReadData(1,17032014,161100)) return 0;
 			while (f_gets(line, sizeof line, &file)){
@@ -209,6 +176,7 @@ int main (void)
 			
 			//f_puts(" The gioi that rong lon\r\n",&file);
 			Close();
+
 }
 
 
