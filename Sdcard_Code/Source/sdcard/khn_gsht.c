@@ -61,6 +61,7 @@ int WriteData(int code,int date,int time){
 	if(fr) return 2;
 	return 0;
 }
+
 void Close(){
 	f_close(&file);
 }

@@ -463,6 +463,11 @@
               <FileType>1</FileType>
               <FilePath>..\Source\sdcard\spi.c</FilePath>
             </File>
+            <File>
+              <FileName>khn_gsht.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Source\sdcard\khn_gsht.c</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
