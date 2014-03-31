@@ -23,8 +23,8 @@ extern unsigned char rx_rd_index1,rx_counter1;
 
 
 
-#define phoneLen    12
-#define smsLen      160
+
+
 #define imeiLen 		20
 extern char imei[imeiLen];
 

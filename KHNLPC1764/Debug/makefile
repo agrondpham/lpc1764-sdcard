@@ -50,7 +50,7 @@ clean:
 
 post-build:
 	-@echo 'Performing post-build steps'
-	-arm-none-eabi-size KHNLPC1764.axf; arm-none-eabi-objcopy -O binary KHNLPC1764.axf KHNLPC1764.bin ; checksum -p LPC1768 -d KHNLPC1764.bin;
+	-arm-none-eabi-size KHNLPC1764.axf; arm-none-eabi-objcopy -O binary KHNLPC1764.axf KHNLPC1764.bin ; checksum -p LPC1764 -d KHNLPC1764.bin;
 	-@echo ' '
 
 .PHONY: all clean dependents

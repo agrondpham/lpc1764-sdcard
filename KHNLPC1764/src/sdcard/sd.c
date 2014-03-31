@@ -47,6 +47,7 @@ DSTATUS disk_initialize (
 	BYTE drv		/* Physical drive number (0) */
 )
 {
+	//spi0_on();
 	if (drv) return STA_NOINIT;			/* Supports only drive 0 */
 	SD_Init();
 	if (SD_Type== 0x00) {	/* Failed */		
@@ -54,7 +55,7 @@ DSTATUS disk_initialize (
 	} else {			/* OK */
 		Stat &= ~STA_NOINIT;	/* Clear STA_NOINIT flag */
 	}
-	
+	//spi0_off();
 	return Stat;
 }
 DRESULT disk_ioctl (

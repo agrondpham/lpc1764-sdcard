@@ -17,43 +17,6 @@ void key_init(){
 	GPIOSetPull(KEY_IN, PULLUP);
 }
 
-/*------------------------------------------------------------------------------
-  delays number of tick Systicks (happens every 1 ms)
- *------------------------------------------------------------------------------*/
-void SysTick_Handler(void) {
-uint8_t var; 
-	msTicks++;                        /* increment counter necessary in Delay() */
-		var = GPIOGetValue(KEY_IN);      //Read the button value
- 
-  if (var == 0)                   
-  {
-     //GPIOSetValue(BUZZER, HIGH);  
-  }
-  else                            
-  {
-     //GPIOSetValue(BUZZER, LOW);
-  }	
-	 if (interruptTimer_0 < 1000) interruptTimer_0 ++;
-	else
-	{
-		 if (timer_gps < counter_gps) timer_gps++; 
-		 else  
-     { 
-       flag_system.request_data = 1; 
-       flag_system.gps_detect=0;    // moi lan request data thi coi nhu gps_detect=0
-      }
-		 interruptTimer_0=0;
-			if (timer_send_gps < counter_send_gps)     timer_send_gps++; // cho nay cai dat thong so thoi gian de kiem tra gps
-      else   
-      {
-         flag_system.send_data=1;     // send data o day
-         flag_system.write_data=1;
-      }
-		
-	}
-	
-
-}
 void delay_ms (uint32_t dlyTicks) 
 	{
   uint32_t curTicks;

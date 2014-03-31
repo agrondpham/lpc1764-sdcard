@@ -54,20 +54,20 @@ void delay_us(int count)
 void  SPI0_Init(void)
 {  
 	/* */
-	LPC_PINCON->PINSEL0 	=	0;		
+//	LPC_PINCON->PINSEL0 	=	0;
    	LPC_GPIO0->FIODIR2 	|=  	1<<0;
-	/* MAP pinsel	*/ 
+	/* MAP pinsel	*/
    	LPC_PINCON->PINSEL0	|= 	0xc0000000;				// P0.15 SCK
-   	LPC_PINCON->PINSEL1	 = (0x03 << 2) | (0x03 << 4);	// P0.17|P0.18
-				               
-   	LPC_SPI->SPCCR =	0x40;		       		// 	72MHz/64*4		
- 
+   	//LPC_PINCON->PINSEL1	 = (0x03 << 2) | (0x03 << 4);	// P0.17|P0.18
+
+   	LPC_SPI->SPCCR =	0x40;		       		// 	72MHz/64*4
+
  	LPC_SPI->SPCR  = 	(0 << 2) |				// SPI
- 				(0 << 3) |				// CPHA = 0, 
- 				(0 << 4) |				// CPOL = 0, SCK 
- 				(1 << 5) |				// MSTR = 1, SPI 
- 				(0 << 6) |				// LSBF = 0, SPI 
- 				(0 << 7);				// SPIE = 0, SPI	
+ 				(0 << 3) |				// CPHA = 0,
+ 				(0 << 4) |				// CPOL = 0, SCK
+ 				(1 << 5) |				// MSTR = 1, SPI
+ 				(0 << 6) |				// LSBF = 0, SPI
+ 				(0 << 7);				// SPIE = 0, SPI
 }
 /************************************************************************																										
 ** Description: Set speed of SPI	

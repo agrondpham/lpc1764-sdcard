@@ -21,6 +21,7 @@
         unsigned long no_dial_tone       : 1;
         unsigned long no_carrier         : 1; 
         unsigned long read_sms          : 1; 
+        unsigned long run_gprs          : 1;
         unsigned long op_selec          : 1;
         
 } ;                     // cac bien dung de check trang thai cac flag he thong (hien tai cau hinh 32 flag)
@@ -60,6 +61,7 @@ extern struct MODEM    flag_modem;
     unsigned long change_status     : 1;  
     unsigned long card_status_data   : 1; 
     unsigned long cold_hot          :1;
+	unsigned long read_sms					:1;
     
 };
 extern struct SYSTEM_FLAG flag_system;
@@ -79,7 +81,7 @@ extern struct GPRS     flag_gprs;
 
 #define OFF 0
 #define ON  1
-
+#define counter_timeout 15000
 #define ESC		0x1B
 #define ctrl_z		0x1A
 
@@ -91,6 +93,15 @@ extern struct GPRS     flag_gprs;
 #define ok_status   		2
 #define connect_error   3
 #define send_error  		4
+
+#define speedLen 5
+#define latLen  12
+#define longLen 13
+extern char latitude[latLen];   //    ="1049.3361"
+extern char longitude[longLen];   // ="10641.8130"
+extern char speed_gps[speedLen];
+//TCP
+extern uint32_t timer_gprs;
 //GPIO
 #define  KEY_IN			0,19
 extern char rx_buffer1[RX_BUFFER_SIZE1];
@@ -101,8 +112,22 @@ extern unsigned int timer_send_gps;
 extern unsigned int counter_send_gps;
 extern char data_gps[gpsLen];
 
-
-
+//GSM
+#define smsLen      160
+#define smsMode    			1
+#define apnLen    			15
+#define userNameLen    	5
+#define passWordLen    	5
+#define ipServerLen    	16
+#define tcpPortLen     	6
+#define phoneLen    12
+extern char sms_reply[smsLen];
+extern char apn[apnLen];
+extern char userName[userNameLen];
+extern char passApn[passWordLen];
+extern char ipServer[ipServerLen];
+extern char tcpPort[tcpPortLen];
+extern char userCall[phoneLen];
 
 //Function
 void key_init();
