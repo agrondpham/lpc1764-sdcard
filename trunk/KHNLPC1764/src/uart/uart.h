@@ -32,9 +32,9 @@
 // ***********************
 // Function to set up UART
 //SIM900
-void UART0_Init();
-//GPS
-void UART1_Init();
+//void UART0_Init();
+////GPS
+//void UART1_Init();
 //COM
 void UART2_Init(int baudrate);
 // ***********************
@@ -50,6 +50,6 @@ char UART2_Getchar();
 void UART2_PrintString(char *pcString);
 
 
-void UART0_Sendchar(char c) ;
-void UART0_PrintString(char *pcString);
+//void UART0_Sendchar(char c) ;
+//void UART0_PrintString(char *pcString);
 #endif /*UART_H_*/
