@@ -29,7 +29,7 @@
 #include "Fatfs/ff.h"
 extern FIL file;
 void KHN_SDCARD_INIT();
-int ReadData(int,int,int);
+int ReadData(char*,char*,char*);
 int WriteData(int ,int ,int );
 void Close(void);
 #endif

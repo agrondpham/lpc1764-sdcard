@@ -15,6 +15,7 @@ RM := rm -rf
 -include src/gsm/subdir.mk
 -include src/Tcp/subdir.mk
 -include src/Led/subdir.mk
+-include src/IAP/subdir.mk
 -include src/GPS/subdir.mk
 -include src/GPIO/subdir.mk
 -include src/subdir.mk

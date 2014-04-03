@@ -35,12 +35,12 @@ void KHN_SDCARD_INIT(){
 	spi0_on();
 
 }
-int ReadData(int code,int date,int time){
+int ReadData(char* code,char* date,char* time){
 	FRESULT fr;
 //Get DateTime
 //Open folder of that date
 	f_mount(&Fatfs, "0:", 0);
-	sprintf(fileName,"0:/%d/%d.txt",date,time);
+	sprintf(fileName,"0:/%s/%s.txt",date,time);
 	fr = f_open(&file,fileName,FA_READ);
 	if(fr) return 1;
 	else return 0;

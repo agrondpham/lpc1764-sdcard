@@ -22,6 +22,7 @@ src \
 src/gsm \
 src/Tcp \
 src/Led \
+src/IAP \
 src/GPS \
 src/GPIO \
 

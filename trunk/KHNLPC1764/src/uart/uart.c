@@ -60,7 +60,7 @@
 
 // ***********************
 // Function to set up UART2 - MAX232
-void UART2_Init() {
+void UART2_Init(int baudrate) {
 	int pclk;
 	unsigned long int Fdiv;
 
@@ -72,15 +72,18 @@ void UART2_Init() {
 	// Turn on UART0 peripheral clock
 	LPC_SC ->PCLKSEL1 |= PCLK_UART2;		// PCLK_periph = CCLK/4
 //
-//	// Set PINSEL0 so that P0.2 = TXD0, P0.3 = RXD0
-	LPC_PINCON ->PINSEL0 |= 0x00500000;
+//	// Set PINSEL0 so that P0.10 = TXD0, P0.11 = RXD0
+	LPC_PINCON ->PINSEL0 |= ((1 << 20) | (1 << 22));
 	LPC_UART2 ->LCR = 0x83;		// 8 bits, no Parity, 1 Stop bit, DLAB=1
-	Fdiv = (pclk / 16) / 9600;	// Set baud rate
+	Fdiv = (pclk / 16) / baudrate;	// Set baud rate
 	//Fdiv = (pclk / 16) / 115200;	// Set baud rate
 	LPC_UART2 ->DLM = Fdiv / 256;
 	LPC_UART2 ->DLL = Fdiv % 256;
 	LPC_UART2 ->LCR = 0x03;		// 8 bits, no Parity, 1 Stop bit DLAB = 0
 	LPC_UART2 ->FCR = 0x07;		// Enable and reset TX and RX FIFO
+
+	NVIC_EnableIRQ(UART2_IRQn);
+	LPC_UART2 ->IER = IER_RBR | IER_THRE | IER_RLS; /* Enable UART0 interrupt */
 }
 
 //Init UART 0 - SIM900
