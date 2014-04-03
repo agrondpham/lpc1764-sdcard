@@ -544,7 +544,7 @@ int main(void) {
 							}
 							f_puts(data_gps, &file);
 #if _DEBUG==1
-							UART2_PrintString("Write sdcard");
+							UART2_PrintString("Write sdcard\r\n");
 #endif
 							//f_puts(" The gioi that rong lon\r\n",&file);
 							Close();
