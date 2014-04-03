@@ -6,7 +6,7 @@
 #define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
 #define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
 
-
+#define _DEBUG 1
 
 
  struct MODEM
