@@ -94,7 +94,6 @@ char version[] = "3.13";
 unsigned char resend;
 unsigned int oil_value;
 char so_vin[so_vinLen] = "";
-
 ///////////////////////////////////////////
 
 struct SYSTEM_FLAG flag_system;
@@ -129,16 +128,55 @@ void SysTick_Handler(void) {
 		}
 
 	}
-	if (timer_gprs < counter_timeout)
-	        {
-	            timer_gprs++;
-	            flag_system.timeout_gprs=0;
-	        }
-	        else flag_system.timeout_gprs=1;
+	if (timer_gprs < counter_timeout) {
+		timer_gprs++;
+		flag_system.timeout_gprs = 0;
+	} else
+		flag_system.timeout_gprs = 1;
 
 }
+int n;
+char readData[11];
 void UART2_IRQHandler(void) {
-	Read232("READ01031214#");
+//	char c;
+//	if((LPC_UART2->LSR & LSR_RDR) != 0){ // Nothing received so just block
+//	c = LPC_UART2->RBR; // Read Receiver buffer register
+//	}
+//	UART2_Sendchar(c);
+	uint8_t IIRValue, LSRValue;
+	uint8_t data;
+	//char readData[11];
+	IIRValue = LPC_UART2->IIR;
+	IIRValue >>= 1; /* skip pending bit in IIR */
+	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
+	if (IIRValue == IIR_RLS) /* Receive Line Status */
+	{
+		LSRValue = LPC_UART2->LSR;
+		if (LSRValue & LSR_RDR) /* Receive Data Ready */
+		{
+			data = LPC_UART2->RBR;
+		}
+	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
+	{
+
+		data = LPC_UART2->RBR;
+		if (data == 0x25){
+			//UART2_PrintString(readData);
+			//UART2_Sendchar('E');
+			Read232(readData);
+			//UART2_PrintString(readData);
+			n=0;
+			//memset(readData, 0, sizeof(readData));
+		}else{
+			readData[n] = data;
+			//UART2_Sendchar(data);
+
+			//UART2_PrintString(n);
+			n++;
+		}
+		//UART2_Sendchar(data);
+	}
+
 }
 void UART0_IRQHandler(void) {
 	uint8_t IIRValue, LSRValue;
@@ -349,7 +387,20 @@ void init_program(void) {
 	key_init();
 	gsm_on();
 }
-
+//int main(void) {
+//	int x;
+//	char* dataCollection;
+//	char line[256]="Khanhhoi;0913742108;213432534435;324123412341;0946309067;0913742108;213432534435;324123412341;324123412341";
+//	char* printData;
+//	UART2_Init(9600);
+//	UART2_PrintString("xxxx");
+//	//dataCollection = strtok(line, ";");
+//
+//	get_data_from_flash(line);
+//
+//	UART2_PrintString(flash_data.company);
+//	UART2_PrintString(flash_data.address);
+//}
 int main(void) {
 	uint8_t location;
 	uint8_t buffer[200];
@@ -361,10 +412,10 @@ int main(void) {
 	//LED_Config();
 	delay_ms(500);
 	upload_info();
-	delay_ms(500);
-	start_up_gsm();
+	//delay_ms(500);
+	//start_up_gsm();
 
-	flash_led();
+	//flash_led();
 
 	for (i = 0; i < 5; i++) {
 		flash_led();

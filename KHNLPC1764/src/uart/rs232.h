@@ -9,8 +9,8 @@
 #define RS232_H_
 
 struct Print232 {
-	int day, month, year;
-	int type;
+	char* day, month, year,ddmmyy;
+	char type;
 } Buff232;
 
 enum DataType            /* Defines an enumeration type    */

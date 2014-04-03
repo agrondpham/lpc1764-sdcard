@@ -1,6 +1,13 @@
 #ifndef __COMMON_H
 #define __COMMON_H
 #include "LPC17xx.h"
+#include <stdio.h>
+/*	Flash sectors to be used for data storage */
+#define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
+#define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
+
+
+
 
  struct MODEM
 {
@@ -79,6 +86,19 @@ struct GPRS
 } ;
 extern struct GPRS     flag_gprs;
 
+struct FlashInfo
+{
+       unsigned char* company           ;    // connect hoac disconnect
+       unsigned char* address           ;    // connect hoac disconnect
+       unsigned char* vin_No            ;
+       unsigned char* id_device         ;
+       unsigned char* ownerName         ;    // connect hoac disconnect
+       unsigned char* so_gplx           ;    // connect hoac disconnect
+       unsigned char* license           ;
+       unsigned char* license_iss_date  ;
+       unsigned char* license_exp_date  ;
+} ;
+extern struct FlashInfo     flash_data;
 #define OFF 0
 #define ON  1
 #define counter_timeout 15000
@@ -132,4 +152,5 @@ extern char userCall[phoneLen];
 //Function
 void key_init();
 void delay_ms (uint32_t dlyTicks);
+void get_data_from_flash(char data[256]) ;
 #endif
