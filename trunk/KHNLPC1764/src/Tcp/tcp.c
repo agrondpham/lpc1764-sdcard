@@ -75,7 +75,6 @@ unsigned char send_data_gprs (char *dataString)
 		//delay_ms(1000);
             while (!flag_gprs.send_gprs_ok)     // waiting ok flag
             {
-            	//UART2_PrintString("wating \r\n");
             	if (flag_system.timeout_gprs || flag_modem.error)
                 {
 

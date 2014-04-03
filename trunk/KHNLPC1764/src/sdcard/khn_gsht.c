@@ -47,6 +47,7 @@ int ReadData(char* code,char* date,char* time){
 	//return file;
 	//f_close(&file);
 }
+
 int WriteData(int code,int date,int time){
 	FRESULT fr;
 //Get DateTime

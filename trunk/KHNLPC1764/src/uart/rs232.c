@@ -23,7 +23,9 @@ void Read232(char* str) { //"READ01031214#"
 		//UART2_Init(115200);
 
 		//strncpy(Buff232.type, str + 4, 2);
+#if _DEBUG==1
 		UART2_PrintString("uart 115200");
+#endif
 	}
 //		Buff232.type = str[4] * 10 + str[5] - 528;
 //		Buff232.day = str[6] * 10 + str[7] - 528;

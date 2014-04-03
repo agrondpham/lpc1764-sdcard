@@ -34,7 +34,6 @@ void process_gps_data(void) {
 			break;
 		latitude[k - m] = rx_buffer1[k];
 	}
-	//UART2_PrintString("abc");
 	latitude[k - m] = NULL;
 	// 1049.3361      // lay lat
 	if ((k - m) < 5) {

@@ -317,7 +317,6 @@ void process_gsm_data(void)
 	else if (chuoitam[0] == 'C' && chuoitam[1] == 'O' && chuoitam[2] == 'N' && chuoitam[3] == 'N' && chuoitam[4] == 'E' && chuoitam[5] == 'C' && chuoitam[6] == 'T' && chuoitam[7] == ' ' && chuoitam[8] == 'F' && chuoitam[9] == 'A' && chuoitam[8] == 'I' && chuoitam[9] == 'L') flag_gprs.connect_ok = 0;
   else if (strcmp(chuoitam, "SEND OK")) {
 	  flag_gprs.send_gprs_ok = 1;
-	  UART2_PrintString("updated send Ok");
   }
  else if (chuoitam[0] == 'C' && chuoitam[1] == 'L' && chuoitam[2] == 'O' && chuoitam[3] == 'S' && chuoitam[4] == 'E') flag_gprs.connect_ok = 0;     // dong ket noi server
 								

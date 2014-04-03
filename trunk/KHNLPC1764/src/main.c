@@ -199,7 +199,9 @@ void UART0_IRQHandler(void) {
 		//UART2_PrintString(tempValue);
 
 		data = LPC_UART0->RBR;
+#if _DEBUG==1
 		UART2_Sendchar(data);
+#endif
 		switch (data) {
 		case 0x0A: {
 			trangthai_gui = 0;
@@ -541,7 +543,9 @@ int main(void) {
 								break;
 							}
 							f_puts(data_gps, &file);
+#if _DEBUG==1
 							UART2_PrintString("Write sdcard");
+#endif
 							//f_puts(" The gioi that rong lon\r\n",&file);
 							Close();
 
