@@ -160,14 +160,14 @@ void UART2_IRQHandler(void) {
 	{
 
 		data = LPC_UART2->RBR;
-		if (data == 0x25){
+		if (data == 0x25) {
 			//UART2_PrintString(readData);
 			//UART2_Sendchar('E');
 			Read232(readData);
 			//UART2_PrintString(readData);
-			n=0;
+			n = 0;
 			//memset(readData, 0, sizeof(readData));
-		}else{
+		} else {
 			readData[n] = data;
 			//UART2_Sendchar(data);
 
@@ -526,7 +526,6 @@ int main(void) {
 							flag_gprs.connect_ok = 1;   // ket noi ok
 
 							memset(data_gps, gpsLen, NULL); // xoa NULL het GPS data
-
 							sprintf(data_gps,
 									"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
 									version, imei, latitude, longitude,
@@ -535,7 +534,8 @@ int main(void) {
 									flag_system.status_key,
 									flag_system.card_status, so_vin, phoneDrive,
 									flag_system.cold_hot, flag_system.sleep,
-									time_gps_send);    // trang thai IN3
+									time_gps_send);
+							// trang thai IN3
 							switch (WriteData(1, 17022014, 160000)) {
 							case 1:
 								break;
@@ -548,7 +548,15 @@ int main(void) {
 #endif
 							//f_puts(" The gioi that rong lon\r\n",&file);
 							Close();
-
+							sprintf(data_gps,
+									"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
+									version, imei, latitude, longitude,
+									speed_gps, oil_value,
+									flag_system.status_door,
+									flag_system.status_key,
+									flag_system.card_status, so_vin, phoneDrive,
+									flag_system.cold_hot, flag_system.sleep,
+									time_gps_send);
 							if (send_data_gprs(data_gps) != ok_status) // send data
 							{
 								//UART2_PrintString("loi xay ra\r\n");
