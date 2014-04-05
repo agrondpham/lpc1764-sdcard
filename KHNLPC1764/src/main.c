@@ -25,6 +25,10 @@
 // CODE RED TECHNOLOGIES LTD. 
 //
 //*****************************************************************************
+///
+//
+//ATu <14/04/05,08:57:59;1052.0366;10641.1721;0;0;0>
+//$$KHN$3.13,56,359772037898310,1052.0366,N,10641.1721,E,0,100,0,0,1,CHUA CAP NHAP,000,1,0,14/04/05,08:56:52$
 
 #include "LPC17xx.h"
 #include <cr_section_macros.h>
@@ -102,37 +106,46 @@ struct SYSTEM_FLAG flag_system;
  delays number of tick Systicks (happens every 1 ms)
  *------------------------------------------------------------------------------*/
 void SysTick_Handler(void) {
-	uint8_t var;
-	msTicks++; /* increment counter necessary in Delay() */
-	var = GPIOGetValue(KEY_IN);      //Read the button value
-	if (var == 0) {
-		//GPIOSetValue(BUZZER, HIGH);
-	} else {
-		//GPIOSetValue(BUZZER, LOW);
-	}
+	msTicks++;
 	if (interruptTimer_0 < 1000)
 		interruptTimer_0++;
 	else {
+		interruptTimer_0 = 0;
+		toggle = ~toggle;
+		GPIOSetValue(LED_STATUS, toggle);
 		if (timer_gps < counter_gps)
 			timer_gps++;
 		else {
+			timer_gps = 0;
 			flag_system.request_data = 1;
 			flag_system.gps_detect = 0; // moi lan request data thi coi nhu gps_detect=0
 		}
-		interruptTimer_0 = 0;
 		if (timer_send_gps < counter_send_gps)
 			timer_send_gps++; // cho nay cai dat thong so thoi gian de kiem tra gps
 		else {
+			timer_send_gps = 0;
 			flag_system.send_data = 1;     // send data o day
 			flag_system.write_data = 1;
+		}
+		if (++timer_read_sms >= 10) {
+			timer_read_sms = 0;
+			flag_modem.read_sms = 1;
 		}
 
 	}
 	if (timer_gprs < counter_timeout) {
 		timer_gprs++;
 		flag_system.timeout_gprs = 0;
-	} else
+	} else {
+		timer_gprs = 0;
 		flag_system.timeout_gprs = 1;
+	}
+
+	if (timer_check_sms < counter_timeout_sms) {
+		timer_check_sms++;
+		flag_system.timeout_sms = 0;
+	} else
+		flag_system.timeout_sms = 1;
 
 }
 int n;
@@ -146,20 +159,20 @@ void UART2_IRQHandler(void) {
 	uint8_t IIRValue, LSRValue;
 	uint8_t data;
 	//char readData[11];
-	IIRValue = LPC_UART2->IIR;
+	IIRValue = LPC_UART2 ->IIR;
 	IIRValue >>= 1; /* skip pending bit in IIR */
 	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
 	if (IIRValue == IIR_RLS) /* Receive Line Status */
 	{
-		LSRValue = LPC_UART2->LSR;
+		LSRValue = LPC_UART2 ->LSR;
 		if (LSRValue & LSR_RDR) /* Receive Data Ready */
 		{
-			data = LPC_UART2->RBR;
+			data = LPC_UART2 ->RBR;
 		}
 	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
 	{
 
-		data = LPC_UART2->RBR;
+		data = LPC_UART2 ->RBR;
 		if (data == 0x25) {
 			//UART2_PrintString(readData);
 			//UART2_Sendchar('E');
@@ -182,15 +195,15 @@ void UART0_IRQHandler(void) {
 	uint8_t IIRValue, LSRValue;
 	uint8_t data;
 	unsigned char trangthai_gui;
-	IIRValue = LPC_UART0->IIR;
+	IIRValue = LPC_UART0 ->IIR;
 	IIRValue >>= 1; /* skip pending bit in IIR */
 	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
 	if (IIRValue == IIR_RLS) /* Receive Line Status */
 	{
-		LSRValue = LPC_UART0->LSR;
+		LSRValue = LPC_UART0 ->LSR;
 		if (LSRValue & LSR_RDR) /* Receive Data Ready */
 		{
-			data = LPC_UART0->RBR;
+			data = LPC_UART0 ->RBR;
 			//UART2_Sendchar(temp);
 		}
 	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
@@ -198,7 +211,7 @@ void UART0_IRQHandler(void) {
 		//sprintf(tempValue,";%d",flag_gprs.send_gprs_ok);
 		//UART2_PrintString(tempValue);
 
-		data = LPC_UART0->RBR;
+		data = LPC_UART0 ->RBR;
 #if _DEBUG==1
 		UART2_Sendchar(data);
 #endif
@@ -268,20 +281,20 @@ void UART0_IRQHandler(void) {
 void UART1_IRQHandler(void) {
 	uint8_t IIRValue, LSRValue;
 	uint8_t data;
-	IIRValue = LPC_UART1->IIR;
+	IIRValue = LPC_UART1 ->IIR;
 	IIRValue >>= 1; /* skip pending bit in IIR */
 	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
 	if (IIRValue == IIR_RLS) /* Receive Line Status */
 	{
-		LSRValue = LPC_UART1->LSR;
+		LSRValue = LPC_UART1 ->LSR;
 		if (LSRValue & LSR_RDR) /* Receive Data Ready */
 		{
-			data = LPC_UART1->RBR;
+			data = LPC_UART1 ->RBR;
 			//UART2_Sendchar(temp);
 		}
 	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
 	{
-		data = LPC_UART1->RBR;
+		data = LPC_UART1 ->RBR;
 		//UART2_PrintString("?");
 		if (flag_system.request_data) {
 			if (data == '$') {
@@ -354,7 +367,26 @@ void TIMER1_IRQHandler(void) {
 }
 
 void upload_info() {
-	unsigned char i, j;
+	unsigned char x, j;
+	unsigned char phone_2[256];
+	for (x = 0; x < phoneLen; x++) {
+		if (phone_2[x] == NULL || phone_2[x] == 0xFF)
+			break;
+		if (phone_2[x] > 0x39 || phone_2[x] < 0x30)
+			break;
+		phone_1[x] = phone_2[x];
+	}
+	phone_1[x] = NULL;
+	if (phone_1[0] == NULL || phone_1[0] == 0xF)
+		sprintf(phone_1, "000");
+//// start phoneDrive
+	for (j = 0; j < phoneLen; j++) {
+		if (phone_1[j] == NULL || phone_1[j] == 0xFF)
+			break;
+		phoneDrive[j] = phone_1[j];
+	}
+	phoneDrive[j] = NULL;
+	///end
 	if (apn[0] == NULL || apn[0] == 0xff) {
 		sprintf(apn, "v-internet");
 		sprintf(userName, "");
@@ -423,6 +455,9 @@ int main(void) {
 		flash_led();
 		delay_ms(1000);
 	}
+	GPIOSetValue(BUZZER, HIGH);
+	delay_ms(50);
+	GPIOSetValue(BUZZER, LOW);
 
 //disk_initialize(0);
 	while (1) {
@@ -445,58 +480,44 @@ int main(void) {
 			}
 		}
 		if (flag_modem.modem == connected) {
+			if (flag_modem.error == 1)
+				flag_modem.modem = not_connect;
+			else
+				flag_modem.modem = connected;
+			if (flag_system.read_sms == 1) {
+				UART0_PrintString("AT+CMGR=1\r");
+				flag_system.read_sms = 0;
+				delay_ms(1000);
+			} else if (flag_modem.cmgr == 1) {
+				flag_modem.cmgr = 0;
+				if (strlen(userCall_new) > 10)
+					process_command();
+				delay_ms(1000);
+				send_sms_func(sms_reply);
+				delay_ms(1000);
+				//UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+				flag_system.send_data = 0;
+				//UART0_PrintString("AT\n\r");
+				delay_ms(1000);
+				//flag_modem.modem = not_connect;
 
-//			if(flag_modem.error == 1)flag_modem.modem = not_connect;
-//			else flag_modem.modem = connected;
-//
-//			 if (flag_modem.cmgr ==1)
-//        {
-//          flag_modem.cmgr=0;
-//
-//					if(strlen(userCall)>10)	process_command();
-//					delay_ms(1000);
-//					send_sms_func(sms_reply);
-//					delay_ms(1000);
-//         UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
-//					flag_system.send_data =0;
-//          delay_ms(1000);
-//
-//
-//        }
-//        else if (flag_system.send_data_flag == smsMode )
-//				 {
-//									flag_system.send_data_flag =0;
-//										flag_system.send_data =0;
-//
-//                           send_sms_func(sms_reply);
-//
-//                           delay_ms(1000);
-//                            UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
-//                            delay_ms(3000);
-//          }
-//			  else if (flag_modem.ring)
-//        {
-//           ring_func();
-//         }
-//
-//							else if(flag_system.read_sms)
-//
-//							{
-//
-//									UART0_PrintString("AT+CMGR=1\r");
-//									flag_system.read_sms=0;
-//									delay_ms(1000);
-//							}
-//				else
+			} else if (flag_system.send_data_flag == smsMode) {
+				flag_system.send_data_flag = 0;
+				flag_system.send_data = 0;
+				send_sms_func(sms_reply);
+				delay_ms(1000);
+				UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+				delay_ms(3000);
+			}
 			if (flag_system.send_data || flag_system.change_status) {
 
 				if (flag_gprs.deactive_pdp) {
-					sprintf(buffer, "%c", ctrl_z);
-					//print_data(buffer);
+					sprintf(buffer, "%c", ESC);
+					UART0_PrintString(buffer);
 					delay_ms(1000);
 					UART0_PrintString("AT+CIPSHUT\r");
 					delay_ms(1000);
-					if (++counter_init >= 20)    // test
+					if (++counter_init >= 5)    // test
 							{
 						counter_init = 0;
 
@@ -508,24 +529,19 @@ int main(void) {
 					flag_gprs.status_gprs = cstt_error;
 				} else if (ipServer[0] != NULL
 						&& ipServer[0] != 0xFF&& tcpPort[0] != NULL) // thieu xac nhan cac thong so
+								{for (vitri = 0; vitri < strlen(imei); vitri++) // kiem tra thanh phan ky tu trong imei
+						{             // dung tam bien vitri de lam bien dem
+							if (imei[vitri] < 0x30 || imei[vitri] > 0x39) {
+								if (check_imei() == 0) // check lai imei neu thay ok thi bat dau gui
 								{
-					for (vitri = 0; vitri < strlen(imei); vitri++) // kiem tra thanh phan ky tu trong imei
-							{             // dung tam bien vitri de lam bien dem
-						if (imei[vitri] < 0x30 || imei[vitri] > 0x39) {
-							if (check_imei() == 0) // check lai imei neu thay ok thi bat dau gui
-									{
-								vitri = 0;      // gan i = 0 de cho gui tiep
-							} else
+									vitri = 0;      // gan i = 0 de cho gui tiep
+								} else
 								vitri = 1;    // gan = 1 de stop gui
-							break;
+								break;
+							}
 						}
-					}
-					if (vitri == 0 || vitri == strlen(imei)) // neu = 0 thi cho gui vi imei dung
-							{
-						if (connectServer(ipServer, tcpPort) == ok_status) {
-							flag_gprs.connect_ok = 1;   // ket noi ok
-
-							memset(data_gps, gpsLen, NULL); // xoa NULL het GPS data
+						if (vitri == 0 || vitri == strlen(imei)) // neu = 0 thi cho gui vi imei dung
+						{
 							sprintf(data_gps,
 									"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
 									version, imei, latitude, longitude,
@@ -536,53 +552,80 @@ int main(void) {
 									flag_system.cold_hot, flag_system.sleep,
 									time_gps_send);
 							// trang thai IN3
-							switch (WriteData(1, 17022014, 160000)) {
-							case 1:
-								break;
-							case 2:
-								break;
+//							switch (WriteData(1, 17022014, 160000)) {
+//								case 1:
+//								break;
+//								case 2:
+//								break;
+//							}
+//							f_puts(data_gps, &file);
+//#if _DEBUG==1
+//								UART2_PrintString("Write sdcard\r\n");
+//#endif
+//								//f_puts(" The gioi that rong lon\r\n",&file);
+//								Close();
+							/// sdcard end
+							if (connectServer(ipServer, tcpPort) == ok_status) {
+								flag_gprs.connect_ok = 1;   // ket noi ok
+
+								memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
+
+								sprintf(data_gps,
+										"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s$\r\n",
+										version, imei, latitude, longitude,
+										speed_gps, oil_value,
+										flag_system.status_door,
+										flag_system.status_key,
+										flag_system.card_status, so_vin, phoneDrive,
+										flag_system.cold_hot, flag_system.sleep,gps_date_string,
+										gps_time_string);//time_gps_send);
+								if (send_data_gprs(data_gps) != ok_status)// send data
+								{
+									//UART2_PrintString("loi xay ra\r\n");
+									flag_gprs.deactive_pdp = 1;// neu send bi loi thi reset lai gprs
+								}
+								//UART2_PrintString("Khong loi khi gui \r\n");
+								delay_ms(1000);
+								UART0_PrintString("AT+CIPCLOSE\r");
+								resend_gprs = 0;
+								flag_gprs.connect_ok = 0;
+							} else {
+								flag_gprs.connect_ok = 0;  // ket noi bi loi
+								flag_gprs.deactive_pdp = 1;
 							}
-							f_puts(data_gps, &file);
-#if _DEBUG==1
-							UART2_PrintString("Write sdcard\r\n");
-#endif
-							//f_puts(" The gioi that rong lon\r\n",&file);
-							Close();
-							sprintf(data_gps,
-									"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
-									version, imei, latitude, longitude,
-									speed_gps, oil_value,
-									flag_system.status_door,
-									flag_system.status_key,
-									flag_system.card_status, so_vin, phoneDrive,
-									flag_system.cold_hot, flag_system.sleep,
-									time_gps_send);
-							if (send_data_gprs(data_gps) != ok_status) // send data
-							{
-								//UART2_PrintString("loi xay ra\r\n");
-								flag_gprs.deactive_pdp = 1; // neu send bi loi thi reset lai gprs
-							}
-							//UART2_PrintString("Khong loi khi gui \r\n");
-							delay_ms(1000);
-							UART0_PrintString("AT+CIPCLOSE\r");
-							resend_gprs = 0;
-						} else {
-							flag_gprs.connect_ok = 0;   // ket noi bi loi
-							flag_gprs.deactive_pdp = 1;
-						}
-					}   // end cua vitri=0
+						}   // end cua vitri=0
+///start_sdcar
+//						switch (WriteData(1, 17022014, 160000)) {
+//							case 1:
+//							break;
+//							case 2:
+//							break;
+//						}
+//						if(f_puts(data_gps, &file)>-1){
+//							Close();
+//#if _DEBUG==1
+//							UART2_PrintString("Write sdcard\r\n");
+//#endif
+//						}else{
+//#if _DEBUG==1
+//							UART2_PrintString("CAN NOT Write sdcard\r\n");
+//#endif
+//						}
+
+						//f_puts(" The gioi that rong lon\r\n",&file);
+
+						////
+					}
+
+					flag_system.send_data = 0;
+					flag_system.change_status = 0;
 
 				}
-
-				flag_system.send_data = 0;
-				flag_system.change_status = 0;
 
 			}
 
 		}
-
 	}
-}
 
 //int main(void) {
 //	char line[82];

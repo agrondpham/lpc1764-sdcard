@@ -6,6 +6,7 @@ unsigned int counter_send_gps;
 char data_gps[gpsLen];
 unsigned int timer_gps;
 unsigned int timer_send_gps;
+unsigned int timer_read_sms;
 volatile uint32_t msTicks;
 struct MODEM flag_modem;
 struct GPRS flag_gprs;
