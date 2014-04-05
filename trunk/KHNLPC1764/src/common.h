@@ -99,12 +99,15 @@ struct FlashInfo
        unsigned char* license_exp_date  ;
 } ;
 extern struct FlashInfo     flash_data;
+
+#define  NULL  0
+
 #define OFF 0
 #define ON  1
 #define counter_timeout 15000
 #define ESC		0x1B
 #define ctrl_z		0x1A
-
+#define counter_timeout_sms 5000
 #define gpsLen      			200
 #define RX_BUFFER_SIZE1 	200
 #define counter_gps 			10
@@ -113,13 +116,18 @@ extern struct FlashInfo     flash_data;
 #define ok_status   		2
 #define connect_error   3
 #define send_error  		4
+///GPS
+#define gps_time_len    7
+#define gps_date_len    7
 
 #define speedLen 5
 #define latLen  12
 #define longLen 13
+extern char gps_time_string [gps_time_len];
 extern char latitude[latLen];   //    ="1049.3361"
 extern char longitude[longLen];   // ="10641.8130"
 extern char speed_gps[speedLen];
+extern char gps_date_string[gps_date_len];
 //TCP
 extern uint32_t timer_gprs;
 //GPIO
@@ -129,6 +137,9 @@ extern unsigned int interruptTimer_0;
 extern volatile uint32_t msTicks;
 extern unsigned int timer_gps;
 extern unsigned int timer_send_gps;
+extern unsigned int timer_read_sms;
+extern unsigned int timer_check_sms;
+
 extern unsigned int counter_send_gps;
 extern char data_gps[gpsLen];
 
@@ -141,6 +152,7 @@ extern char data_gps[gpsLen];
 #define ipServerLen    	16
 #define tcpPortLen     	6
 #define phoneLen    12
+extern  char phone_1[phoneLen];
 extern char sms_reply[smsLen];
 extern char apn[apnLen];
 extern char userName[userNameLen];
@@ -148,6 +160,9 @@ extern char passApn[passWordLen];
 extern char ipServer[ipServerLen];
 extern char tcpPort[tcpPortLen];
 extern char userCall[phoneLen];
+extern char userCall_new[phoneLen];
+extern char data_sms[smsLen];
+extern void process_command();
 
 //Function
 void key_init();

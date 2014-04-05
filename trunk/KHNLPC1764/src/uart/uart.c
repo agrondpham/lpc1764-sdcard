@@ -75,8 +75,9 @@ void UART2_Init(int baudrate) {
 //	// Set PINSEL0 so that P0.10 = TXD0, P0.11 = RXD0
 	LPC_PINCON ->PINSEL0 |= ((1 << 20) | (1 << 22));
 	LPC_UART2 ->LCR = 0x83;		// 8 bits, no Parity, 1 Stop bit, DLAB=1
-	Fdiv = (pclk / 16) / baudrate;	// Set baud rate
+	//Fdiv = (pclk / 16) / baudrate;	// Set baud rate
 	//Fdiv = (pclk / 16) / 115200;	// Set baud rate
+	Fdiv = (pclk / 16) / 9600;
 	LPC_UART2 ->DLM = Fdiv / 256;
 	LPC_UART2 ->DLL = Fdiv % 256;
 	LPC_UART2 ->LCR = 0x03;		// 8 bits, no Parity, 1 Stop bit DLAB = 0
