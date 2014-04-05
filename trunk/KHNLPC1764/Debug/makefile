@@ -39,7 +39,7 @@ all: KHNLPC1764.axf
 KHNLPC1764.axf: $(OBJS) $(USER_OBJS)
 	@echo 'Building target: $@'
 	@echo 'Invoking: MCU Linker'
-	arm-none-eabi-gcc -nostdlib -L"C:\Users\Long\Documents\LPCXpresso_7.0.0_92\workspace\CMSISv2p00_LPC17xx\Debug" -Xlinker --gc-sections -Xlinker -Map=KHNLPC1764.map -mcpu=cortex-m3 -mthumb -T "KHNLPC1764_Debug.ld" -o "KHNLPC1764.axf" $(OBJS) $(USER_OBJS) $(LIBS)
+	arm-none-eabi-gcc -nostdlib -L"E:\workspaceLPC\CMSISv2p00_LPC17xx\Debug" -Xlinker --gc-sections -Xlinker -Map=KHNLPC1764.map -mcpu=cortex-m3 -mthumb -T "KHNLPC1764_Debug.ld" -o "KHNLPC1764.axf" $(OBJS) $(USER_OBJS) $(LIBS)
 	@echo 'Finished building target: $@'
 	@echo ' '
 	$(MAKE) --no-print-directory post-build
