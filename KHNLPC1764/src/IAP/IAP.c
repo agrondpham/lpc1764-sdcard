@@ -21,8 +21,12 @@
  * warranty that such application will be suitable for the specified
  * use without further testing or modification.
  *****************************************************************************/
+//#include "IAP.h"
+//#include "LPC17xx.h"
+//#include "system_LPC17xx.h"
+
 #include "IAP.h"
-#include "LPC17xx.h"
+#include <LPC17xx.h>
 #include "system_LPC17xx.h"
 
 /* IAP Command Definitions */

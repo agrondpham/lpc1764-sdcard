@@ -3,15 +3,18 @@
 uint32_t timer_gprs;
 unsigned char init_tcp (char *apnString, char * userName_a,  char *passWord_a, unsigned char pos)
 {
-	uint32_t buffer_tam[20];
+	uint32_t buffer_tam[50];
     if (pos==cstt_error) goto cstt_label;
     else if (pos==ciicr_error) goto ciicr_label;     
 cstt_label: 
-   
-    //sprintf("AT+CSTT=\"%s\",\"%s\",\"%s\"\r", apnString, userName_a, passWord_a);
-			//sprintf(buffer_tam,"%s%c", dataString, ctrl_z);
+   //start
+UART0_PrintString("AT\r");
+delay_ms(500);
+    sprintf(buffer_tam,"AT+CSTT=\"%s\",\"%s\",\"%s\"\r", apnString, userName_a, passWord_a);
+    UART0_PrintString(buffer_tam);
 			//print_data(buffer_tam);
-		UART0_PrintString("AT+CSTT=\"v-internet\",\"\",\"\"\r");
+// end
+	//	UART0_PrintString("AT+CSTT=\"v-internet\",\"\",\"\"\r");
         flag_system.timeout_gprs = 0;
            flag_modem.ok=0;
            flag_modem.error=0;
