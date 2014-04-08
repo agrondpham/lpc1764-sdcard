@@ -30,7 +30,8 @@ set timer as MATx instead of CAPx. */
 #define TIME_INTERVALmS	1000
 
 #define TIME_INTERVAL	(9000000/100 - 1)
-#define TIMER0_INTERVAL	((2 * (4 *(SystemCoreClock/10))) - 1)
+#define TIMER0_INTERVAL	((2 * (4 *(SystemCoreClock/100))) - 1)
+//#define TIMER0_INTERVAL	((2 * (2 *(SystemCoreClock/100))) - 1)
 #define TIMER1_INTERVAL	((2 *(4 *(SystemCoreClock/10))/3) - 1)
 
 extern volatile uint32_t timer0_counter;

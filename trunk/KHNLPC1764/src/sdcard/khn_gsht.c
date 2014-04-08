@@ -42,7 +42,7 @@ int ReadData(char* code,char* date,char* time){
 	f_mount(&Fatfs, "0:", 0);
 	sprintf(fileName,"0:/%s/%s.txt",date,time);
 	fr = f_open(&file,fileName,FA_READ);
-	if(fr) return 1;
+	if(fr==FR_OK) return 1;
 	else return 0;
 	//return file;
 	//f_close(&file);

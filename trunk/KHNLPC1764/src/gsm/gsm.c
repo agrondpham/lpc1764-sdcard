@@ -12,10 +12,11 @@ char check_error[] = "ERROR";
 char infor_cmd[] = "222";
 ///////////////////define_call
 char all_call[] = "GOI";
+char print_all[] = "IN1:";
 
 char passWord[] = "0000";
 char speed[speedLen];
-char dat_version[] = "240314";
+char dat_version[] = "070414";
 unsigned int timer_check_sms = 0;
 unsigned int timer_read_sms = 0;
 unsigned char door_key;
@@ -25,7 +26,7 @@ char phone_1[phoneLen];
 unsigned char queue_sms;
 char data_sms[smsLen];
 char Selection[Selec];
-char sms_time[20];
+char sms_time[25];
 char userCall_new[phoneLen];
 char userCall[phoneLen];
 char sms_reply[smsLen];
@@ -34,6 +35,7 @@ char time_gps[20];
 char time_gps_send[20];
 
 char imei[imeiLen];
+
 
 char rx_buffer0[RX_BUFFER_SIZE0];
 unsigned char rx_wr_index0, rx_rd_index0, rx_counter0;
@@ -138,6 +140,20 @@ void upperCase() {
 			data_sms[i] = data_sms[i] - 0x20;   // chuyen sang dang chu hoa
 	}
 }
+void data_SMS_read() {
+	int i, k;
+	for (i = 0; i < RX_BUFFER_SIZE0; i++) {
+		if (rx_buffer0[i] == NULL )
+			break;
+		data_sms[i] = rx_buffer0[i];         // chuoi nay chua den 160 ky tu
+	}
+	data_sms[i] = NULL;
+	memset(sms_reply, 160, NULL );
+	//UART2_PrintString("da vao process_SMS \n\r ");
+	sprintf(sms_reply, "D: %s;END %s;i=%d \r\n", data_sms, sms_time, i);
+	UART2_PrintString(sms_reply);
+	upperCase();   // chuyen sang chu hoa het
+}
 void process_SMS(void) {
 	unsigned char i, k, j;
 
@@ -154,23 +170,22 @@ void process_SMS(void) {
 	k = i + 1;
 	k = k + 2; ///k=k+5;
 	for (i = k;; i++) {
-		if (rx_buffer0[i] == ',')
+		if (rx_buffer0[i] == '"')
 			break;
 		userCall[i - k] = rx_buffer0[i];        // 168...// +84168...
 	}
 	userCall[i - k] = NULL;
 
-	for (j = 0; j < phoneLen; j++)
-	{
-		if (userCall[i] == NULL)
-					break;
+	for (j = 0; j < phoneLen; j++) {
+		if (userCall[j] == NULL )
+			break;
 		userCall_new[j] = userCall[j];
 	}
 	userCall_new[j] = NULL;
 
-	memset(sms_reply,160,NULL);
-	sprintf(sms_reply,"1:%s,2_%s:,3_%s\r",rx_buffer0,userCall,userCall_new);
-	UART2_PrintString(sms_reply);
+	//memset(sms_reply,160,NULL);
+	//sprintf(sms_reply,"1:%s,2_%s:,3_%s\r",rx_buffer0,userCall,userCall_new);
+	//UART2_PrintString(sms_reply);
 	k = i + 1;              // bo dau "
 
 	k = k + 1;              // bo dau ,
@@ -184,20 +199,21 @@ void process_SMS(void) {
 			break;
 		sms_time[i - k] = rx_buffer0[i];  // lay thoi gian cua tin nhan
 	}
-	sms_time[i - k] = NULL;
-	memset(data_sms, smsLen, NULL);
+
+	memset(data_sms, smsLen, NULL );
 	k = i + 1; // bo wa dau "      den phan noi dung tin nhan
 	for (i = k; i < RX_BUFFER_SIZE0; i++) // tach du lieu cua noi dung tin  nhan tu vi tri cho den het toan bo tin nhan
 			{
-		if (rx_buffer0[i] == NULL)
+		if (rx_buffer0[i] == NULL )
 			break;
 		data_sms[i - k] = rx_buffer0[i];         // chuoi nay chua den 160 ky tu
 	}
 	data_sms[i - k] = NULL;
-	// memset(sms_reply,160,NULL);
-	sprintf(sms_reply,"1:%s,2_D%s:",data_sms,sms_time);
-			UART2_PrintString(sms_reply);
+
 	upperCase();   // chuyen sang chu hoa het
+//	memset(sms_reply, 160, NULL );
+//	sprintf(sms_reply, "1:%s,2:%s:", data_sms, sms_time);
+//	UART2_PrintString(sms_reply);
 
 }
 void process_gsm_data(void) {
@@ -206,7 +222,7 @@ void process_gsm_data(void) {
 	if (flag_system.imei_check) {
 		flag_system.imei_check = 0;
 		for (i = 0; i < imeiLen; i++) {
-			if (rx_buffer0[i] == NULL)
+			if (rx_buffer0[i] == NULL )
 				break;
 			imei[i] = rx_buffer0[i];
 		}
@@ -230,7 +246,25 @@ void process_gsm_data(void) {
 			chuoitam[j - i] = rx_buffer0[j];
 		}
 		chuoitam[j - i] = NULL;
+
 		process_SMS();
+		//clearFlash();
+
+//		memset(data_sms, smsLen, NULL );
+//		//k = i + 1; // bo wa dau "      den phan noi dung tin nhan
+//		for (i = 0; i < RX_BUFFER_SIZE0; i++) // tach du lieu cua noi dung tin  nhan tu vi tri cho den het toan bo tin nhan
+//				{
+//			if (rx_buffer0[i] == NULL )
+//				break;
+//			data_sms[i ] = rx_buffer0[i];         // chuoi nay chua den 160 ky tu
+//		}
+//		data_sms[i] = NULL;
+//
+//		upperCase();   // chuyen sang chu hoa het
+//		memset(sms_reply, 160, NULL );
+//		sprintf(sms_reply, "3:%s,4:%s:", data_sms, sms_time);
+//		UART2_PrintString(sms_reply);
+
 	} else if (chuoitam[0] == '+' && chuoitam[1] == 'C' && chuoitam[2] == 'U'
 			&& chuoitam[3] == 'S' && chuoitam[4] == 'D') {
 		i++;
@@ -300,8 +334,11 @@ void process_gsm_data(void) {
 
 	else if (strcmp(chuoitam, check_ok) == 0) {
 		flag_modem.ok = 1;
-	} else if (strcmp(chuoitam, cmti) == 0)
+	} else if (strcmp(chuoitam, cmti) == 0) {
 		flag_system.read_sms = 1;
+		EraseSectors();
+	}
+
 	else if (strcmp(chuoitam, check_error) == 0)
 		flag_modem.error = 1;
 	else if (chuoitam[0] == 'E' && chuoitam[1] == 'R' && chuoitam[2] == 'R'
@@ -372,7 +409,7 @@ void process_gsm_data(void) {
 			{
 		i = i + 2;  // bo qua : va khoang trang
 		for (j = i; j < 20; j++) {
-			if (rx_buffer0[j] == NULL)
+			if (rx_buffer0[j] == NULL )
 				break;
 			chuoitam[j - i] = rx_buffer0[j];
 		}
@@ -408,13 +445,13 @@ unsigned char check_imei() {
 void send_sms_func(char *smsString) {
 	char buffer[200];
 
-	memset(buffer, 200, NULL);
+	memset(buffer, 200, NULL );
 	delay_ms(500);
 	sprintf(buffer, "AT+CMGS=\"%s\"\r", userCall_new);
 	//sprintf(buffer,"AT+CMGS=\"0914777116\"\r");
 	UART0_PrintString(buffer);
 	delay_ms(1000);
-	memset(buffer, 200, NULL);
+	memset(buffer, 200, NULL );
 	delay_ms(300);
 	sprintf(buffer, "%s%c", smsString, ctrl_z);
 	delay_ms(300);
@@ -431,7 +468,7 @@ void send_sms_func(char *smsString) {
 			break;
 		}
 	}
-	memset(userCall, phoneLen, NULL);
+	memset(userCall, phoneLen, NULL );
 }
 
 void process_command() {
@@ -439,18 +476,25 @@ void process_command() {
 	unsigned char i, k;
 	char chuoitam[20];
 	char co_loi = 0;
-#if _DEBUG==1
-	UART2_PrintString("vao  process_command\r\n");
-#endif
+	char ngay[3];
+	char thang[3];
+	char nam[3];
+	char gio[3];
+	char phut[3];
+	char giay[3];
+
+//#if _DEBUG==1
+//	UART2_PrintString("vao  process_command\r\n");
+//#endif
 	for (i = 0; i < smsLen; i++) {
 		if (data_sms[i] == NULL || data_sms[i] == ' ')
 			break;
 		chuoitam[i] = data_sms[i];
 	}
 	chuoitam[i] = NULL;
-	memset(sms_reply, smsLen, NULL);
-	sprintf(sms_reply,"%s",chuoitam);
-	UART2_PrintString(sms_reply);
+	//memset(sms_reply, smsLen, NULL );
+	//sprintf(sms_reply, "chuoitam: %s,data_sms: %s", chuoitam, data_sms);
+	//UART2_PrintString(sms_reply);
 	//delay_ms(500);
 	if (strcmp(chuoitam, passWord) == 0) {
 		k = i + 1;
@@ -461,7 +505,7 @@ void process_command() {
 			chuoitam[i - k] = data_sms[i];
 		}
 		chuoitam[i - k] = NULL;
-		memset(sms_reply, smsLen, NULL);
+		memset(sms_reply, smsLen, NULL );
 		if (strcmp(chuoitam, infor_cmd) == 0) {
 			sprintf(sms_reply,
 					"KHN:%s,TCP:%s,%s,%s,IP:%s,%s,C:%d,ID:%s,S:%s,P:%s,LAT:%s,LOG:%s,alarm:%d,K:%d,SLEEP:%d",
@@ -498,9 +542,73 @@ void process_command() {
 			//for (i=0;i<apnLen;i++) setup_call_sms_save[i]=setup_call_sms[i];
 
 			sprintf(sms_reply, "DT:%s", phone_1);
+			flag_modem.upinfo = 1;
 		}
 		flag_system.send_data_flag = smsMode;
 	}
+	///////// printer
+	else if (strcmp(chuoitam, print_all) == 0)      //in du lieu trong ngay
+			{
+				   // IN1: 05 08 12 08 30 15
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			ngay[i - k] = data_sms[i];
+		}
+		ngay[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			thang[i - k] = data_sms[i];
+		}
+		thang[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			nam[i - k] = data_sms[i];
+		}
+		nam[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			gio[i - k] = data_sms[i];
+		}
+		gio[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			phut[i - k] = data_sms[i];
+		}
+		phut[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			giay[i - k] = data_sms[i];
+		}
+		giay[i - k] = NULL;
+		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
+				giay);
+
+		if (flag_system.card_status) {
+			find_file(chuoitam);
+			//ket_qua();
+			sprintf(sms_reply, "Da in xong %s", chuoitam);
+			flag_system.led_check = 0;
+		} else
+			sprintf(sms_reply, "Chua lap the nho");
+		#if _DEBUG==1
+			UART2_PrintString("vao  print_all\r\n");
+		#endif
+		flag_system.send_data_flag = smsMode;
+	}
+	///////////END
+
 }
 void ring_func() {
 	//led_status=0;
