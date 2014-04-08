@@ -5,6 +5,8 @@
 #include "../uart/uart.h"
 #include "../GPIO/GPIO.h"
 #include "../LED/led.h"
+#include "../sdcard/khn_gsht.h"
+
 #include <string.h>
 //Define variable is used
 #define RX_BUFFER_SIZE0 200

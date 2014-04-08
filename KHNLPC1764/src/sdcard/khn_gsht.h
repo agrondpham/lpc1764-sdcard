@@ -27,9 +27,12 @@
 #include "SD.h"
 #include "Fatfs/diskio.h"
 #include "Fatfs/ff.h"
+#include "../common.h"
 extern FIL file;
 void KHN_SDCARD_INIT();
 int ReadData(char*,char*,char*);
 int WriteData(int ,int ,int );
 void Close(void);
+//for print by UART 9600
+void KHN_Print(char print_date[20], char print_time[20], char LXLT[50], char LXTN[50],char open[5], char close[5]);
 #endif
