@@ -142,7 +142,21 @@ extern struct time_gsm *timeSet;
 #define ten_laixeLen         20
 #define tencongtyLen        50
 #define diachiLen           25
+#define phoneLen    13
+#define data_flash_len  200
 
+
+extern char tencongty[tencongtyLen];
+extern char diachi[diachiLen];
+extern char so_vin[so_vinLen] ;
+extern char bien_soxe[bien_soxeLen];
+extern char ten_laixe_save_1[ten_laixeLen];
+extern char number_phone1[phoneLen];
+extern char  so_gplx_save_1[so_gplxLen];
+extern char  ngaycap_gplx_save_1[ngaycapLen];
+extern char  handen_gplx_save_1[handenLen];
+
+extern char data_flash[data_flash_len];
 
 extern char gps_time_string[gps_time_len];
 extern char latitude[latLen];   //    ="1049.3361"

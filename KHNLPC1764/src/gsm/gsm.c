@@ -14,6 +14,9 @@ char infor_cmd[] = "222";
 char all_call[] = "GOI";
 char print_all[] = "IN1:";
 
+char thongtin_cty[] = "005";
+char thongtin_laixe[] = "0061";
+
 char passWord[] = "0000";
 char speed[speedLen];
 char dat_version[] = "070414";
@@ -21,6 +24,16 @@ unsigned int timer_check_sms = 0;
 unsigned int timer_read_sms = 0;
 unsigned char door_key;
 char phone_1[phoneLen];
+
+ char ten_laixe_save_1[ten_laixeLen];
+ char number_phone1[phoneLen];
+char  so_gplx_save_1[so_gplxLen];
+ char  ngaycap_gplx_save_1[ngaycapLen];
+ char  handen_gplx_save_1[handenLen];
+ char data_flash[data_flash_len];
+
+
+
 #define waiting     		1
 //global
 unsigned char queue_sms;
@@ -35,7 +48,6 @@ char time_gps[20];
 char time_gps_send[20];
 
 char imei[imeiLen];
-
 
 char rx_buffer0[RX_BUFFER_SIZE0];
 unsigned char rx_wr_index0, rx_rd_index0, rx_counter0;
@@ -546,10 +558,125 @@ void process_command() {
 		}
 		flag_system.send_data_flag = smsMode;
 	}
+
+	/// thong tin cong ty
+
+	else if (strcmp(chuoitam, thongtin_cty) == 0) {
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			tencongty[i - k] = data_sms[i];
+
+		}
+		tencongty[i - k] = NULL;
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			diachi[i - k] = data_sms[i];
+
+		}
+		diachi[i - k] = NULL;
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			so_vin[i - k] = data_sms[i];
+
+		}
+		so_vin[i - k] = NULL;
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			bien_soxe[i - k] = data_sms[i];
+
+		}
+		bien_soxe[i - k] = NULL;
+
+		sprintf(sms_reply, "%s,%s,%s,%s", tencongty, diachi, so_vin, bien_soxe);
+
+		flag_system.send_data_flag = smsMode;
+	}
+	/////////end/
+
+	else if (strcmp(chuoitam, thongtin_laixe) == 0) {
+		// 0061 Nguyen Van A,0904..,A557799,15/09/2013,15/09/2020    //TX1
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			ten_laixe_save_1[i - k] = data_sms[i];
+
+		}
+		ten_laixe_save_1[i - k] = NULL;
+
+		k = i + 1;
+		//////// phone
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',' || data_sms[i] == 'A')
+				break;
+			if ((data_sms[i] != '.'
+					&& (data_sms[i] > 0x39 || data_sms[i] < 0x30))
+					|| (i - k) >= ipServerLen)
+				break;
+			// {
+			//  co_loi=1;
+			//  goto xu_ly_loi;
+			// }
+			number_phone1[i - k] = data_sms[i];
+
+		}
+		number_phone1[i - k] = NULL;
+
+		////////////////
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+
+			so_gplx_save_1[i - k] = data_sms[i];
+		}
+		so_gplx_save_1[i - k] = NULL;
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+
+			ngaycap_gplx_save_1[i - k] = data_sms[i];
+		}
+
+		ngaycap_gplx_save_1[i - k] = NULL;
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == NULL || data_sms[i] == ',')
+				break;
+			// handen_gplx[i-k] = data_sms[i];
+			handen_gplx_save_1[i - k] = data_sms[i];
+		}
+
+		handen_gplx_save_1[i - k] = NULL;
+
+		if (ten_laixe_save_1[0] == NULL )
+			sprintf(sms_reply, "No. Ten lai xe chua co");
+		else
+			sprintf(sms_reply, "Ye. TX1:%s, PHONE:%s", ten_laixe_save_1,
+					number_phone1);
+		flag_system.send_data_flag = smsMode;
+	}
+
+	/////////end
+
 	///////// printer
 	else if (strcmp(chuoitam, print_all) == 0)      //in du lieu trong ngay
 			{
-				   // IN1: 05 08 12 08 30 15
+		// IN1: 05 08 12 08 30 15
 		k = i + 1;
 		for (i = k; i < smsLen; i++) {
 			if (data_sms[i] == ' ' || data_sms[i] == NULL )
@@ -598,9 +725,10 @@ void process_command() {
 		if (flag_system.card_status) {
 			//find_file(chuoitam);
 			//Get information from sdcard and put them to global data
-			if(read_basic_infor()==1){
-				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665", "5", "6");
-			}else{
+			if (read_basic_infor() == 1) {
+				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665",
+						"5", "6");
+			} else {
 				UART2_PrintString("Co loi xay ra khi in\r\n");
 				UART2_PrintString("Ma loi :  bsi-01\r\n");
 			}
@@ -610,11 +738,14 @@ void process_command() {
 			flag_system.led_check = 0;
 		} else
 			sprintf(sms_reply, "Chua lap the nho");
-		#if _DEBUG==1
-			UART2_PrintString("vao  print_all\r\n");
-		#endif
+#if _DEBUG==1
+		UART2_PrintString("vao  print_all\r\n");
+#endif
 		flag_system.send_data_flag = smsMode;
 	}
+
+	sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s\n\r",tencongty,diachi,so_vin,bien_soxe,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
+
 	///////////END
 
 }

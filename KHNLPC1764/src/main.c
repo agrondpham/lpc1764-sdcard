@@ -617,7 +617,7 @@ while (1) {
 			flag_system.send_data = 0;
 			delay_ms(1000);
 			//writeFlash(phone_1);
-			write_basic_infor(phone_1);
+			write_basic_infor(data_flash);
 			//CopyRAMToFlash(phone_1);
 			delay_ms(500);
 			UART0_PrintString("AT\n\r");
@@ -708,15 +708,21 @@ while (1) {
 
 							memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
 
-							sprintf(data_gps,
-									"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
-									version, imei, latitude, longitude,
-									speed_gps, oil_value,
-									flag_system.status_key,
-									flag_system.status_door,
-									flag_system.card_status, so_vin, phone_1,
-									flag_system.cold_hot, flag_system.sleep,time_gps);//,gps_time_string);//gps_date_string,
-							//gps_time_string);//time_gps_send);
+							if(read_basic_infor()==1){
+
+							       } else {
+							        UART2_PrintString("Co loi xay ra khi in\r\n");
+							        UART2_PrintString("Ma loi :  bsi-01\r\n");
+							       }
+							       sprintf(data_gps,
+							         "$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
+							         version, imei, latitude, longitude,
+							         speed_gps, oil_value,
+							         flag_system.status_key,
+							         flag_system.status_door,
+							         flag_system.card_status, flash_data.vin_No, flash_data.phone,
+							         flag_system.cold_hot, flag_system.sleep,time_gps);//,gps_time_string);//gps_date_string,
+							       //gps_time_string);//time_gps_send);
 							if (send_data_gprs(data_gps) != ok_status)// send data
 							{
 								//UART2_PrintString("loi xay ra\r\n");
