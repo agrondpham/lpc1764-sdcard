@@ -91,7 +91,7 @@ struct FlashInfo {
 	unsigned char vin_No[50];
 	unsigned char id_device[50];
 	unsigned char ownerName[50];    // connect hoac disconnect
-	unsigned char so_gplx[20];    // connect hoac disconnect
+	unsigned char phone[20];    // connect hoac disconnect
 	unsigned char license[20];
 	unsigned char license_iss_date[15];
 	unsigned char license_exp_date[15];
