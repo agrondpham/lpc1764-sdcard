@@ -141,23 +141,23 @@ int read_basic_infor() {
 			case 2: //vin
 			strcpy(flash_data.vin_No,dataCollection);
 			break;
-			case 3: //company
+			case 3: //Bien so xe
 			strcpy(flash_data.id_device,dataCollection);
 			break;
-			case 4: //company
+			case 4: //ten tai xe
 			strcpy(flash_data.ownerName,dataCollection);
 			break;
 			case 5: //company
-			strcpy(flash_data.so_gplx,dataCollection);
-			break;
-			case 6: //company
 			strcpy(flash_data.license,dataCollection);
 			break;
-			case 7: //company
+			case 6: //company
 			strcpy(flash_data.license_iss_date,dataCollection);
 			break;
-			case 8: //company
+			case 7: //company
 			strcpy(flash_data.license_exp_date,dataCollection);
+			break;
+			case 8: //so gplx
+			strcpy(flash_data.phone,dataCollection);
 			break;
 		}
 			dataCollection = strtok(NULL, ",");
