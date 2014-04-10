@@ -597,28 +597,13 @@ void process_command() {
 
 		if (flag_system.card_status) {
 			//find_file(chuoitam);
-				char company[] = "Khanhhoi";    // connect hoac disconnect
-				char address[] = "HA HUY GIAP";    // connect hoac disconnect
-				char vin_No[] = "4564765765765";
-				char id_device[] = "51P 637.19";
-				char ownerName[] = "PHAM THE LONG";    // connect hoac disconnect
-				char so_gplx[] = "1232132143";    // connect hoac disconnect
-				char license[] = "34534543545";
-				char license_iss_date[] = "12/12/2014";
-				char license_exp_date[] = "12/12/2024";
-
-				flash_data.company = company;
-				flash_data.address = address;
-				flash_data.vin_No = vin_No;
-				flash_data.id_device = id_device;
-				flash_data.ownerName = ownerName;
-				flash_data.so_gplx = so_gplx;
-				flash_data.license = license;
-				flash_data.license_iss_date = license_iss_date;
-				flash_data.license_exp_date = license_exp_date;
-
-			KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665", "5", "6");
-
+			//Get information from sdcard and put them to global data
+			if(read_basic_infor()==1){
+				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665", "5", "6");
+			}else{
+				UART2_PrintString("Co loi xay ra khi in\r\n");
+				UART2_PrintString("Ma loi :  bsi-01\r\n");
+			}
 
 			//ket_qua();
 			sprintf(sms_reply, "Da in xong %s", chuoitam);
