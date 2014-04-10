@@ -1241,14 +1241,16 @@ while (1) {
 		}
 		if (f_puts(data_gps, &file) > -1) {
 			Close();
+			flag_system.card_status = 1;
 #if _DEBUG==1
 			UART2_PrintString("Write sdcard\r\n");
-			flag_system.card_status = 1;
+
 #endif
 		} else {
+			flag_system.card_status = 0;
 #if _DEBUG==1
 			UART2_PrintString("CAN NOT Write sdcard\r\n");
-			flag_system.card_status = 0;
+
 #endif
 		}  //END
 		   //READ sdcard
