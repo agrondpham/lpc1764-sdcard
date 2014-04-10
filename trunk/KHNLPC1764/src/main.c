@@ -107,6 +107,8 @@ char version[] = "3.13";
 unsigned char resend;
 unsigned int oil_value;
 char so_vin[so_vinLen] = "";
+char time_gps_card[8];
+char day_gps_card[8];
 
 char year_str[3];
 char month_str[3];
@@ -115,10 +117,10 @@ char hour_str[3];
 char min_str[3];
 char sec_str[3];
 
-char ten_laixe[ten_laixeLen] ;
-char so_gplx[so_gplxLen] ;
-char ngaycap_gplx[ngaycapLen] ;
-char handen_gplx[handenLen] ;
+char ten_laixe[ten_laixeLen];
+char so_gplx[so_gplxLen];
+char ngaycap_gplx[ngaycapLen];
+char handen_gplx[handenLen];
 char buffer[buffer_file];
 char tencongty[tencongtyLen];
 char diachi[diachiLen];
@@ -497,25 +499,25 @@ void upload_info() {
 }
 
 void init_program(void) {
-TimerInit(0, TIMER0_INTERVAL);
-TimerInit(1, TIMER1_INTERVAL);
-enable_timer(0);
-enable_timer(1);
-if (SysTick_Config(SystemCoreClock / 1000)) //{ /* Setup SysTick Timer for 1 msec interrupts  */
-		{
-	while (1)
-		; /* Capture error */
-}
+	TimerInit(0, TIMER0_INTERVAL);
+	TimerInit(1, TIMER1_INTERVAL);
+	enable_timer(0);
+	enable_timer(1);
+	if (SysTick_Config(SystemCoreClock / 1000)) //{ /* Setup SysTick Timer for 1 msec interrupts  */
+			{
+		while (1)
+			; /* Capture error */
+	}
 
-UART0_Init(9600);
-UART1_Init(9600);
-UART2_Init(9600);
-UART3_Init(9600);
-KHN_SDCARD_INIT();
-LED_Init();
-BUZZER_Init();
-key_init();
-gsm_on();
+	UART0_Init(9600);
+	UART1_Init(9600);
+	UART2_Init(9600);
+	UART3_Init(9600);
+	KHN_SDCARD_INIT();
+	LED_Init();
+	BUZZER_Init();
+	key_init();
+	gsm_on();
 }
 //int main(void) {
 //	int x;
@@ -533,151 +535,149 @@ gsm_on();
 //}
 
 int main(void) {
-uint8_t location;
-uint8_t buffer[200];
+	uint8_t location;
+	uint8_t buffer[200];
 
-uint8_t vitri, resend_gprs, counter_init = 0, i;
-unsigned char a, b, c, d;
-char day, month, year, hour, min, sec; //, week_day;
+	uint8_t vitri, resend_gprs, counter_init = 0, i;
+	unsigned char b, c, d;
+	int a;
+	char day, month, year, hour, min, sec; //, week_day;
 
-char hour_tam[3];
+	char hour_tam[3];
 
-char min_tam[3];
-char sec_tam[3];
-char year_tam[3];
-char month_tam[3];
-char day_tam[3];
-char month_tam_1[3];
-init_program();
+	char min_tam[3];
+	char sec_tam[3];
+	char year_tam[3];
+	char month_tam[3];
+	char day_tam[3];
+	char month_tam_1[3];
+	init_program();
 //delay_ms(500);
 //Init_SomeThing();
 //LED_Config();
-delay_ms(500);
-upload_info();
+	delay_ms(500);
+	upload_info();
 //delay_ms(500);
 //start_up_gsm();
 
 //flash_led();
 
-for (i = 0; i < 5; i++) {
-	flash_led();
-	delay_ms(1000);
-}
-GPIOSetValue(BUZZER, HIGH);
-delay_ms(50);
-GPIOSetValue(BUZZER, LOW);
-flag_modem.flash_coppy = 1;
+	for (i = 0; i < 5; i++) {
+		flash_led();
+		delay_ms(1000);
+	}
+	GPIOSetValue(BUZZER, HIGH);
+	delay_ms(50);
+	GPIOSetValue(BUZZER, LOW);
+	flag_modem.flash_coppy = 1;
 
 //disk_initialize(0);
-while (1) {
-	if (flag_modem.modem == not_connect) {
-		start_up_gsm();
-		///if(flag_modem.flash_coppy == 1)
-		//{
-		//flag_modem.flash_coppy = 0;
-		//CopyRAMToFlash(phone_1);
-		//}
-		delay_ms(1000);
-		init_gsm();
-		//UART3_Sendchar('A');
-		//UART3_PrintString("ket thuc main vao while");
-		if (flag_gprs.status_gprs != ok_status) {
-
-			flag_system.led_check = 1;
-			flag_gprs.status_gprs = init_tcp(apn, userName, passApn,
-					flag_gprs.status_gprs);
-			resend++;
-			if (resend >= 2 && flag_gprs.status_gprs != ok_status) {
-				flag_gprs.deactive_pdp = 1;
-				resend = 0;
-			} else if (flag_gprs.status_gprs == ok_status)
-				counter_init = 0;
-			flag_system.led_check = 0;
-		}
-	}
-	if (flag_modem.modem == connected) {
-		if (flag_modem.error == 1)
-			flag_modem.modem = not_connect;
-		else
-			flag_modem.modem = connected;
-		if (flag_system.read_sms == 1) {
-			UART0_PrintString("AT+CMGR=1\r");
-			flag_system.read_sms = 0;
-			delay_ms(1000);
-		} else if (flag_modem.cmgr == 1) {
-			flag_modem.cmgr = 0;
-			//clearFlash();
-			EraseSectors();
-			if (strlen(userCall_new) > 10)
-				process_command();
-			delay_ms(1000);
-			send_sms_func(sms_reply);
-			delay_ms(1000);
-			UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
-			flag_system.send_data = 0;
-			delay_ms(1000);
-			//writeFlash(phone_1);
-			write_basic_infor(data_flash);
+	while (1) {
+		if (flag_modem.modem == not_connect) {
+			start_up_gsm();
+			///if(flag_modem.flash_coppy == 1)
+			//{
+			//flag_modem.flash_coppy = 0;
 			//CopyRAMToFlash(phone_1);
-			delay_ms(500);
-			UART0_PrintString("AT\n\r");
+			//}
 			delay_ms(1000);
-			flag_modem.modem = not_connect;
-			flag_modem.flash_coppy = 1;
+			init_gsm();
+			//UART3_Sendchar('A');
+			//UART3_PrintString("ket thuc main vao while");
+			if (flag_gprs.status_gprs != ok_status) {
 
-		} else if (flag_system.send_data_flag == smsMode) {
-			flag_system.send_data_flag = 0;
-			flag_system.send_data = 0;
-			send_sms_func(sms_reply);
-			delay_ms(1000);
-			UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
-			delay_ms(3000);
-		} else if (flag_modem.ring) {
-			ring_func();
-			for (i = 0; i < phoneLen; i++) {
-				if (phone_1[i] == NULL || phone_1[i] == 0xFF)
-					break;
-				phoneDrive[i] = phone_1[i];
-			}
-			phoneDrive[i] = NULL;
-
-		} else if (flag_modem.upinfo == 1) {
-			flag_modem.upinfo = 0;	// test
-			//upload_info();
-		}
-		if (flag_system.send_data || flag_system.change_status) {
-
-			if (flag_gprs.deactive_pdp) {
-				sprintf(buffer, "%c", ESC);
-				UART0_PrintString(buffer);
-				delay_ms(1000);
-				UART0_PrintString("AT+CIPSHUT\r");
-				delay_ms(1000);
-				if (++counter_init >= 5)    // test
-						{
+				flag_system.led_check = 1;
+				flag_gprs.status_gprs = init_tcp(apn, userName, passApn,
+						flag_gprs.status_gprs);
+				resend++;
+				if (resend >= 2 && flag_gprs.status_gprs != ok_status) {
+					flag_gprs.deactive_pdp = 1;
+					resend = 0;
+				} else if (flag_gprs.status_gprs == ok_status)
 					counter_init = 0;
+				flag_system.led_check = 0;
+			}
+		}
+		if (flag_modem.modem == connected) {
+			if (flag_modem.error == 1)
+				flag_modem.modem = not_connect;
+			else
+				flag_modem.modem = connected;
+			if (flag_system.read_sms == 1) {
+				UART0_PrintString("AT+CMGR=1\r");
+				flag_system.read_sms = 0;
+				delay_ms(1000);
+			} else if (flag_modem.cmgr == 1) {
+				flag_modem.cmgr = 0;
+				//clearFlash();
+				EraseSectors();
+				if (strlen(userCall_new) > 10)
+					process_command();
+				delay_ms(1000);
+				send_sms_func(sms_reply);
+				delay_ms(1000);
+				UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+				flag_system.send_data = 0;
+				delay_ms(1000);
+				//writeFlash(phone_1);
+				write_basic_infor(data_flash);
+				//CopyRAMToFlash(phone_1);
+				delay_ms(500);
+				UART0_PrintString("AT\n\r");
+				delay_ms(1000);
+				flag_modem.modem = not_connect;
+				flag_modem.flash_coppy = 1;
 
-					start_up_gsm();
-					flag_modem.modem = not_connect;
-				}
-				flag_gprs.deactive_pdp = 0;
-				flag_gprs.connect_ok = 0;
-				flag_gprs.status_gprs = cstt_error;
-			} else if (ipServer[0] != NULL
-					&& ipServer[0] != 0xFF&& tcpPort[0] != NULL) // thieu xac nhan cac thong so
-							{for (vitri = 0; vitri < strlen(imei); vitri++) // kiem tra thanh phan ky tu trong imei
-					{             // dung tam bien vitri de lam bien dem
-						if (imei[vitri] < 0x30 || imei[vitri] > 0x39) {
-							if (check_imei() == 0) // check lai imei neu thay ok thi bat dau gui
+			} else if (flag_system.send_data_flag == smsMode) {
+				flag_system.send_data_flag = 0;
+				flag_system.send_data = 0;
+				send_sms_func(sms_reply);
+				delay_ms(1000);
+				UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+				delay_ms(3000);
+			} else if (flag_modem.ring) {
+				ring_func();
+//			for (i = 0; i < phoneLen; i++) {
+//				if (phone_1[i] == NULL || phone_1[i] == 0xFF)
+//					break;
+//				phoneDrive[i] = phone_1[i];
+//			}
+//			phoneDrive[i] = NULL;
+
+			}
+			if (flag_system.send_data || flag_system.change_status) {
+
+				if (flag_gprs.deactive_pdp) {
+					sprintf(buffer, "%c", ESC);
+					UART0_PrintString(buffer);
+					delay_ms(1000);
+					UART0_PrintString("AT+CIPSHUT\r");
+					delay_ms(1000);
+					if (++counter_init >= 5)    // test
 							{
-								vitri = 0;      // gan i = 0 de cho gui tiep
-							} else
-							vitri = 1;    // gan = 1 de stop gui
-							break;
-						}
+						counter_init = 0;
+
+						start_up_gsm();
+						flag_modem.modem = not_connect;
 					}
-					if (vitri == 0 || vitri == strlen(imei)) // neu = 0 thi cho gui vi imei dung
-					{
+					flag_gprs.deactive_pdp = 0;
+					flag_gprs.connect_ok = 0;
+					flag_gprs.status_gprs = cstt_error;
+				} else if (ipServer[0] != NULL
+						&& ipServer[0] != 0xFF&& tcpPort[0] != NULL) // thieu xac nhan cac thong so
+								{for (vitri = 0; vitri < strlen(imei); vitri++) // kiem tra thanh phan ky tu trong imei
+						{             // dung tam bien vitri de lam bien dem
+							if (imei[vitri] < 0x30 || imei[vitri] > 0x39) {
+								if (check_imei() == 0) // check lai imei neu thay ok thi bat dau gui
+								{
+									vitri = 0;      // gan i = 0 de cho gui tiep
+								} else
+								vitri = 1;    // gan = 1 de stop gui
+								break;
+							}
+						}
+						if (vitri == 0 || vitri == strlen(imei)) // neu = 0 thi cho gui vi imei dung
+						{
 //							sprintf(data_gps,
 //									"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s$\r\n",
 //									version, imei, latitude, longitude,
@@ -687,7 +687,7 @@ while (1) {
 //									flag_system.card_status, so_vin, phone_1,
 //									flag_system.cold_hot, flag_system.sleep,gps_date_string,
 //									gps_time_string);
-						// trang thai IN3
+							// trang thai IN3
 
 //							switch (WriteData(1, 17022014, 160000)) {
 //								case 1:
@@ -703,41 +703,41 @@ while (1) {
 //								Close();
 //								// sdcard end
 //
-						if (connectServer(ipServer, tcpPort) == ok_status) {
-							flag_gprs.connect_ok = 1;   // ket noi ok
+							if (connectServer(ipServer, tcpPort) == ok_status) {
+								flag_gprs.connect_ok = 1;   // ket noi ok
 
-							memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
+								memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
 
-							if(read_basic_infor()==1){
+								if(read_basic_infor()==1) {
 
-							       } else {
-							        UART2_PrintString("Co loi xay ra khi in\r\n");
-							        UART2_PrintString("Ma loi :  bsi-01\r\n");
-							       }
-							       sprintf(data_gps,
-							         "$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
-							         version, imei, latitude, longitude,
-							         speed_gps, oil_value,
-							         flag_system.status_key,
-							         flag_system.status_door,
-							         flag_system.card_status, flash_data.vin_No, flash_data.phone,
-							         flag_system.cold_hot, flag_system.sleep,time_gps);//,gps_time_string);//gps_date_string,
-							       //gps_time_string);//time_gps_send);
-							if (send_data_gprs(data_gps) != ok_status)// send data
-							{
-								//UART2_PrintString("loi xay ra\r\n");
-								flag_gprs.deactive_pdp = 1;// neu send bi loi thi reset lai gprs
+								} else {
+									UART2_PrintString("Co loi xay ra khi in\r\n");
+									UART2_PrintString("Ma loi :  bsi-01\r\n");
+								}
+								sprintf(data_gps,
+										"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
+										version, imei, latitude, longitude,
+										speed_gps, oil_value,
+										flag_system.status_key,
+										flag_system.status_door,
+										flag_system.card_status, flash_data.vin_No, flash_data.phone,
+										flag_system.cold_hot, flag_system.sleep,time_gps); //,gps_time_string);//gps_date_string,
+								//gps_time_string);//time_gps_send);
+								if (send_data_gprs(data_gps) != ok_status)// send data
+								{
+									//UART2_PrintString("loi xay ra\r\n");
+									flag_gprs.deactive_pdp = 1;// neu send bi loi thi reset lai gprs
+								}
+								//UART2_PrintString("Khong loi khi gui \r\n");
+								delay_ms(1000);
+								UART0_PrintString("AT+CIPCLOSE\r");
+								resend_gprs = 0;
+								flag_gprs.connect_ok = 0;
+							} else {
+								flag_gprs.connect_ok = 0;  // ket noi bi loi
+								flag_gprs.deactive_pdp = 1;
 							}
-							//UART2_PrintString("Khong loi khi gui \r\n");
-							delay_ms(1000);
-							UART0_PrintString("AT+CIPCLOSE\r");
-							resend_gprs = 0;
-							flag_gprs.connect_ok = 0;
-						} else {
-							flag_gprs.connect_ok = 0;  // ket noi bi loi
-							flag_gprs.deactive_pdp = 1;
-						}
-					}   // end cua vitri=0
+						}   // end cua vitri=0
 ///start_sdcar
 //						switch (WriteData(1, 17022014, 160000)) {
 //							case 1:
@@ -756,192 +756,216 @@ while (1) {
 //#endif
 //						}
 
-					//f_puts(" The gioi that rong lon\r\n",&file);
+						//f_puts(" The gioi that rong lon\r\n",&file);
 
-					////
+						////
+					}
+
+					flag_system.send_data = 0;
+					flag_system.change_status = 0;
+
 				}
 
-				flag_system.send_data = 0;
-				flag_system.change_status = 0;
-
 			}
 
-		}
+				//// timer
+		if (flag_system.write_data == 1) {
 
-			//// timer
-	if (flag_system.write_data == 1) {
+			if (flag_system.gps_detect) {
+				if (strlen(gps_time_string) != 6
+						|| strlen(gps_date_string) != 6) {
+					UART2_PrintString("TIMER_ERROR\r");
+					delay_ms(1000);
+					goto exit_write_data;
+				}
+				hour_tam[0] = gps_time_string[0];
+				hour_tam[1] = gps_time_string[1];
+				hour_tam[2] = NULL;
 
-		if (flag_system.gps_detect) {
-			if (strlen(gps_time_string) != 6 || strlen(gps_date_string) != 6) {
-				UART2_PrintString("TIMER_ERROR\r");
-				delay_ms(1000);
-				goto exit_write_data;
-			}
-			hour_tam[0] = gps_time_string[0];
-			hour_tam[1] = gps_time_string[1];
-			hour_tam[2] = NULL;
+				min_tam[0] = gps_time_string[2];
+				min_tam[1] = gps_time_string[3];
+				min_tam[2] = NULL;
 
-			min_tam[0] = gps_time_string[2];
-			min_tam[1] = gps_time_string[3];
-			min_tam[2] = NULL;
+				sec_tam[0] = gps_time_string[4];
+				sec_tam[1] = gps_time_string[5];
+				sec_tam[2] = NULL;
 
-			sec_tam[0] = gps_time_string[4];
-			sec_tam[1] = gps_time_string[5];
-			sec_tam[2] = NULL;
+				day_tam[0] = gps_date_string[0];
+				day_tam[1] = gps_date_string[1];
+				day_tam[2] = NULL;
 
-			day_tam[0] = gps_date_string[0];
-			day_tam[1] = gps_date_string[1];
-			day_tam[2] = NULL;
+				month_tam[0] = gps_date_string[2];
+				month_tam[1] = gps_date_string[3];
+				month_tam[2] = NULL;
 
-			month_tam[0] = gps_date_string[2];
-			month_tam[1] = gps_date_string[3];
-			month_tam[2] = NULL;
+				year_tam[0] = gps_date_string[4];
+				year_tam[1] = gps_date_string[5];
+				year_tam[2] = NULL;
 
-			year_tam[0] = gps_date_string[4];
-			year_tam[1] = gps_date_string[5];
-			year_tam[2] = NULL;
+				if (atoi(hour_tam) > 23 || atoi(min_tam) > 59
+						|| atoi(sec_tam) > 59 || atoi(day_tam) > 31
+						|| atoi(month_tam) > 12 || atoi(year_tam) > 99) {
 
-			if (atoi(hour_tam) > 23 || atoi(min_tam) > 59 || atoi(sec_tam) > 59
-					|| atoi(day_tam) > 31 || atoi(month_tam) > 12
-					|| atoi(year_tam) > 99) {
+					memset(data_gps, gpsLen, NULL );
+					sprintf(data_gps, "ERROR: %s %s\r", gps_time_string,
+							gps_date_string);
+					UART2_PrintString(data_gps);
+					delay_ms(1000);
+					goto exit_write_data;
+				}
+				a = atoi(hour_tam) + 7;
+				if (a >= 24)        // neu gio vuot qua 1 ngay moi
+						{
+					a = a - 24;    // gio
+					b = atoi(day_tam);
+					b++;           // ngay
+					c = atoi(month_tam);  // thang
+					d = atoi(year_tam);
+					switch (atoi(month_tam)) {
+					case 1:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 2:
+						if (b > 29) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 3:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 4:
+						if (b > 30) {
+							b = 1;
+							c++;
+						}
+						break;
 
+					case 5:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+
+					case 6:
+						if (b > 30) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 7:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+
+					case 8:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+
+					case 9:
+						if (b > 30) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 10:
+						if (b > 31) {
+							b = 1;
+							c++;
+						}
+						break;
+
+					case 11:
+						if (b > 30) {
+							b = 1;
+							c++;
+						}
+						break;
+					case 12:
+						if (b > 31) {
+							b = 1;
+							c++;
+							d++;
+						}
+						break;
+
+					}
+
+					sprintf(time_gps, "%02d/%02d/%02d,%02d:%s:%s", d, c, b, a,
+							min_tam, sec_tam);
+					year = d;
+					month = c;
+					day = b;
+					hour = a;
+					min = atoi(min_tam);
+					sec = atoi(sec_tam);
+				} else {
+					sprintf(time_gps, "%s/%s/%s,%02d:%s:%s", year_tam,
+							month_tam, day_tam, a, min_tam, sec_tam);
+					////// ghi SDCARD
+					sprintf(time_gps_card, "%02d%s%s", a, min_tam, sec_tam);
+					sprintf(day_gps_card, "%s%s%s", day_tam, month_tam,
+							year_tam);
+					hour = a;
+					min = atoi(min_tam);
+					sec = atoi(sec_tam);
+					day = atoi(day_tam);
+					month = atoi(month_tam);
+					year = atoi(year_tam);
+					/////////////////
+				}
 				memset(data_gps, gpsLen, NULL );
-				sprintf(data_gps, "ERROR: %s %s\r", gps_time_string,
-						gps_date_string);
-				UART2_PrintString(data_gps);
-				delay_ms(1000);
-				goto exit_write_data;
-			}
-			a = atoi(hour_tam) + 7;
-			if (a >= 24)        // neu gio vuot qua 1 ngay moi
-					{
-				a = a - 24;    // gio
-				b = atoi(day_tam);
-				b++;           // ngay
-				c = atoi(month_tam);  // thang
-				d = atoi(year_tam);
-				switch (atoi(month_tam)) {
-				case 1:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 2:
-					if (b > 29) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 3:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 4:
-					if (b > 30) {
-						b = 1;
-						c++;
-					}
-					break;
+				//sprintf(data_gps, "AT+CCLK=\"%s+00\"\r", time_gps);
+				//UART0_PrintString(data_gps);
+				//UART2_PrintString(time_gps);
+				delay_ms(500);
+				// UART2_PrintString(time_gps);
 
-				case 5:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-
-				case 6:
-					if (b > 30) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 7:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-
-				case 8:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-
-				case 9:
-					if (b > 30) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 10:
-					if (b > 31) {
-						b = 1;
-						c++;
-					}
-					break;
-
-				case 11:
-					if (b > 30) {
-						b = 1;
-						c++;
-					}
-					break;
-				case 12:
-					if (b > 31) {
-						b = 1;
-						c++;
-						d++;
-					}
-					break;
-
-				}
-
-				sprintf(time_gps, "%02d/%02d/%02d,%02d:%s:%s", d, c, b, a,
-						min_tam, sec_tam);
-				year = d;
-				month = c;
-				day = b;
-				hour = a;
-				min = atoi(min_tam);
-				sec = atoi(sec_tam);
 			} else {
-				sprintf(time_gps, "%s/%s/%s,%02d:%s:%s", year_tam, month_tam,
-						day_tam, a, min_tam, sec_tam);
-				hour = a;
-				min = atoi(min_tam);
-				sec = atoi(sec_tam);
-				day = atoi(day_tam);
-				month = atoi(month_tam);
-				year = atoi(year_tam);
+				//UART0_PrintString("at+cclk?\r");
+				delay_ms(1000);
 			}
-			memset(data_gps, gpsLen, NULL );
-			sprintf(data_gps, "AT+CCLK=\"%s+00\"\r", time_gps);
-			UART0_PrintString(data_gps);
-			//UART2_PrintString(time_gps);
-			delay_ms(500);
-			// UART2_PrintString(time_gps);
-
-		} else {
-			UART0_PrintString("at+cclk?\r");
-			delay_ms(1000);
-		}
 //		                flag_system.status_door =! door;
 //		                flag_system.status_key =! key;
 
-		for (vitri = 0; vitri < gpsLen; vitri++)
-			data_gps[vitri] = NULL;
-		sprintf(data_gps, "<%s;%s;%s;%s;%d;%d>\r\n", time_gps, latitude,
-				longitude, speed_gps, flag_system.status_key,
-				flag_system.status_door);
-		//printf("ATu %s\r", data_gps);
+			for (vitri = 0; vitri < gpsLen; vitri++)
+				data_gps[vitri] = NULL;
+			//$3.13,56,862118024728161,1052.0431,N,10641.1769,E,81.00,0,0,0,0,_,000,0,0,050414,080307
+//		sprintf(data_gps, "<%s;%s;%s;%s;%d;%d>\r\n", time_gps, latitude,
+//				longitude, speed_gps, flag_system.status_key,
+//				flag_system.status_door);
 
-		//SDCARD
+//		sprintf(data_gps, "$3.13,56,%s,%s\r\n", imei,time_gps, latitude,
+//				longitude, speed_gps, flag_system.status_key,
+//				flag_system.status_door);
+
+			sprintf(data_gps,
+					"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s\r\n",
+					version, imei, latitude, longitude, speed_gps, oil_value,
+					flag_system.status_key, flag_system.status_door,
+					flag_system.card_status, flash_data.vin_No,
+					flash_data.phone, flag_system.cold_hot, flag_system.sleep,
+					day_gps_card,time_gps_card);			//flash_data.phone
+//
+#if _DEBUG==1
+			UART2_PrintString(data_gps);
+#endif
+
+			//printf("ATu %s\r", data_gps);
+
+			//SDCARD
 
 //		               //  i = init_mmc();
 //
@@ -967,27 +991,27 @@ while (1) {
 //
 //		                    }
 
-		///start_sdcar
-		switch (WriteData(1, 17022014, 160000)) {
-		case 1:
-			break;
-		case 2:
-			break;
-		}
-		if (f_puts(data_gps, &file) > -1) {
-			Close();
-			flag_system.card_status = 1;
+			///start_sdcar
+			switch (WriteData(1, atoi(day_gps_card), a*10000)) {
+			case 1:
+				break;
+			case 2:
+				break;
+			}
+			if (f_puts(data_gps, &file) > -1) {
+				Close();
+				flag_system.card_status = 1;
 #if _DEBUG==1
-			UART2_PrintString("write sdcard\r\n");
+				UART2_PrintString("write sdcard\r\n");
 #endif
-		} else {
-			flag_system.card_status = 0;
+			} else {
+				flag_system.card_status = 0;
 #if _DEBUG==1
-			UART2_PrintString("CAN NOT Write sdcard\r\n");
+				UART2_PrintString("CAN NOT Write sdcard\r\n");
 
 #endif
-		}  //END
-		   //READ sdcard
+			}  //END
+			   //READ sdcard
 //			switch (ReadData(1, 17022014, 160000)) {
 //			case 1:
 //				break;
@@ -1000,14 +1024,14 @@ while (1) {
 //			}
 //
 //			////////////////END
-		exit_write_data: flag_system.write_data = 0;
-		timer_send_gps = 0; // xoa thoi gian gui len data va cho ghi vao the nho
+			exit_write_data: flag_system.write_data = 0;
+			timer_send_gps = 0; // xoa thoi gian gui len data va cho ghi vao the nho
 
-		delay_ms(100);
+			delay_ms(100);
+		}
+		//////////end
+
 	}
-	//////////end
-
-}
 }
 
 //int main(void) {
