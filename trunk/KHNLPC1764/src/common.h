@@ -2,9 +2,9 @@
 #define __COMMON_H
 #include "LPC17xx.h"
 #include <stdio.h>
-///*	Flash sectors to be used for data storage */
-//#define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
-//#define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
+/*	Flash sectors to be used for data storage */
+#define	DATA_START_SECTOR	0x00000000	/* Start Sector 17 */
+#define	DATA_END_SECTOR		0x00000FFF	/* End Sector 17 */
 
 #define _DEBUG 1
 
@@ -86,17 +86,18 @@ struct GPRS {
 extern struct GPRS flag_gprs;
 
 struct FlashInfo {
-	unsigned char* company;    // connect hoac disconnect
-	unsigned char* address;    // connect hoac disconnect
-	unsigned char* vin_No;
-	unsigned char* id_device;
-	unsigned char* ownerName;    // connect hoac disconnect
-	unsigned char* so_gplx;    // connect hoac disconnect
-	unsigned char* license;
-	unsigned char* license_iss_date;
-	unsigned char* license_exp_date;
+	unsigned char company[50];    // connect hoac disconnect
+	unsigned char address[150];    // connect hoac disconnect
+	unsigned char vin_No[50];
+	unsigned char id_device[50];
+	unsigned char ownerName[50];    // connect hoac disconnect
+	unsigned char so_gplx[20];    // connect hoac disconnect
+	unsigned char license[20];
+	unsigned char license_iss_date[15];
+	unsigned char license_exp_date[15];
 };
-extern struct FlashInfo flash_data;
+typedef struct FlashInfo flash_data_type;
+extern flash_data_type flash_data;
 
 struct time_gsm {
 	char year[3];
@@ -203,7 +204,7 @@ extern void EraseSectors();
 //Function
 void key_init();
 void delay_ms(uint32_t dlyTicks);
-void get_data_from_flash(char data[256]);
+//void get_data_from_flash(char data[256]);
 void send_sms_func(char *smsString);
 //extern void clearFlash();
 #endif

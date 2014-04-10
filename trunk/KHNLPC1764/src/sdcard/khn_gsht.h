@@ -33,6 +33,9 @@ void KHN_SDCARD_INIT();
 int ReadData(char*,char*,char*);
 int WriteData(int ,int ,int );
 void Close(void);
+//write basic infor
+int write_basic_infor(char data[250]);
+int read_basic_infor();
 //for print by UART 9600
 void KHN_Print(char print_date[20], char print_time[20], char LXLT[50], char LXTN[50],char open[5], char close[5]);
 #endif

@@ -425,24 +425,24 @@ void TIMER1_IRQHandler(void) {
 //
 //}
 
-void CopyRAMToFlash(char* phone_save) {
-	int x;
-	//char* fone="0934131426";
-	//delay_ms(3000);
-	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-		/*	Copy data from RAM to Flash, number of bytes to be written should be 256|512|1024|4096 */
-		unsigned char src_buffer[256]; // at least 256 bytes buffer to write into flash
-		memset(src_buffer, 0, 256); //zero init src buffer
-		for (x = 0; x < 256; x++) {
-			src_buffer[x] = phone_save[x]; // copy phone_1 into 256 bytes buffer
-		}
-		u32IAP_CopyRAMToFlash(DATA_START_SECTOR, (uint32_t) &src_buffer, 256); //sizeof(phone_1));
-	}
-	//UART2_PrintString("coppy_run \r\n");
-	/* Read back data from Flash */
-	//unsigned char phone_2[256];
-	//memcpy(phone_2, (void*)0x00018000,256);
-}
+//void CopyRAMToFlash(char* phone_save) {
+//	int x;
+//	//char* fone="0934131426";
+//	//delay_ms(3000);
+//	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
+//		/*	Copy data from RAM to Flash, number of bytes to be written should be 256|512|1024|4096 */
+//		unsigned char src_buffer[256]; // at least 256 bytes buffer to write into flash
+//		memset(src_buffer, 0, 256); //zero init src buffer
+//		for (x = 0; x < 256; x++) {
+//			src_buffer[x] = phone_save[x]; // copy phone_1 into 256 bytes buffer
+//		}
+//		u32IAP_CopyRAMToFlash(DATA_START_SECTOR, (uint32_t) &src_buffer, 256); //sizeof(phone_1));
+//	}
+//	//UART2_PrintString("coppy_run \r\n");
+//	/* Read back data from Flash */
+//	//unsigned char phone_2[256];
+//	//memcpy(phone_2, (void*)0x00018000,256);
+//}
 
 void EraseSectors() {
 	if (u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
@@ -847,7 +847,7 @@ while (1) {
 		///if(flag_modem.flash_coppy == 1)
 		//{
 		//flag_modem.flash_coppy = 0;
-		CopyRAMToFlash(phone_1);
+		//CopyRAMToFlash(phone_1);
 		//}
 		delay_ms(1000);
 		init_gsm();
@@ -889,7 +889,8 @@ while (1) {
 			flag_system.send_data = 0;
 			delay_ms(1000);
 			//writeFlash(phone_1);
-			CopyRAMToFlash(phone_1);
+			write_basic_infor(phone_1);
+			//CopyRAMToFlash(phone_1);
 			delay_ms(500);
 			UART0_PrintString("AT\n\r");
 			delay_ms(1000);

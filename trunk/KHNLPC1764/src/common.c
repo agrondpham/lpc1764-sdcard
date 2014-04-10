@@ -10,7 +10,7 @@ unsigned int timer_read_sms;
 volatile uint32_t msTicks;
 struct MODEM flag_modem;
 struct GPRS flag_gprs;
-struct FlashInfo flash_data;
+
 
 char rx_buffer1[RX_BUFFER_SIZE1];
 
@@ -52,44 +52,44 @@ void delay_ms(uint32_t dlyTicks) {
  *
  *
  */
-void get_data_from_flash(char data[256]) {
-	char * dataCollection;
-	dataCollection = strtok(data, ";");
-	int x;
-	for (x = 0; x < 9; x++) {
-		switch (x) {
-		//company
-		case 0:
-			flash_data.company = dataCollection;
-			break;
-			//address
-		case 1:
-			flash_data.address = dataCollection;
-			break;
-		case 2:
-			flash_data.vin_No = dataCollection;
-			break;
-		case 3:
-			flash_data.id_device = dataCollection;
-			break;
-		case 4:
-			flash_data.ownerName = dataCollection;
-			break;
-		case 5:
-			flash_data.so_gplx = dataCollection;
-			break;
-		case 6:
-			flash_data.license = dataCollection;
-			break;
-		case 7:
-			flash_data.license_iss_date = dataCollection;
-			break;
-
-		case 8:
-			flash_data.license_exp_date = dataCollection;
-			break;
-		}
-		dataCollection = strtok(NULL, ";");
-	}
-
-}
+//void get_data_from_flash(char data[256]) {
+//	char * dataCollection;
+//	dataCollection = strtok(data, ";");
+//	int x;
+//	for (x = 0; x < 9; x++) {
+//		switch (x) {
+//		//company
+//		case 0:
+//			flash_data.company = dataCollection;
+//			break;
+//			//address
+//		case 1:
+//			flash_data.address = dataCollection;
+//			break;
+//		case 2:
+//			flash_data.vin_No = dataCollection;
+//			break;
+//		case 3:
+//			flash_data.id_device = dataCollection;
+//			break;
+//		case 4:
+//			flash_data.ownerName = dataCollection;
+//			break;
+//		case 5:
+//			flash_data.so_gplx = dataCollection;
+//			break;
+//		case 6:
+//			flash_data.license = dataCollection;
+//			break;
+//		case 7:
+//			flash_data.license_iss_date = dataCollection;
+//			break;
+//
+//		case 8:
+//			flash_data.license_exp_date = dataCollection;
+//			break;
+//		}
+//		dataCollection = strtok(NULL, ";");
+//	}
+//
+//}
