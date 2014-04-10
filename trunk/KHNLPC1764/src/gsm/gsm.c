@@ -726,8 +726,7 @@ void process_command() {
 			//find_file(chuoitam);
 			//Get information from sdcard and put them to global data
 			if (read_basic_infor() == 1) {
-				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665",
-						"5", "6");
+				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665");
 			} else {
 				UART2_PrintString("Co loi xay ra khi in\r\n");
 				UART2_PrintString("Ma loi :  bsi-01\r\n");
