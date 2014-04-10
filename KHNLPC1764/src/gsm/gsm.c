@@ -744,7 +744,7 @@ void process_command() {
 		flag_system.send_data_flag = smsMode;
 	}
 
-	sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s\n\r",tencongty,diachi,so_vin,bien_soxe,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
+	sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",tencongty,diachi,so_vin,bien_soxe,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
 
 	///////////END
 
