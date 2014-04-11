@@ -3,6 +3,7 @@ char latitude[latLen];   //    ="1049.3361"
 char longitude[longLen];   // ="10641.8130"
 char speed_gps[speedLen];
 char gps_date_string[gps_date_len];
+
 char gps_time_string[gps_time_len];
 void process_gps_data(void) {
 	char chuoitam[10];
@@ -33,6 +34,7 @@ void process_gps_data(void) {
 		}
 		if (!check)
 			gps_time_string[k - m] = rx_buffer1[k];
+
 
 	} // bo qua : 080156.000
 	m = k + 1;
