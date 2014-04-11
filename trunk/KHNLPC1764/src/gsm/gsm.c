@@ -17,9 +17,9 @@ char print_all[] = "IN1:";
 char thongtin_cty[] = "005";
 char thongtin_laixe[] = "0061";
 
-char passWord[] = "0000";
+char passWord[] = "000000";
 char speed[speedLen];
-char dat_version[] = "070414";
+char dat_version[] = "110414";
 unsigned int timer_check_sms = 0;
 unsigned int timer_read_sms = 0;
 unsigned char door_key;
@@ -494,6 +494,10 @@ void process_command() {
 	char gio[3];
 	char phut[3];
 	char giay[3];
+	char ngay_thang_nam[10];
+	char gio_phut_giay[10];
+	char temp_from_time[10];
+	char temp_printDate[10];
 
 //#if _DEBUG==1
 //	UART2_PrintString("vao  process_command\r\n");
@@ -520,10 +524,10 @@ void process_command() {
 		memset(sms_reply, smsLen, NULL );
 		if (strcmp(chuoitam, infor_cmd) == 0) {
 			sprintf(sms_reply,
-					"KHN:%s,TCP:%s,%s,%s,IP:%s,%s,C:%d,ID:%s,S:%s,P:%s,LAT:%s,LOG:%s,alarm:%d,K:%d,SLEEP:%d",
+					"LPC:%s,TCP:%s,%s,%s,IP:%s,%s,C:%d,P:%s,S:%s,ID:%s,LAT:%s,LOG:%s,D:%d,K:%d,SL:%d",
 					dat_version, apn, userName, passApn, ipServer, tcpPort,
-					counter_send_gps, phone_1, speed, imei, latitude, longitude,
-					flag_modem.run_gprs, door_key, flag_system.sleep);
+					counter_send_gps,flash_data.phone, speed, imei, latitude, longitude,
+					flag_system.status_door, flag_system.status_key, flag_system.sleep);
 		} else {
 			sprintf(sms_reply, "xin kiem tra lai !");
 		}
@@ -601,6 +605,10 @@ void process_command() {
 		sprintf(sms_reply, "%s,%s,%s,%s", tencongty, diachi, so_vin, bien_soxe);
 
 		flag_system.send_data_flag = smsMode;
+		//LPT
+		read_basic_infor();
+		sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",tencongty,diachi,so_vin,bien_soxe,flash_data.ownerName,flash_data.license,flash_data.license_iss_date,flash_data.license_exp_date,flash_data.phone);
+
 	}
 	/////////end/
 
@@ -669,6 +677,10 @@ void process_command() {
 			sprintf(sms_reply, "Ye. TX1:%s, PHONE:%s", ten_laixe_save_1,
 					number_phone1);
 		flag_system.send_data_flag = smsMode;
+		//LPT
+		read_basic_infor();
+		sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",flash_data.company,flash_data.address,flash_data.vin_No,flash_data.id_device,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
+
 	}
 
 	/////////end
@@ -719,14 +731,19 @@ void process_command() {
 			giay[i - k] = data_sms[i];
 		}
 		giay[i - k] = NULL;
-		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
-				giay);
-
+//		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
+//				giay);
+		sprintf(gio_phut_giay,"%s:%s:%s",gio,phut,giay);
+		sprintf(ngay_thang_nam,"%s/%s/%s",ngay,thang,nam);
+		sprintf(temp_from_time,"%s0000",gio);
+		sprintf(temp_printDate,"%s%s%s",ngay,thang,nam);
 		if (flag_system.card_status) {
 			//find_file(chuoitam);
 			//Get information from sdcard and put them to global data
 			if (read_basic_infor() == 1) {
-				KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665");
+				//KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665");
+
+				KHN_Print(ngay_thang_nam, gio_phut_giay, "CHUA CN", "CHUA CN",time_gps_card,temp_from_time,temp_printDate);
 			} else {
 				UART2_PrintString("Co loi xay ra khi in\r\n");
 				UART2_PrintString("Ma loi :  bsi-01\r\n");
@@ -737,13 +754,10 @@ void process_command() {
 			flag_system.led_check = 0;
 		} else
 			sprintf(sms_reply, "Chua lap the nho");
-#if _DEBUG==1
-		UART2_PrintString("vao  print_all\r\n");
-#endif
+
 		flag_system.send_data_flag = smsMode;
 	}
 
-	sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",tencongty,diachi,so_vin,bien_soxe,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
 
 	///////////END
 

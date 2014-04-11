@@ -7,7 +7,7 @@
 #define	DATA_END_SECTOR		0x00000FFF	/* End Sector 17 */
 
 #define _DEBUG 1
-
+extern char time_gps_card[8];
 struct MODEM {
 	unsigned long modem :1;    // connect hoac disconnect
 	unsigned long sim :1;

@@ -94,6 +94,9 @@ unsigned char resend;
 //char phone_1[phoneLen];
 
 unsigned int interruptTimer_0;
+unsigned int led_counter;
+
+
 char timeCheck[timeLen];
 void start_up_gsm();
 char gsm_buffer[gsm_bufferLen];
@@ -139,8 +142,6 @@ void SysTick_Handler(void) {
 		interruptTimer_0++;
 	else {
 		interruptTimer_0 = 0;
-		toggle = ~toggle;
-		GPIOSetValue(LED_STATUS, toggle);
 		if (timer_gps < counter_gps)
 			timer_gps++;
 		else {
@@ -175,6 +176,26 @@ void SysTick_Handler(void) {
 	} else
 		flag_system.timeout_sms = 1;
 
+	if (flag_modem.modem == not_connect) {
+
+		if (led_counter < 500)
+			led_counter++;
+		else {
+			led_counter = 0;
+			toggle = ~toggle;
+			GPIOSetValue(LED_STATUS, toggle);
+
+		}
+	} else {
+		if (led_counter < 2000)
+			led_counter++;
+		else {
+			led_counter = 0;
+			toggle = ~toggle;
+			GPIOSetValue(LED_STATUS, toggle);
+
+		}
+	}
 }
 int n;
 char readData[11];
@@ -355,18 +376,18 @@ void TIMER0_IRQHandler(void) {
 	if (var_key == 0)      //KEY_IN
 			{
 		// GPIOSetValue(BUZZER, HIGH);
-		flag_system.status_key = 2;
+		flag_system.status_key = 1;
 	} else {
 		//GPIOSetValue(BUZZER, LOW);
-		flag_system.status_key = 1;
+		flag_system.status_key = 2;
 	}
 	if (var_door == 0)      //KEY_IN
 			{
 		//GPIOSetValue(BUZZER, HIGH);
-		flag_system.status_door = 2;
+		flag_system.status_door = 1;
 	} else {
 		//GPIOSetValue(BUZZER, LOW);
-		flag_system.status_door = 1;
+		flag_system.status_door = 2;
 	}
 
 }
@@ -389,62 +410,6 @@ void TIMER1_IRQHandler(void) {
 //    GPIOSetValue(BUZZER, toggle);
 }
 
-///start EEPROM
-//int writeFlash(char* data) {
-//void writeFlash(char* data) {
-//	int x;
-//	unsigned char src_buffer[256];
-//	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-//		/*	Copy data from RAM to Flash, number of bytes to be written should be 256|512|1024|4096 */
-//		memset(src_buffer, 0, 256); //zero init src buffer
-//		for (x = 0; x < 256; x++) {
-//			src_buffer[x] = data[x]; // copy phone_1 into 256 bytes buffer
-//		}
-//		u32IAP_CopyRAMToFlash(DATA_START_SECTOR, (uint32_t)&src_buffer, sizeof(src_buffer));
-////		if (u32IAP_CopyRAMToFlash(DATA_START_SECTOR, (uint32_t) &src_buffer,
-////				sizeof(src_buffer)) == IAP_STA_CMD_SUCCESS) {
-////			return 1;
-////		} else {
-////			return 0;
-////		}
-//	}
-//
-//}
-
-//void clearFlash() {
-//
-//	u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS;
-//	delay_ms(100);
-//	u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS;
-//
-////	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-////		if (u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-////			return 1;
-////		} else {
-////			return 0;
-////		}
-////	}
-//
-//}
-
-//void CopyRAMToFlash(char* phone_save) {
-//	int x;
-//	//char* fone="0934131426";
-//	//delay_ms(3000);
-//	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-//		/*	Copy data from RAM to Flash, number of bytes to be written should be 256|512|1024|4096 */
-//		unsigned char src_buffer[256]; // at least 256 bytes buffer to write into flash
-//		memset(src_buffer, 0, 256); //zero init src buffer
-//		for (x = 0; x < 256; x++) {
-//			src_buffer[x] = phone_save[x]; // copy phone_1 into 256 bytes buffer
-//		}
-//		u32IAP_CopyRAMToFlash(DATA_START_SECTOR, (uint32_t) &src_buffer, 256); //sizeof(phone_1));
-//	}
-//	//UART2_PrintString("coppy_run \r\n");
-//	/* Read back data from Flash */
-//	//unsigned char phone_2[256];
-//	//memcpy(phone_2, (void*)0x00018000,256);
-//}
 
 void EraseSectors() {
 	if (u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
@@ -490,11 +455,13 @@ void upload_info() {
 		sprintf(passApn, "mms");
 	}
 	if (ipServer[0] == NULL || ipServer[0] == 0xff) {
-		sprintf(ipServer, "112.213.84.16");
+		//sprintf(ipServer, "112.213.84.16");
+		sprintf(ipServer,"112.213.84.16");
+
 		sprintf(tcpPort, "11511");
 	}
 	if (timeCheck[0] == NULL || timeCheck[0] == 0xff)
-		counter_send_gps = 20;		// gui len server
+		counter_send_gps = 15;		// gui len server
 
 }
 
@@ -620,7 +587,10 @@ int main(void) {
 				flag_system.send_data = 0;
 				delay_ms(1000);
 				//writeFlash(phone_1);
-				write_basic_infor(data_flash);
+				if (strcmp(data_flash, ",,,,,,,,,\n\r") != 0) {
+					write_basic_infor(data_flash);
+				}
+
 				//CopyRAMToFlash(phone_1);
 				delay_ms(500);
 				UART0_PrintString("AT\n\r");
@@ -678,31 +648,7 @@ int main(void) {
 						}
 						if (vitri == 0 || vitri == strlen(imei)) // neu = 0 thi cho gui vi imei dung
 						{
-//							sprintf(data_gps,
-//									"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s$\r\n",
-//									version, imei, latitude, longitude,
-//									speed_gps, oil_value,
-//									flag_system.status_door,
-//									flag_system.status_key,
-//									flag_system.card_status, so_vin, phone_1,
-//									flag_system.cold_hot, flag_system.sleep,gps_date_string,
-//									gps_time_string);
-							// trang thai IN3
 
-//							switch (WriteData(1, 17022014, 160000)) {
-//								case 1:
-//								break;
-//								case 2:
-//								break;
-//							}
-//							f_puts(data_gps, &file);
-//#if _DEBUG==1
-//								UART2_PrintString("Write sdcard\r\n");
-//#endif
-//								//f_puts(" The gioi that rong lon\r\n",&file);
-//								Close();
-//								// sdcard end
-//
 							if (connectServer(ipServer, tcpPort) == ok_status) {
 								flag_gprs.connect_ok = 1;   // ket noi ok
 
@@ -715,8 +661,8 @@ int main(void) {
 									UART2_PrintString("Ma loi :  bsi-01\r\n");
 								}
 								sprintf(data_gps,
-										"$$KHN$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
-										version, imei, latitude, longitude,
+										"$$KHN$%s,%s,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
+										version,flash_data.id_device, imei, latitude, longitude,
 										speed_gps, oil_value,
 										flag_system.status_key,
 										flag_system.status_door,
@@ -951,17 +897,23 @@ int main(void) {
 //				longitude, speed_gps, flag_system.status_key,
 //				flag_system.status_door);
 
+			if (flag_system.cold_hot == "") {
+				flag_system.cold_hot = "_";
+			}
+			if (flag_system.sleep == "") {
+				flag_system.sleep = "_";
+			}
 			sprintf(data_gps,
 					"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s\r\n",
 					version, imei, latitude, longitude, speed_gps, oil_value,
 					flag_system.status_key, flag_system.status_door,
 					flag_system.card_status, flash_data.vin_No,
 					flash_data.phone, flag_system.cold_hot, flag_system.sleep,
-					day_gps_card,time_gps_card);			//flash_data.phone
+					day_gps_card, time_gps_card);			//flash_data.phone
 //
-#if _DEBUG==1
-			UART2_PrintString(data_gps);
-#endif
+//#if _DEBUG==1
+//			UART2_PrintString(data_gps);
+//#endif
 
 			//printf("ATu %s\r", data_gps);
 
@@ -992,7 +944,7 @@ int main(void) {
 //		                    }
 
 			///start_sdcar
-			switch (WriteData(1, atoi(day_gps_card), a*10000)) {
+			switch (WriteData(1, atoi(day_gps_card), a * 10000)) {
 			case 1:
 				break;
 			case 2:

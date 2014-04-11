@@ -271,8 +271,8 @@ int count_violations_from_sdcard(char data[256], int y) {
 	} else if (door_status == 1 && atoi(door) == 2) {
 		count_data.close++;
 		door_status = 2;
-	}else{
-		door_status=atoi(door);
+	} else {
+		door_status = atoi(door);
 	}
 //vua tren 80 nhung duoi 20'
 	if (atoi(speed) >= 80 && is_high_speed_under_20s == 0) {
@@ -357,7 +357,7 @@ int count_number_violations(char * date) {
 
 	int is_high_speed;
 	while (x < 24) {
-		if (time[x] == NULL) {
+		if (time[x] == NULL ) {
 			break;
 		} else {
 
@@ -419,21 +419,21 @@ int count_number_violations(char * date) {
 //}
 //------------------------------------------------------------------------------------
 void KHN_Print(char print_date[20], char print_time[20], char LXLT[50],
-		char LXTN[50]) {
+		char LXTN[50],char print_time_curret[8],char print_time_from[8],char print_time_date[8]) {
 //store temp data
 //strcpy(tmp_open,tmp_open);
 //	strcpy(tmp_close,tmp_close);
 	//clear
-	count_data.close=0;
-	count_data.open=0;
-	count_data.num_violation=0;
+	count_data.close = 0;
+	count_data.open = 0;
+	count_data.num_violation = 0;
 	////////////////
 	int open = 0;
 	int close = 0;
 	char temp[100];
 	int z = 0;
-	calculate_time("171700", "150000");
-	count_number_violations("17022014");
+	calculate_time(print_time_curret, print_time_from);
+	count_number_violations(print_time_date);
 	sprintf(temp, "%s\r\n", flash_data.company);
 	UART2_PrintString(temp);
 	sprintf(temp, "%s\r\n", flash_data.address);
@@ -453,7 +453,9 @@ void KHN_Print(char print_date[20], char print_time[20], char LXLT[50],
 	sprintf(temp, "Han den: %s\r\n", flash_data.license_exp_date);
 	UART2_PrintString(temp);
 	UART2_PrintString("--------------------\r\n");
-	sprintf(temp, "Thoi diem in: %s %s\r\n", print_date, print_time);
+	sprintf(temp, "Thoi diem in: %s\r\n", print_date);
+	UART2_PrintString(temp);
+	sprintf(temp, "%s\r\n", print_time);
 	UART2_PrintString(temp);
 
 //hien thi so lan vi pham
@@ -485,6 +487,8 @@ void KHN_Print(char print_date[20], char print_time[20], char LXLT[50],
 	sprintf(temp, "TG LXLT: %s \r\n", LXLT);
 	UART2_PrintString(temp);
 	sprintf(temp, "TTGLXTN: %s \r\n", LXTN);
+	UART2_PrintString(temp);
+	sprintf(temp, "----------END-------\r\n\r\n", LXTN);
 	UART2_PrintString(temp);
 }
 
