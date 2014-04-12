@@ -190,7 +190,7 @@ int key_status; //2 dong ; 1 mo
 
 traffic_violations violations[15];
 print_count count_data;
-char time[24][8];
+char load_filename[24][8];
 //$3.13,56,862118024728161,1052.0431,N,10641.1769,E,81.00,0,0,0,0,_,000,0,0,050414,080307
 int count_violations_from_sdcard(char data[256], int y) {
 	char * dataCollection;
@@ -344,7 +344,7 @@ void calculate_time(char* current, char* from) {
 	int y;
 	for (y = 0; y <= x; y++) {
 		sprintf(buffer, "%d", atoi(from) + (y * 10000));
-		strcpy(time[y], buffer);
+		strcpy(load_filename[y], buffer);
 	}
 }
 //folder test 17022014
@@ -357,14 +357,14 @@ int count_number_violations(char * date) {
 
 	int is_high_speed;
 	while (x < 24) {
-		if (time[x] == NULL ) {
+		if (load_filename[x] == NULL ) {
 			break;
 		} else {
 
 			//violations = (traffic_violations *) realloc(violations,
 			//		y * sizeof(traffic_violations));
 
-			if (ReadData("01", date, time[x]) == 1) {
+			if (ReadData("01", date, load_filename[x]) == 1) {
 				while (f_gets(buffer, sizeof buffer, &file)) {
 					//Process line of data in sdcard ::::line_of_sddata
 					switch (count_violations_from_sdcard(buffer, y)) {

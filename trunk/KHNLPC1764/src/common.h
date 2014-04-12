@@ -2,6 +2,9 @@
 #define __COMMON_H
 #include "LPC17xx.h"
 #include <stdio.h>
+#include <time.h>
+#include <assert.h>
+
 /*	Flash sectors to be used for data storage */
 #define	DATA_START_SECTOR	0x00000000	/* Start Sector 17 */
 #define	DATA_END_SECTOR		0x00000FFF	/* End Sector 17 */
@@ -99,16 +102,16 @@ struct FlashInfo {
 typedef struct FlashInfo flash_data_type;
 extern flash_data_type flash_data;
 
-struct time_gsm {
-	char year[3];
-	char month[3];
-	char day[3];
-	char hour[3];
-	char min[3];
-	char sec[3];
-};
-
-extern struct time_gsm *timeSet;
+struct khn_time {
+	int year;
+	int month;
+	int day;
+	int hour;
+	int min;
+	int sec;
+} ;
+typedef struct khn_time khn_time_type;
+extern struct khn_time_type timeSet;
 
 #define OFF 0
 #define ON  1
@@ -220,5 +223,6 @@ void key_init();
 void delay_ms(uint32_t dlyTicks);
 //void get_data_from_flash(char data[256]);
 void send_sms_func(char *smsString);
+khn_time_type convert_data_time(char date[8],char times[8],int timezone);
 //extern void clearFlash();
 #endif
