@@ -8,6 +8,7 @@ char check_ok[] = "OK";
 char clip[] = "+CLIP";
 char cmti[] = "+CMTI";
 char check_error[] = "ERROR";
+char cops[] = "+COPS";
 // tap lenh kiem tra thong tin thiet bi
 char infor_cmd[] = "222";
 ///////////////////define_call
@@ -25,14 +26,12 @@ unsigned int timer_read_sms = 0;
 unsigned char door_key;
 char phone_1[phoneLen];
 
- char ten_laixe_save_1[ten_laixeLen];
- char number_phone1[phoneLen];
-char  so_gplx_save_1[so_gplxLen];
- char  ngaycap_gplx_save_1[ngaycapLen];
- char  handen_gplx_save_1[handenLen];
- char data_flash[data_flash_len];
-
-
+char ten_laixe_save_1[ten_laixeLen];
+char number_phone1[phoneLen];
+char so_gplx_save_1[so_gplxLen];
+char ngaycap_gplx_save_1[ngaycapLen];
+char handen_gplx_save_1[handenLen];
+char data_flash[data_flash_len];
 
 #define waiting     		1
 //global
@@ -117,7 +116,7 @@ void start_up_gsm() {
 		delay_ms(500);
 		if (flag_modem.ok)
 			break;
-		else if (++retry_sim900 > 10) {
+		else if (++retry_sim900 > 5) {
 			retry_sim900 = 0;
 			GPIOSetValue(GSM_POWER, HIGH);
 			delay_ms(500);
@@ -319,7 +318,28 @@ void process_gsm_data(void) {
 		}
 		userCall[j - i] = NULL;
 		flag_modem.ring = ON;
-	} else if (chuoitam[0] == '+' && chuoitam[1] == 'C' && chuoitam[2] == 'O'
+	}
+	//// APN///
+	else if (strcmp(chuoitam, cops) == 0) {
+		GPIOSetValue(BUZZER, HIGH);
+		//delay_ms(50);
+		//GPIOSetValue(BUZZER, LOW);
+		i = i + 7;
+		for (j = i; j < RX_BUFFER_SIZE0; j++) {
+			if (rx_buffer0[j] == NULL || rx_buffer0[j] == '"')
+				break;
+			Selection[j - i] = rx_buffer0[j];
+		}
+		Selection[j - i] = NULL;
+		// printf("Selection2: %s\r",Selection);
+
+		flag_modem.op_selec = ON;
+		GPIOSetValue(BUZZER, LOW);
+
+	}
+	/////END
+
+	else if (chuoitam[0] == '+' && chuoitam[1] == 'C' && chuoitam[2] == 'O'
 			&& chuoitam[3] == 'P' && chuoitam[4] == 'S') {
 		GPIOSetValue(BUZZER, HIGH);
 
@@ -348,7 +368,7 @@ void process_gsm_data(void) {
 		flag_modem.ok = 1;
 	} else if (strcmp(chuoitam, cmti) == 0) {
 		flag_system.read_sms = 1;
-		EraseSectors();
+		//EraseSectors();
 	}
 
 	else if (strcmp(chuoitam, check_error) == 0)
@@ -526,8 +546,9 @@ void process_command() {
 			sprintf(sms_reply,
 					"LPC:%s,TCP:%s,%s,%s,IP:%s,%s,C:%d,P:%s,S:%s,ID:%s,LAT:%s,LOG:%s,D:%d,K:%d,SL:%d",
 					dat_version, apn, userName, passApn, ipServer, tcpPort,
-					counter_send_gps,flash_data.phone, speed, imei, latitude, longitude,
-					flag_system.status_door, flag_system.status_key, flag_system.sleep);
+					counter_send_gps, flash_data.phone, speed, imei, latitude,
+					longitude, flag_system.status_door, flag_system.status_key,
+					flag_system.sleep);
 		} else {
 			sprintf(sms_reply, "xin kiem tra lai !");
 		}
@@ -607,7 +628,10 @@ void process_command() {
 		flag_system.send_data_flag = smsMode;
 		//LPT
 		read_basic_infor();
-		sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",tencongty,diachi,so_vin,bien_soxe,flash_data.ownerName,flash_data.license,flash_data.license_iss_date,flash_data.license_exp_date,flash_data.phone);
+		sprintf(data_flash, "%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r", tencongty,
+				diachi, so_vin, bien_soxe, flash_data.ownerName,
+				flash_data.license, flash_data.license_iss_date,
+				flash_data.license_exp_date, flash_data.phone);
 
 	}
 	/////////end/
@@ -679,7 +703,10 @@ void process_command() {
 		flag_system.send_data_flag = smsMode;
 		//LPT
 		read_basic_infor();
-		sprintf(data_flash,"%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",flash_data.company,flash_data.address,flash_data.vin_No,flash_data.id_device,ten_laixe_save_1,so_gplx_save_1,ngaycap_gplx_save_1,handen_gplx_save_1,number_phone1);
+		sprintf(data_flash, "%s,%s,%s,%s,%s,%s,%s,%s,%s,\n\r",
+				flash_data.company, flash_data.address, flash_data.vin_No,
+				flash_data.id_device, ten_laixe_save_1, so_gplx_save_1,
+				ngaycap_gplx_save_1, handen_gplx_save_1, number_phone1);
 
 	}
 
@@ -733,17 +760,18 @@ void process_command() {
 		giay[i - k] = NULL;
 //		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
 //				giay);
-		sprintf(gio_phut_giay,"%s:%s:%s",gio,phut,giay);
-		sprintf(ngay_thang_nam,"%s/%s/%s",ngay,thang,nam);
-		sprintf(temp_from_time,"%s0000",gio);
-		sprintf(temp_printDate,"%s%s%s",ngay,thang,nam);
+		sprintf(gio_phut_giay, "%s:%s:%s", gio, phut, giay);
+		sprintf(ngay_thang_nam, "%s/%s/%s", ngay, thang, nam);
+		sprintf(temp_from_time, "%s0000", gio);
+		sprintf(temp_printDate, "%s%s%s", ngay, thang, nam);
 		if (flag_system.card_status) {
 			//find_file(chuoitam);
 			//Get information from sdcard and put them to global data
 			if (read_basic_infor() == 1) {
 				//KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665");
 
-				KHN_Print(ngay_thang_nam, gio_phut_giay, "CHUA CN", "CHUA CN",time_gps_card,temp_from_time,temp_printDate);
+				KHN_Print(ngay_thang_nam, gio_phut_giay, "CHUA CN", "CHUA CN",
+						time_gps_card, temp_from_time, temp_printDate);
 			} else {
 				UART2_PrintString("Co loi xay ra khi in\r\n");
 				UART2_PrintString("Ma loi :  bsi-01\r\n");
@@ -757,7 +785,6 @@ void process_command() {
 
 		flag_system.send_data_flag = smsMode;
 	}
-
 
 	///////////END
 

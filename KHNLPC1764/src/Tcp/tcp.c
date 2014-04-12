@@ -45,9 +45,10 @@ unsigned char connectServer (char *ipString, char *port)
 {
 	uint32_t buffer_tam[20];
     if (flag_gprs.connect_ok) return ok_status;
-    //sprintf(buffer_tam,"AT+CIPSTART=\"TCP\",\"%s\",\"%s\"\r", ipString, port);
+    sprintf(buffer_tam,"AT+CIPSTART=\"TCP\",\"%s\",\"%s\"\r", ipString, port);
     //print_data(buffer_tam);
-	UART0_PrintString("AT+CIPSTART=\"TCP\",\"112.213.84.16\",\"11511\"\r");
+	//UART0_PrintString("AT+CIPSTART=\"TCP\",\"112.213.84.16\",\"11511\"\r");
+	UART0_PrintString(buffer_tam);
      flag_gprs.connect_ok=0;
      flag_modem.error = 0;
      flag_modem.ok = 0;
