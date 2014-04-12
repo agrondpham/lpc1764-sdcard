@@ -168,6 +168,8 @@ extern char speed_gps[speedLen];
 extern char gps_date_string[gps_date_len];
 //TCP
 extern uint32_t timer_gprs;
+#define Selec  20
+extern char Selection[Selec];
 //GPIO
 //#define  KEY_IN			0,19
 #define  KEY_IN					0,19

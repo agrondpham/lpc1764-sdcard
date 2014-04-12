@@ -19,7 +19,7 @@ extern unsigned char rx_rd_index1,rx_counter1;
 #define  GSM_POWER	2,13
 
 //Something strange. Maybe it is common
- #define Selec  20
+
  #define no_send     0 //can merge to complete .if 1 is complete,0 is no_send
  #define complete    0
 
