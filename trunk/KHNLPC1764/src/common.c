@@ -14,11 +14,6 @@ struct GPRS flag_gprs;
 
 char rx_buffer1[RX_BUFFER_SIZE1];
 
-//for key of car
-void key_init() {
-	GPIOSetDir(KEY_IN, INPUT);
-	GPIOSetPull(KEY_IN, PULLUP);
-}
 
 void delay_ms(uint32_t dlyTicks) {
 	uint32_t curTicks;

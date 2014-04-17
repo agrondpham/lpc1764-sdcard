@@ -85,8 +85,24 @@ struct GPRS {
 	unsigned int connect_ok :1;
 	unsigned int send_gprs_ok :1;
 	unsigned int tcp_error :1;
+	unsigned int bit_data_infor : 1;
+	unsigned int bit_data_flash_apn : 1;
+
 };
 extern struct GPRS flag_gprs;
+////APN_IP_SPEED
+struct FlashAPN {
+	unsigned char apn_save[13];    // connect hoac disconnect
+	unsigned char userName_save[5];    // connect hoac disconnect
+	unsigned char passWord_save[5];
+	unsigned char ipServer_save[16];
+	unsigned char tcpPort_save[7];    // connect hoac disconnect
+	unsigned char speed_save[20];    // connect hoac disconnect
+	unsigned char pass_save[9];
+};
+typedef struct FlashAPN flash_data_APN;
+extern flash_data_APN flash_data_APN_IP;
+////END
 
 struct FlashInfo {
 	unsigned char company[50];    // connect hoac disconnect
@@ -146,7 +162,7 @@ extern struct khn_time_type timeSet;
 #define tencongtyLen        50
 #define diachiLen           25
 #define phoneLen    13
-#define data_flash_len  200
+#define data_flash_len  150
 
 
 extern char tencongty[tencongtyLen];
@@ -160,6 +176,7 @@ extern char  ngaycap_gplx_save_1[ngaycapLen];
 extern char  handen_gplx_save_1[handenLen];
 
 extern char data_flash[data_flash_len];
+extern char data_flash_APN[50];
 
 extern char gps_time_string[gps_time_len];
 extern char latitude[latLen];   //    ="1049.3361"
@@ -174,6 +191,8 @@ extern char Selection[Selec];
 //#define  KEY_IN			0,19
 #define  KEY_IN					0,19
 #define  DOOR_IN				0,18
+
+
 extern char rx_buffer1[RX_BUFFER_SIZE1];
 extern unsigned int interruptTimer_0;
 extern volatile uint32_t msTicks;
@@ -181,6 +200,8 @@ extern unsigned int timer_gps;
 extern unsigned int timer_send_gps;
 extern unsigned int timer_read_sms;
 extern unsigned int timer_check_sms;
+extern unsigned int speed_max;
+
 
 extern unsigned int counter_send_gps;
 extern char data_gps[gpsLen];
@@ -192,7 +213,7 @@ extern char data_gps[gpsLen];
 #define userNameLen    	5
 #define passWordLen    	5
 #define ipServerLen    	16
-#define tcpPortLen     	6
+#define tcpPortLen     	8
 #define phoneLen    13
 extern char phone_1[phoneLen];
 extern char sms_reply[smsLen];

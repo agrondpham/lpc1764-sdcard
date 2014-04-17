@@ -24,6 +24,7 @@
 #include "khn_gsht.h"
 //Validation definition
 flash_data_type flash_data;
+flash_data_APN flash_data_APN_IP;
 //u8 buffer_data[512];
 
 FATFS Fatfs;
@@ -82,7 +83,29 @@ struct traffic_violations_type {
 	unsigned char time[15];
 
 };
+//////WRITE_APN_IP_SPEED
+int WRITE_APN_IP_SPEED(char data[250]) {
+	FRESULT fr;
 
+	f_mount(&Fatfs, "0:", 0);
+	fr = f_mkdir("khnsys");
+	//check if folder can not create(exist or can create)
+	if (fr != FR_OK && fr != FR_EXIST)
+		return 1;
+	//Create file to hold data
+	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "APN");
+	/*Open file to write infor if file does not exist create new file*/
+	fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
+	f_lseek(&file, f_size(&file));
+	if (fr == FR_OK) {
+		f_puts(data, &file);
+		f_close(&file);
+		return 2;
+	}
+	return 0;
+
+}
+////END
 /////////////////////Write basic infor
 //How to use
 //	char basic_data[]="Khanhhoi2,HA HUY GIAP,4564765765765,51P 637.19;PHAM THE LONG,1232132143,34534543545,12122014,12122024\r\n";
@@ -116,6 +139,52 @@ int write_basic_infor(char data[250]) {
 //UART2_PrintString(flash_data.id_device);
 //
 //.............
+int READ_APN_IP_SPEED()
+{
+
+	FRESULT fr;
+	char * dataCollection;
+	char return_data[250];
+	char buffer[250];
+	f_mount(&Fatfs, "0:", 0);
+	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "APN");
+	fr = f_open(&file, fileName, FA_READ);
+	if (fr == FR_OK) {
+		while (f_gets(buffer, sizeof(buffer), &file)) {
+			strcpy(return_data, buffer);
+		}
+		dataCollection = strtok(return_data, ",");
+		int x;
+		for (x = 0; x < 9; x++) {
+			switch (x) {
+			case 0: //m3-word
+				strcpy(flash_data_APN_IP.apn_save, dataCollection);
+				break;
+			case 1: //mms
+				strcpy(flash_data_APN_IP.userName_save, dataCollection);
+				break;
+			case 2: //mms
+				strcpy(flash_data_APN_IP.passWord_save, dataCollection);
+				break;
+			case 3: //ip
+				strcpy(flash_data_APN_IP.ipServer_save, dataCollection);
+				break;
+			case 4: //port
+				strcpy(flash_data_APN_IP.tcpPort_save, dataCollection);
+				break;
+			case 5: //speed
+				strcpy(flash_data_APN_IP.speed_save, dataCollection);
+				break;
+
+			}
+			dataCollection = strtok(NULL, ",");
+		}
+		return 1;
+	} else
+		return 0;
+}
+
+
 //"Khanhhoi2,HA HUY GIAP,4564765765765,51P 637.19;PHAM THE LONG,1232132143,34534543545,12122014,12122024\r\n"
 int read_basic_infor() {
 	FRESULT fr;
