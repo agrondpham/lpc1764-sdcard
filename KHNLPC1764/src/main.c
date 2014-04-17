@@ -145,7 +145,7 @@ RTCTime local_time, alarm_time, current_time;
 ///////////////////////////////////////////
 
 struct SYSTEM_FLAG flag_system;
-struct time_gsm *timeSet;
+//struct time_gsm *timeSet;
 
 /*------------------------------------------------------------------------------
  delays number of tick Systicks (happens every 1 ms)
@@ -464,6 +464,14 @@ void upload_info() {
 //	}
 //	phoneDrive[j] = NULL;
 //	///end
+	READ_APN_IP_SPEED();
+	delay_ms(1000);
+	sprintf(apn, "%s", flash_data_APN_IP.apn_save);
+	sprintf(userName, "%s", flash_data_APN_IP.userName_save);
+	sprintf(passApn, "%s", flash_data_APN_IP.passWord_save);
+	sprintf(ipServer, "%s", flash_data_APN_IP.ipServer_save);
+	sprintf(tcpPort, "%s", flash_data_APN_IP.tcpPort_save);
+	speed_max = atoi(flash_data_APN_IP.speed_save);
 	if (apn[0] == NULL || apn[0] == 0xff) {
 //		sprintf(apn, "v-internet");
 //		sprintf(userName, "");
@@ -504,6 +512,8 @@ void init_program(void) {
 	BUZZER_Init();
 	key_init();
 	gsm_on();
+	gps_init();
+
 }
 //int main(void) {
 //	int x;
@@ -538,34 +548,30 @@ int main(void) {
 	char day_tam[3];
 	char month_tam_1[3];
 	init_program();
+
 	RTCInit();
 
-	local_time.RTC_Sec = 56;
-	local_time.RTC_Min = 52;
-	local_time.RTC_Hour = 10;
-	local_time.RTC_Mday = 8;
-	//local_time.RTC_Wday = 03;
-	//local_time.RTC_Yday = 12; /* current date 07/12/2006 */
-	local_time.RTC_Mon = 04;
-	local_time.RTC_Year = 2014;
-	RTCSetTime(local_time); /* Set local time */
-
-	alarm_time.RTC_Sec = 0;
-	alarm_time.RTC_Min = 0;
-	alarm_time.RTC_Hour = 0;
-	alarm_time.RTC_Mday = 1;
-	alarm_time.RTC_Wday = 0;
-	alarm_time.RTC_Yday = 1; /* alarm date 01/01/2007 */
-	alarm_time.RTC_Mon = 1;
-	alarm_time.RTC_Year = 2007;
-	RTCSetAlarm(alarm_time); /* set alarm time */
+//	alarm_time.RTC_Sec = 0;
+//	alarm_time.RTC_Min = 0;
+//	alarm_time.RTC_Hour = 0;
+//	alarm_time.RTC_Mday = 1;
+//	alarm_time.RTC_Wday = 0;
+//	alarm_time.RTC_Yday = 1; /* alarm date 01/01/2007 */
+//	alarm_time.RTC_Mon = 1;
+//	alarm_time.RTC_Year = 2007;
+//	RTCSetAlarm(alarm_time); /* set alarm time */
 
 	NVIC_EnableIRQ(RTC_IRQn);
 
 //delay_ms(500);
 //Init_SomeThing();
 //LED_Config();
+	GPIOSetValue(RES_GPS, HIGH);
+	GPIOSetValue(GSM_RES, LOW);
+
 	delay_ms(500);
+	GPIOSetValue(RES_GPS, LOW);
+	GPIOSetValue(GSM_RES, HIGH);
 	upload_info();
 //delay_ms(500);
 //start_up_gsm();
@@ -575,12 +581,15 @@ int main(void) {
 
 	for (i = 0; i < 5; i++) {
 		flash_led();
+		//flash_gps();
 		delay_ms(1000);
 	}
 	GPIOSetValue(BUZZER, HIGH);
 	delay_ms(50);
 	GPIOSetValue(BUZZER, LOW);
 	flag_modem.flash_coppy = 1;
+	flag_gprs.bit_data_flash_apn = 0;
+	flag_gprs.bit_data_infor = 0;
 	//// test
 //	if (flag_modem.modem == not_connect) {
 //		start_up_gsm();
@@ -610,11 +619,28 @@ int main(void) {
 	/////////end
 
 //disk_initialize(0);
+
 	while (1) {
+
 //		current_time = RTCGetTime();
 //		sprintf(buffer,"%d/%d/%d",current_time.RTC_Hour,current_time.RTC_Min,current_time.RTC_Sec);
 //		UART2_PrintString(buffer);
+		if (timer_check_sim900 >= counter_check_sim900)   // 10s kiem tra 1 lan
+		{
+			current_time = RTCGetTime();
+			//			sprintf(buffer, "%d/%d/%d", current_time.RTC_Hour,
+			//					current_time.RTC_Min, current_time.RTC_Sec);
+			sprintf(time_gps, "%02d/%02d/%d,%02d:%02d:%02d",
+					current_time.RTC_Mday, current_time.RTC_Mon,
+					current_time.RTC_Year % 100, current_time.RTC_Hour,
+					current_time.RTC_Min, current_time.RTC_Sec);
+			//UART2_PrintString(time_gps);
+			start_up_gsm();
+			timer_check_sim900 = 0;
+			//UART0_PrintString("AT+CMGR=1\r");
+			flag_system.read_sms = 1;
 
+		}
 		if (flag_modem.modem == not_connect) {
 			start_up_gsm();
 			///if(flag_modem.flash_coppy == 1)
@@ -687,12 +713,32 @@ int main(void) {
 					send_sms_func(sms_reply);
 					delay_ms(1000);
 					UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+					//delay_ms(1000);
+					//UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
 					flag_system.send_data = 0;
 					delay_ms(1000);
 					//writeFlash(phone_1);
 					if (strcmp(data_flash, ",,,,,,,,,\n\r") != 0) {
-						write_basic_infor(data_flash);
+						if (flag_gprs.bit_data_infor == 1) {
+							write_basic_infor(data_flash);
+							flag_gprs.bit_data_infor = 0;
+						}
+
 					}
+					if (strcmp(data_flash_APN, ",,,,,,,,,\n\r") != 0) {
+
+						if (flash_data_APN_IP.userName_save == "") {
+							strcpy(flash_data_APN_IP.userName_save, '0');//flash_data_APN_IP.userName_save  = "";
+						}
+						if (flash_data_APN_IP.passWord_save == "") {
+							strcpy(flash_data_APN_IP.passWord_save, '0');
+						}
+						if (flag_gprs.bit_data_flash_apn == 1) {
+							WRITE_APN_IP_SPEED(data_flash_APN);
+							flag_gprs.bit_data_flash_apn = 0;
+						}
+					}
+
 				}
 
 				//CopyRAMToFlash(phone_1);
@@ -719,6 +765,13 @@ int main(void) {
 //				phoneDrive[i] = phone_1[i];
 //			}
 //			phoneDrive[i] = NULL;
+
+			}
+			if (atoi(speed_gps) * 1.852 >= speed_max && flag_system.gps_detect) // vuot toc do  va co tin hieu GPS
+					{
+				if (atoi(speed_gps) < 80)GPIOSetValue(BUZZER, HIGH);
+
+				else GPIOSetValue(BUZZER, LOW);
 
 			}
 			if (flag_system.send_data || flag_system.change_status) {
@@ -756,15 +809,22 @@ int main(void) {
 						{
 
 							if (connectServer(ipServer, tcpPort) == ok_status) {
-								flag_gprs.connect_ok = 1;   // ket noi ok
+								//if (connectServer(flash_data_APN_IP.ipServer_save,flash_data_APN_IP.tcpPort_save) == ok_status) {
+								flag_gprs.connect_ok = 1;// ket noi ok
 
 								memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
 
-								if(read_basic_infor()==1) {
+								if(read_basic_infor()==1 ||READ_APN_IP_SPEED()==1) {
 
 								} else {
 									UART2_PrintString("Co loi xay ra khi in\r\n");
 									UART2_PrintString("Ma loi :  bsi-01\r\n");
+								}
+								if (strcmp(latitude, "_") == 0) {
+									strcpy(latitude,"");
+								}
+								if (strcmp(longitude, "_") == 0) {
+									strcpy(longitude,"");
 								}
 								sprintf(data_gps,
 										"$$KHN$%s,%s,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
@@ -786,31 +846,11 @@ int main(void) {
 								resend_gprs = 0;
 								flag_gprs.connect_ok = 0;
 							} else {
-								flag_gprs.connect_ok = 0;  // ket noi bi loi
+								flag_gprs.connect_ok = 0; // ket noi bi loi
 								flag_gprs.deactive_pdp = 1;
 							}
 						}   // end cua vitri=0
-///start_sdcar
-//						switch (WriteData(1, 17022014, 160000)) {
-//							case 1:
-//							break;
-//							case 2:
-//							break;
-//						}
-//						if(f_puts(data_gps, &file)>-1){
-//							Close();
-//#if _DEBUG==1
-//							UART2_PrintString("Write sdcard\r\n");
-//#endif
-//						}else{
-//#if _DEBUG==1
-//							UART2_PrintString("CAN NOT Write sdcard\r\n");
-//#endif
-//						}
 
-						//f_puts(" The gioi that rong lon\r\n",&file);
-
-						////
 					}
 
 					flag_system.send_data = 0;
@@ -830,159 +870,21 @@ int main(void) {
 					delay_ms(1000);
 					goto exit_write_data;
 				}
-				hour_tam[0] = gps_time_string[0];
-				hour_tam[1] = gps_time_string[1];
-				hour_tam[2] = NULL;
+				khn_time_type datetime;
 
-				min_tam[0] = gps_time_string[2];
-				min_tam[1] = gps_time_string[3];
-				min_tam[2] = NULL;
+				datetime = convert_data_time(gps_date_string, gps_time_string,
+						7);
+				local_time.RTC_Sec = datetime.sec;
+				local_time.RTC_Min = datetime.min;
+				local_time.RTC_Hour = datetime.hour;
+				local_time.RTC_Mday = datetime.day;
+				//local_time.RTC_Wday = 03;
+				//local_time.RTC_Yday = 12; /* current date 07/12/2006 */
+				local_time.RTC_Mon = datetime.month;
+				local_time.RTC_Year = datetime.year;
+				RTCSetTime(local_time); /* Set local time */
+				//sprintf(time_gps_card, "%02d%s%s", a, min_tam, sec_tam);
 
-				sec_tam[0] = gps_time_string[4];
-				sec_tam[1] = gps_time_string[5];
-				sec_tam[2] = NULL;
-
-				day_tam[0] = gps_date_string[0];
-				day_tam[1] = gps_date_string[1];
-				day_tam[2] = NULL;
-
-				month_tam[0] = gps_date_string[2];
-				month_tam[1] = gps_date_string[3];
-				month_tam[2] = NULL;
-
-				year_tam[0] = gps_date_string[4];
-				year_tam[1] = gps_date_string[5];
-				year_tam[2] = NULL;
-
-				if (atoi(hour_tam) > 23 || atoi(min_tam) > 59
-						|| atoi(sec_tam) > 59 || atoi(day_tam) > 31
-						|| atoi(month_tam) > 12 || atoi(year_tam) > 99) {
-
-					memset(data_gps, gpsLen, NULL );
-					sprintf(data_gps, "ERROR: %s %s\r", gps_time_string,
-							gps_date_string);
-					UART2_PrintString(data_gps);
-					delay_ms(1000);
-					goto exit_write_data;
-				}
-				a = atoi(hour_tam) + 7;
-				if (a >= 24)        // neu gio vuot qua 1 ngay moi
-						{
-					a = a - 24;    // gio
-					b = atoi(day_tam);
-					b++;           // ngay
-					c = atoi(month_tam);  // thang
-					d = atoi(year_tam);
-					switch (atoi(month_tam)) {
-					case 1:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 2:
-						if (b > 29) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 3:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 4:
-						if (b > 30) {
-							b = 1;
-							c++;
-						}
-						break;
-
-					case 5:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-
-					case 6:
-						if (b > 30) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 7:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-
-					case 8:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-
-					case 9:
-						if (b > 30) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 10:
-						if (b > 31) {
-							b = 1;
-							c++;
-						}
-						break;
-
-					case 11:
-						if (b > 30) {
-							b = 1;
-							c++;
-						}
-						break;
-					case 12:
-						if (b > 31) {
-							b = 1;
-							c++;
-							d++;
-						}
-						break;
-
-					}
-
-					//sprintf(time_gps, "%02d/%02d/%02d,%02d:%s:%s", d, c, b, a,
-					//		min_tam, sec_tam);
-					//// ghi SDCARD
-					sprintf(time_gps_card, "%02d%s%s", a, min_tam, sec_tam);
-					sprintf(day_gps_card, "%s%s%s", b, c, d);
-					///////////////
-
-					year = d;
-					month = c;
-					day = b;
-					hour = a;
-					min = atoi(min_tam);
-					sec = atoi(sec_tam);
-				} else {
-					//sprintf(time_gps, "%s/%s/%s,%02d:%s:%s", year_tam,
-					//		month_tam, day_tam, a, min_tam, sec_tam);
-					////// ghi SDCARD
-					sprintf(time_gps_card, "%02d%s%s", a, min_tam, sec_tam);
-					sprintf(day_gps_card, "%s%s%s", day_tam, month_tam,
-							year_tam);
-					hour = a;
-					min = atoi(min_tam);
-					sec = atoi(sec_tam);
-					day = atoi(day_tam);
-					month = atoi(month_tam);
-					year = atoi(year_tam);
-					/////////////////
-				}
 				memset(data_gps, gpsLen, NULL );
 				//sprintf(data_gps, "AT+CCLK=\"%s+00\"\r", time_gps);
 				//UART0_PrintString(data_gps);
@@ -1014,6 +916,17 @@ int main(void) {
 			if (flag_system.sleep == "") {
 				flag_system.sleep = "_";
 			}
+			if (strcmp(latitude, "") == 0) {
+				strcpy(latitude, "_");
+			}
+			if (strcmp(longitude, "") == 0) {
+				strcpy(longitude, "_");
+			}
+			current_time = RTCGetTime();
+			sprintf(day_gps_card, "%02d%02d%02d", current_time.RTC_Mday,
+					current_time.RTC_Mon, current_time.RTC_Year % 100);
+			sprintf(time_gps_card, "%02d%02d%d", current_time.RTC_Hour,
+					current_time.RTC_Min, current_time.RTC_Sec);
 			sprintf(data_gps,
 					"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s\r\n",
 					version, imei, latitude, longitude, speed_gps, oil_value,
@@ -1027,7 +940,8 @@ int main(void) {
 //#endif
 
 			///start_sdcar
-			switch (WriteData(1, atoi(day_gps_card), current_time.RTC_Hour * 10000)) {
+			switch (WriteData(1, atoi(day_gps_card),
+					current_time.RTC_Hour * 10000)) {
 			case 1:
 				break;
 			case 2:
@@ -1046,19 +960,7 @@ int main(void) {
 
 #endif
 			}  //END
-			   //READ sdcard
-//			switch (ReadData(1, 17022014, 160000)) {
-//			case 1:
-//				break;
-//			case 2:
-//				break;
-//			}
-//			char buffer[256];
-//			while (f_gets(buffer, sizeof buffer, &file)) {
-//				UART2_PrintString(buffer);
-//			}
-//
-//			////////////////END
+
 			exit_write_data: flag_system.write_data = 0;
 			timer_send_gps = 0; // xoa thoi gian gui len data va cho ghi vao the nho
 
@@ -1066,63 +968,6 @@ int main(void) {
 		}
 		//////////end////////
 
-		if (timer_check_sim900 >= counter_check_sim900)   // 10s kiem tra 1 lan
-		{
-			current_time = RTCGetTime();
-//			sprintf(buffer, "%d/%d/%d", current_time.RTC_Hour,
-//					current_time.RTC_Min, current_time.RTC_Sec);
-			sprintf(time_gps, "%02d/%02d/%d,%02d:%02d:%02d", current_time.RTC_Mday,
-					current_time.RTC_Mon, current_time.RTC_Year,
-					current_time.RTC_Hour, current_time.RTC_Min,
-					current_time.RTC_Sec);
-			UART2_PrintString(time_gps);
-			start_up_gsm();
-			timer_check_sim900 = 0;
-			UART0_PrintString("AT+CMGR=1\r");
-
-		}
-
 	}
 }
-
-//int main(void) {
-//	char line[82];
-//	InitPort();
-//	SystemInit();
-//	KHN_SDCARD_INIT();
-//	init_timer(TIMER0_INTERVAL);
-//	enable_timer( 0 );
-//	UART1_Init();	//GPS
-//	UART0_Init();	//SIM900D
-//	UART2_Init(9600);	//RS232
-//	//{COde demo sdcard
-//	disk_initialize(0);
-//		// This line of code will return Fil data in &file.Data is in Folder 117032014, filename 16110
-//		if(ReadData(1,17032014,161100)) return 0;
-//		while (f_gets(line, sizeof line, &file)){
-//			DebugPrint(line);
-//			DebugPrint("\r\n");
-//		}
-//		//remeber close file
-//		Close();
-//						//while(1){}
-//		switch(WriteData(1,17022014,160000))	{
-//		case 1:
-//			break;
-//		case 2:
-//			break;
-//		}
-//		f_puts("$GSHT,2,xx,<NGUYEN VAN A,AN234343,00:01:29;105.34344,21.34343,21.34343,04:02:13,105.3464433,21.32343,80>,xxx#\r\n",&file);
-//		//f_puts(" The gioi that rong lon\r\n",&file);
-//		Close();
-////}end sdcard demo
-//	while (1) {
-//		short_delay(1000);
-//		Leds_invert();
-//		Read232("READ01031214#");
-//		Write232(Buff232.type, "abaabbbbcccccc");
-//		//UART0_PrintString("AT\r\n");
-//	}
-//	return 0;
-//}
 

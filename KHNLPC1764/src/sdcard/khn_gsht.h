@@ -35,7 +35,9 @@ int WriteData(int ,int ,int );
 void Close(void);
 //write basic infor
 int write_basic_infor(char data[250]);
+int WRITE_APN_IP_SPEED(char data[250]);
 int read_basic_infor();
+int READ_APN_IP_SPEED();
 //for print by UART 9600
 void KHN_Print(char print_date[20], char print_time[20], char LXLT[50], char LXTN[50],char print_time_curret[8],char print_time_from[8],char print_time_date[8]);
 #endif
