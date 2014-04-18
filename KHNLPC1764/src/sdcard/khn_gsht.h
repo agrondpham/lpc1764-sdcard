@@ -40,4 +40,5 @@ int read_basic_infor();
 int READ_APN_IP_SPEED();
 //for print by UART 9600
 void KHN_Print(char print_date[20], char print_time[20], char LXLT[50], char LXTN[50],char print_time_curret[8],char print_time_from[8],char print_time_date[8]);
+void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_curret[8],char imei[20]);
 #endif
