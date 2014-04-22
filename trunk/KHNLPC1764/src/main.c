@@ -390,6 +390,7 @@ void TIMER0_IRQHandler(void) {
 //    toggle = ~toggle;
 //    GPIOSetValue(BUZZER, toggle);
 //
+
 	var_key = GPIOGetValue(KEY_IN);      //Read the button value
 	var_door = GPIOGetValue(DOOR_IN);
 	if (var_key == 0)      //KEY_IN
@@ -471,6 +472,7 @@ void upload_info() {
 	sprintf(passApn, "%s", flash_data_APN_IP.passWord_save);
 	sprintf(ipServer, "%s", flash_data_APN_IP.ipServer_save);
 	sprintf(tcpPort, "%s", flash_data_APN_IP.tcpPort_save);
+	sprintf(passWord, "%s", flash_data_APN_IP.pass_save);
 	speed_max = atoi(flash_data_APN_IP.speed_save);
 	if (apn[0] == NULL || apn[0] == 0xff) {
 //		sprintf(apn, "v-internet");
@@ -488,8 +490,8 @@ void upload_info() {
 		sprintf(tcpPort, "11511");
 	}
 	if (timeCheck[0] == NULL || timeCheck[0] == 0xff)
-		counter_send_gps = 15;		// gui len server
-
+		counter_send_gps = 5;		// gui len server
+	flag_system.buzz_accept = 1;
 }
 
 void init_program(void) {
@@ -710,9 +712,11 @@ int main(void) {
 					if (strlen(userCall_new) > 10)
 						process_command();
 					delay_ms(1000);
-					send_sms_func(sms_reply);
-					delay_ms(1000);
 					UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
+					delay_ms(1000);
+					send_sms_func(sms_reply);
+
+
 					//delay_ms(1000);
 					//UART0_PrintString("AT+CMGDA=\"DEL ALL\"\r");
 					flag_system.send_data = 0;
@@ -767,12 +771,14 @@ int main(void) {
 //			phoneDrive[i] = NULL;
 
 			}
+			if (flag_system.buzz_accept){
 			if (atoi(speed_gps) * 1.852 >= speed_max && flag_system.gps_detect) // vuot toc do  va co tin hieu GPS
 					{
-				if (atoi(speed_gps) < 80)GPIOSetValue(BUZZER, HIGH);
+				if (atoi(speed_gps) < 80)GPIOSetValue(BUZZER, LOW);
 
-				else GPIOSetValue(BUZZER, LOW);
+				else GPIOSetValue(BUZZER,HIGH );
 
+			}
 			}
 			if (flag_system.send_data || flag_system.change_status) {
 
@@ -925,7 +931,7 @@ int main(void) {
 			current_time = RTCGetTime();
 			sprintf(day_gps_card, "%02d%02d%02d", current_time.RTC_Mday,
 					current_time.RTC_Mon, current_time.RTC_Year % 100);
-			sprintf(time_gps_card, "%02d%02d%d", current_time.RTC_Hour,
+			sprintf(time_gps_card, "%02d%02d%02d", current_time.RTC_Hour,
 					current_time.RTC_Min, current_time.RTC_Sec);
 			sprintf(data_gps,
 					"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s\r\n",

@@ -225,6 +225,7 @@ extern char tcpPort[tcpPortLen];
 extern char userCall[phoneLen];
 extern char userCall_new[phoneLen];
 extern char data_sms[smsLen];
+extern char passWord[20];
 
 extern char ten_laixe[ten_laixeLen] ;
 extern char so_gplx[so_gplxLen]  ;

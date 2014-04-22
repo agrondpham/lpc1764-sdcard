@@ -14,6 +14,7 @@ char infor_cmd[] = "222";
 ///////////////////define_call
 char all_call[] = "GOI";
 char print_all[] = "IN1:";
+char print_all_2[] = "IN2:";
 char config_apn[] = "110";
 char config_ip[] = "111";
 char speedmax_cmd[] = "001";
@@ -22,10 +23,11 @@ char thongtin_cty[] = "005";
 char thongtin_laixe[] = "0061";
 char TTTX[] = "023";
 
-char passWord[] = "999999";
-char passWord_cmd[] = "0000";
+char passWord[20];
+char read_passWord[] = "000000";
+char passWord_cmd[] = "1111";
 char speed[speedLen];
-char dat_version[] = "110414";
+char dat_version[] = "190414";
 unsigned int timer_check_sms = 0;
 unsigned int timer_read_sms = 0;
 unsigned int speed_max;
@@ -548,7 +550,19 @@ void process_command() {
 	//sprintf(sms_reply, "chuoitam: %s,data_sms: %s", chuoitam, data_sms);
 	//UART2_PrintString(sms_reply);
 	//delay_ms(500);
-	if (strcmp(chuoitam, flash_data_APN_IP.pass_save) == 0) {
+	if (strcmp(chuoitam, read_passWord) == 0) {
+		READ_APN_IP_SPEED();
+		read_basic_infor();
+		sprintf(passWord, "%s", flash_data_APN_IP.pass_save);
+		if (passWord[0] == NULL || atoi(passWord) <= 1 || passWord[0] == "")
+			sprintf(passWord, "999999");
+		sprintf(sms_reply, "ID:%s,IP:%s,%s,PASS:%s,%s,SD: %d", imei,
+				flash_data_APN_IP.ipServer_save, flash_data_APN_IP.tcpPort_save,
+				flash_data_APN_IP.pass_save, passWord, flag_system.card_status);
+		flag_system.send_data_flag = smsMode;
+		flag_gprs.bit_data_flash_apn = 1;
+	}
+	if (strcmp(chuoitam, passWord) == 0) {
 		k = i + 1;
 		for (i = k; i < smsLen; i++) {
 			if (data_sms[i] == NULL || data_sms[i] == ' ')
@@ -562,30 +576,31 @@ void process_command() {
 		if (strcmp(chuoitam, passWord_cmd) == 0) {
 			k = i + 1;
 			for (i = k; i < smsLen; i++) {
-				if (data_sms[i] == NULL || data_sms[i] == ' ')
+				if (data_sms[i] == NULL )//|| data_sms[i] == ' ')
 					break;
 
 				passWord[i - k] = data_sms[i];
 			}
 			passWord[i - k] = NULL;
-			sprintf(sms_reply, "Password change: %s", passWord);
+
+			sprintf(sms_reply,"Password change: %s", passWord);
 			READ_APN_IP_SPEED();
 			sprintf(data_flash_APN, "%s,%s,%s,%s,%s,%s,%s,\n\r",
 					flash_data_APN_IP.apn_save, flash_data_APN_IP.userName_save,
 					flash_data_APN_IP.passWord_save,
 					flash_data_APN_IP.ipServer_save,
-					flash_data_APN_IP.tcpPort_save, flash_data_APN_IP.speed_save,
-					passWord);
+					flash_data_APN_IP.tcpPort_save,
+					flash_data_APN_IP.speed_save, passWord);
 			flag_gprs.bit_data_flash_apn = 1;
 		}
 
-		if (strcmp(chuoitam, infor_cmd) == 0) {
+		else if (strcmp(chuoitam, infor_cmd) == 0) {
 			sprintf(sms_reply,
 					"LPC:%s,TCP:%s,%s,%s,IP:%s,%s,C:%d,P:%s,S:%s,ID:%s,LAT:%s,LOG:%s,D:%d,K:%d,SL:%d",
 					dat_version, apn, userName, passApn, ipServer, tcpPort,
-					counter_send_gps, flash_data.phone, speed, imei, latitude,
+					counter_send_gps, flash_data.phone,flash_data_APN_IP.speed_save, imei, latitude,
 					longitude, flag_system.status_door, flag_system.status_key,
-					flag_system.sleep);
+					flag_system.sleep);//speed
 		}
 
 		/// setup van toc
@@ -709,7 +724,7 @@ void process_command() {
 		}
 		///END////////////////
 		else {
-			sprintf(sms_reply, "xin kiem tra lai !");
+			sprintf(sms_reply, "xin kiem tra lai ! %s", chuoitam);
 		}
 
 		flag_system.send_data_flag = smsMode;
@@ -953,6 +968,84 @@ void process_command() {
 
 		flag_system.send_data_flag = smsMode;
 	}
+
+	//// in2:
+	else if (strcmp(chuoitam, print_all_2) == 0)      //in du lieu trong ngay
+			{      // 0000 004 11/10/25,08:30:00 20:00:00
+				   // IN: 05 08 12 08 30 15    // in thoi gian 05/08/12 08:30:15
+
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			ngay[i - k] = data_sms[i];
+		}
+		ngay[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			thang[i - k] = data_sms[i];
+		}
+		thang[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			nam[i - k] = data_sms[i];
+		}
+		nam[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			gio[i - k] = data_sms[i];
+		}
+		gio[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			phut[i - k] = data_sms[i];
+		}
+		phut[i - k] = NULL;
+		k = i + 1;
+		for (i = k; i < smsLen; i++) {
+			if (data_sms[i] == ' ' || data_sms[i] == NULL )
+				break;
+			giay[i - k] = data_sms[i];
+		}
+		giay[i - k] = NULL;
+
+		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
+				giay);
+		sprintf(gio_phut_giay, "%s:%s:%s", gio, phut, giay);
+		sprintf(ngay_thang_nam, "%s/%s/%s", ngay, thang, nam);
+		sprintf(temp_from_time, "%s0000", gio);
+		sprintf(temp_printDate, "%s%s%s", ngay, thang, nam);
+
+		sprintf(chuoitam, "%s/%s/%s,%s:%s:%s", nam, thang, ngay, gio, phut,
+				giay);
+
+		if (flag_system.card_status) {
+
+			if (read_basic_infor() == 1) {
+				//KHN_Print("07/04/14", "16:18:00", "1234567890", "GSB4324235665");
+
+				KHN_Print_Infor(ngay_thang_nam, gio_phut_giay, time_gps_card,
+						imei);
+			} else {
+				UART2_PrintString("Co loi xay ra khi in\r\n");
+				UART2_PrintString("Ma loi :  bsi-01\r\n");
+			}
+			//find_file_2(chuoitam);
+			sprintf(sms_reply, "Da in xong %s", chuoitam);
+		} else
+			sprintf(sms_reply, "Chua lap the nho");
+		flag_system.send_data_flag = smsMode;
+	}
+
+	///end
 
 ///////////END
 
