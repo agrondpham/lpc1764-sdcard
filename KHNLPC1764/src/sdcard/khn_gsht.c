@@ -56,13 +56,13 @@ int WriteData(int code, int date, int time) {
 //Get DateTime
 //Create folder of that date
 	f_mount(&Fatfs, "0:", 0);
-	sprintf(fileName, "%d", date);
+	sprintf(fileName, "%06d", date);
 	fr = f_mkdir(fileName);
 	//check if folder can not create(exist or can create)
 	if (fr != FR_OK && fr != FR_EXIST)
 		return 1;
 	//Create file to hold data
-	sprintf(fileName, "0:/%d/%d.txt", date, time);
+	sprintf(fileName, "0:/%06d/%06d.txt", date, time);
 	/*Open file to write infor if file does not exist create new file*/
 	fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
 	f_lseek(&file, f_size(&file));
@@ -173,6 +173,9 @@ int READ_APN_IP_SPEED() {
 				break;
 			case 5: //speed
 				strcpy(flash_data_APN_IP.speed_save, dataCollection);
+				break;
+			case 6: //pass
+				strcpy(flash_data_APN_IP.pass_save, dataCollection);
 				break;
 
 			}
