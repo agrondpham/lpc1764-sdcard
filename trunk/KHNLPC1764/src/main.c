@@ -115,9 +115,9 @@ char data_server[data_serverLen];
 unsigned int pointer_server = 0;
 unsigned char rx_buffer_overflow1;
 unsigned char rx_buffer_overflow0;
-char version[] = "3.13";
+char version[] = "5.00";
 unsigned char resend;
-unsigned int oil_value;
+unsigned int oil_value = 0;
 unsigned int timer_check_sim900 = 0;
 char so_vin[so_vinLen] = "";
 char time_gps_card[8];
@@ -242,7 +242,7 @@ void UART2_IRQHandler(void) {
 
 		data = LPC_UART2 ->RBR;
 		if (data == 0x25) {
-			//UART2_PrintString(readData);
+			//UART3_PrintString(readData);
 			//UART2_Sendchar('E');
 			Read232(readData);
 			//UART2_PrintString(readData);
@@ -281,7 +281,7 @@ void UART0_IRQHandler(void) {
 
 		data = LPC_UART0 ->RBR;
 #if _DEBUG==1
-		UART2_Sendchar(data);
+		//UART2_Sendchar(data);
 		UART3_Sendchar(data);
 #endif
 		if (data == 0x0A) {
@@ -377,7 +377,7 @@ void UART1_IRQHandler(void) {
 void TIMER0_IRQHandler(void) {
 //
 //    /* Set new timer interrupt, toggle led status and write value to the led port */
-	uint8_t var_key, var_door;
+	uint8_t var_key, var_door,var_cold_hot;
 	TIMER0_interrupt();
 //	couter0++;
 //	if (couter0 > 6) {
@@ -393,6 +393,8 @@ void TIMER0_IRQHandler(void) {
 
 	var_key = GPIOGetValue(KEY_IN);      //Read the button value
 	var_door = GPIOGetValue(DOOR_IN);
+	var_cold_hot = GPIOGetValue(COL_HOT);
+
 	if (var_key == 0)      //KEY_IN
 			{
 		// GPIOSetValue(BUZZER, HIGH);
@@ -401,13 +403,21 @@ void TIMER0_IRQHandler(void) {
 		//GPIOSetValue(BUZZER, LOW);
 		flag_system.status_key = 2;
 	}
-	if (var_door == 0)      //KEY_IN
+	if (var_door == 0)      //DOOR_IN
 			{
 		//GPIOSetValue(BUZZER, HIGH);
 		flag_system.status_door = 1;
 	} else {
 		//GPIOSetValue(BUZZER, LOW);
 		flag_system.status_door = 2;
+	}
+	if (var_cold_hot == 0)      //DOOR_IN
+			{
+
+		flag_system.cold_hot =1;
+	} else {
+		//GPIOSetValue(BUZZER, LOW);
+		flag_system.cold_hot = 2;
 	}
 
 }
@@ -432,12 +442,12 @@ void TIMER1_IRQHandler(void) {
 
 void EraseSectors() {
 	if (u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
-		UART2_PrintString("clear successful \r\n");
+		UART3_PrintString("clear successful \r\n");
 	} else {
-		UART2_PrintString("clear unsuccessful \r\n");
+		UART3_PrintString("clear unsuccessful \r\n");
 	}
 	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS)
-		UART2_PrintString("clear end \r\n");
+		UART3_PrintString("clear end \r\n");
 }
 
 //////END
@@ -484,13 +494,13 @@ void upload_info() {
 	}
 	if (ipServer[0] == NULL || ipServer[0] == 0xff) {
 		//sprintf(ipServer, "112.213.84.16");
-		//sprintf(ipServer,"112.213.84.16");
-		sprintf(ipServer, "112.213.94.122");
+		sprintf(ipServer,"112.213.84.16");
+		//sprintf(ipServer, "112.213.94.122");
 
 		sprintf(tcpPort, "11511");
 	}
 	if (timeCheck[0] == NULL || timeCheck[0] == 0xff)
-		counter_send_gps = 5;		// gui len server
+		counter_send_gps = 15;		// gui len server
 	flag_system.buzz_accept = 1;
 }
 
@@ -510,11 +520,14 @@ void init_program(void) {
 	UART2_Init(9600);
 	UART3_Init(9600);
 	KHN_SDCARD_INIT();
-	LED_Init();
-	BUZZER_Init();
-	key_init();
-	gsm_on();
-	gps_init();
+//	LED_Init();
+//	BUZZER_Init();
+//	key_init();
+//	door_init();
+//	col_init();
+//	gsm_on();
+//	gps_init();
+	GPIO_init();
 
 }
 //int main(void) {
@@ -537,6 +550,7 @@ int main(void) {
 	uint8_t buffer[200];
 
 	uint8_t vitri, resend_gprs, counter_init = 0, i;
+	unsigned int couter_reset_gps =0;
 	unsigned char b, c, d;
 	int a;
 	char day, month, year, hour, min, sec; //, week_day;
@@ -632,13 +646,25 @@ int main(void) {
 			current_time = RTCGetTime();
 			//			sprintf(buffer, "%d/%d/%d", current_time.RTC_Hour,
 			//					current_time.RTC_Min, current_time.RTC_Sec);
-			sprintf(time_gps, "%02d/%02d/%d,%02d:%02d:%02d",
+			sprintf(time_gps, "%02d%02d%d,%02d%02d%02d",
 					current_time.RTC_Mday, current_time.RTC_Mon,
 					current_time.RTC_Year % 100, current_time.RTC_Hour,
 					current_time.RTC_Min, current_time.RTC_Sec);
 			//UART2_PrintString(time_gps);
 			start_up_gsm();
 			timer_check_sim900 = 0;
+			if (couter_reset_gps < 100)couter_reset_gps++;
+			else
+			{
+				couter_reset_gps = 0;
+				GPIOSetValue(RES_GPS, LOW);
+				delay_ms(500);
+				GPIOSetValue(RES_GPS, HIGH);
+				delay_ms(1000);
+				GPIOSetValue(RES_GPS, LOW);
+				delay_ms(500);
+
+			}
 			//UART0_PrintString("AT+CMGR=1\r");
 			flag_system.read_sms = 1;
 
@@ -776,7 +802,13 @@ int main(void) {
 					{
 				if (atoi(speed_gps) < 80)GPIOSetValue(BUZZER, LOW);
 
-				else GPIOSetValue(BUZZER,HIGH );
+				else
+					{
+						GPIOSetValue(BUZZER,HIGH );
+						delay_ms(50);
+						GPIOSetValue(BUZZER,LOW );
+						delay_ms(50);
+					}
 
 			}
 			}
@@ -823,8 +855,8 @@ int main(void) {
 								if(read_basic_infor()==1 ||READ_APN_IP_SPEED()==1) {
 
 								} else {
-									UART2_PrintString("Co loi xay ra khi in\r\n");
-									UART2_PrintString("Ma loi :  bsi-01\r\n");
+									UART3_PrintString("Co loi xay ra khi in\r\n");
+									UART3_PrintString("Ma loi :  bsi-01\r\n");
 								}
 								if (strcmp(latitude, "_") == 0) {
 									strcpy(latitude,"");
@@ -841,6 +873,7 @@ int main(void) {
 										flag_system.card_status, flash_data.vin_No, flash_data.phone,
 										flag_system.cold_hot,flag_system.sleep,time_gps); //,gps_time_string);//gps_date_string,
 								//gps_time_string);//time_gps_send);flag_system.sleep
+								flag_gprs.send_gprs_ok =0;///it me
 								if (send_data_gprs(data_gps) != ok_status)// send data
 								{
 									//UART2_PrintString("loi xay ra\r\n");
@@ -848,7 +881,9 @@ int main(void) {
 								}
 								//UART2_PrintString("Khong loi khi gui \r\n");
 								delay_ms(1000);
-								UART0_PrintString("AT+CIPCLOSE\r");
+								//if(flag_gprs.send_gprs_ok == 1)UART0_PrintString("AT+CIPSHUT\r");//it me
+								//UART0_PrintString("AT+CIPCLOSE\r");
+
 								resend_gprs = 0;
 								flag_gprs.connect_ok = 0;
 							} else {
@@ -872,7 +907,7 @@ int main(void) {
 			if (flag_system.gps_detect) {
 				if (strlen(gps_time_string) != 6
 						|| strlen(gps_date_string) != 6) {
-					UART2_PrintString("TIMER_ERROR\r");
+					UART3_PrintString("TIMER_ERROR\r");
 					delay_ms(1000);
 					goto exit_write_data;
 				}
@@ -922,6 +957,14 @@ int main(void) {
 			if (flag_system.sleep == "") {
 				flag_system.sleep = "_";
 			}
+
+			if (strcmp(flash_data.vin_No, "") == 0) {
+				strcpy(flash_data.vin_No, "0");
+			}
+			if (strcmp(flash_data.phone, "") == 0) {
+				strcpy(flash_data.phone, "0");
+			}
+
 			if (strcmp(latitude, "") == 0) {
 				strcpy(latitude, "_");
 			}
@@ -957,12 +1000,12 @@ int main(void) {
 				Close();
 				flag_system.card_status = 1;
 #if _DEBUG==1
-				UART2_PrintString("write sdcard\r\n");
+				UART3_PrintString("write sdcard\r\n");
 #endif
 			} else {
 				flag_system.card_status = 0;
 #if _DEBUG==1
-				UART2_PrintString("CAN NOT Write sdcard\r\n");
+				UART3_PrintString("CAN NOT Write sdcard\r\n");
 
 #endif
 			}  //END
