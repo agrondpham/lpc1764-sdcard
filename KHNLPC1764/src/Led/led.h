@@ -5,7 +5,7 @@
 #define  BUZZER			3,25
 
 
-
+void GPIO_init(void);
 void LED_Init(void);
 void flash_led();
 

@@ -9,7 +9,7 @@
 #define	DATA_START_SECTOR	0x00000000	/* Start Sector 17 */
 #define	DATA_END_SECTOR		0x00000FFF	/* End Sector 17 */
 
-#define _DEBUG 1
+#define _DEBUG 1/// out data
 extern char time_gps_card[8];
 struct MODEM {
 	unsigned long modem :1;    // connect hoac disconnect
@@ -70,7 +70,7 @@ struct SYSTEM_FLAG {
 	unsigned long print :1;
 	unsigned long change_status :1;
 	unsigned long card_status_data :1;
-	unsigned long cold_hot :1;
+	unsigned long cold_hot :2;
 	unsigned long read_sms :1;
 
 };
@@ -191,6 +191,13 @@ extern char Selection[Selec];
 //#define  KEY_IN			0,19
 #define  KEY_IN					0,19
 #define  DOOR_IN				0,18
+#define COL_HOT			2,5
+//GSM
+#define  GSM_POWER	2,13
+#define GSM_RES				0,22
+#define RES_GPS				0,20
+
+
 
 
 extern char rx_buffer1[RX_BUFFER_SIZE1];

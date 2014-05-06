@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 
-#define RES_GPS				0,20
+//#define RES_GPS				0,20
 void gps_init(void);
 void flash_gps();
 

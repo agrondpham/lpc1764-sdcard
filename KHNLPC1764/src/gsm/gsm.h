@@ -15,9 +15,6 @@ extern unsigned char rx_wr_index0,rx_rd_index0,rx_counter0;
 extern unsigned char rx_wr_index1;
 extern unsigned char rx_rd_index1,rx_counter1;
 
-//GSM
-#define  GSM_POWER	2,13
-#define GSM_RES				0,22
 
 //Something strange. Maybe it is common
 

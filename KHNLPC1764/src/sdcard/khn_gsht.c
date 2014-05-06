@@ -154,7 +154,7 @@ int READ_APN_IP_SPEED() {
 		}
 		dataCollection = strtok(return_data, ",");
 		int x;
-		for (x = 0; x < 9; x++) {
+		for (x = 0; x < 10; x++) {
 			switch (x) {
 			case 0: //m3-word
 				strcpy(flash_data_APN_IP.apn_save, dataCollection);
@@ -177,6 +177,9 @@ int READ_APN_IP_SPEED() {
 			case 6: //pass
 				strcpy(flash_data_APN_IP.pass_save, dataCollection);
 				break;
+		//	case 7: //pass
+		//		strcpy(flash_data_APN_IP.key_door, dataCollection);
+		//		break;
 
 			}
 			dataCollection = strtok(NULL, ",");
@@ -727,7 +730,7 @@ void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_cu
 	UART2_PrintString(temp);
 	sprintf(temp, "GPLX: %s\r\n", flash_data.license);
 	UART2_PrintString(temp);
-	sprintf(temp, "GPLX: %s\r\n", imei);
+	sprintf(temp, "ID: %s\r\n", imei);
 	UART2_PrintString(temp);
 	UART2_PrintString("--------------------\r\n");
 	sprintf(temp, "Thoi diem in: %s\r\n", print_date);
