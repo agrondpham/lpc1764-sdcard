@@ -475,7 +475,7 @@ void upload_info() {
 //	}
 //	phoneDrive[j] = NULL;
 //	///end
-	create_default_data
+	create_default_data;
 	READ_APN_IP_SPEED();
 	//delay_ms(1000);
 	sprintf(apn, "%s", flash_data_APN_IP.apn_save);
