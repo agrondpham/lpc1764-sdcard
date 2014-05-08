@@ -57,8 +57,8 @@
 #include "RTC/rtc.h"
 
 /*	Flash sectors to be used for data storage */
-#define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
-#define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
+//#define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
+//#define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
 
 #define IIR_RLS		0x03
 #define IIR_RDA		0x02
@@ -475,8 +475,9 @@ void upload_info() {
 //	}
 //	phoneDrive[j] = NULL;
 //	///end
+	create_default_data
 	READ_APN_IP_SPEED();
-	delay_ms(1000);
+	//delay_ms(1000);
 	sprintf(apn, "%s", flash_data_APN_IP.apn_save);
 	sprintf(userName, "%s", flash_data_APN_IP.userName_save);
 	sprintf(passApn, "%s", flash_data_APN_IP.passWord_save);
@@ -546,23 +547,14 @@ void init_program(void) {
 //}
 
 int main(void) {
-	uint8_t location;
 	uint8_t buffer[200];
 
-	uint8_t vitri, resend_gprs, counter_init = 0, i;
+	uint8_t vitri, counter_init = 0, i;
 	unsigned int couter_reset_gps =0;
-	unsigned char b, c, d;
-	int a;
-	char day, month, year, hour, min, sec; //, week_day;
 
-	char hour_tam[3];
 
-	char min_tam[3];
-	char sec_tam[3];
-	char year_tam[3];
-	char month_tam[3];
-	char day_tam[3];
-	char month_tam_1[3];
+
+
 	init_program();
 
 	RTCInit();
@@ -579,9 +571,7 @@ int main(void) {
 
 	NVIC_EnableIRQ(RTC_IRQn);
 
-//delay_ms(500);
-//Init_SomeThing();
-//LED_Config();
+
 	GPIOSetValue(RES_GPS, HIGH);
 	GPIOSetValue(GSM_RES, LOW);
 
@@ -589,10 +579,7 @@ int main(void) {
 	GPIOSetValue(RES_GPS, LOW);
 	GPIOSetValue(GSM_RES, HIGH);
 	upload_info();
-//delay_ms(500);
-//start_up_gsm();
 
-//flash_led();
 	RTCStart();
 
 	for (i = 0; i < 5; i++) {
@@ -606,51 +593,18 @@ int main(void) {
 	flag_modem.flash_coppy = 1;
 	flag_gprs.bit_data_flash_apn = 0;
 	flag_gprs.bit_data_infor = 0;
-	//// test
-//	if (flag_modem.modem == not_connect) {
-//		start_up_gsm();
-//		///if(flag_modem.flash_coppy == 1)
-//		//{
-//		//flag_modem.flash_coppy = 0;
-//		//CopyRAMToFlash(phone_1);
-//		//}
-//		delay_ms(1000);
-//		init_gsm();
-//		//UART3_Sendchar('A');
-//		//UART3_PrintString("ket thuc main vao while");
-//		if (flag_gprs.status_gprs != ok_status) {
-//
-//			flag_system.led_check = 1;
-//			flag_gprs.status_gprs = init_tcp(apn, userName, passApn,
-//					flag_gprs.status_gprs);
-//			resend++;
-//			if (resend >= 2 && flag_gprs.status_gprs != ok_status) {
-//				flag_gprs.deactive_pdp = 1;
-//				resend = 0;
-//			} else if (flag_gprs.status_gprs == ok_status)
-//				counter_init = 0;
-//			flag_system.led_check = 0;
-//		}
-//	}
-	/////////end
-
-//disk_initialize(0);
 
 	while (1) {
-
-//		current_time = RTCGetTime();
-//		sprintf(buffer,"%d/%d/%d",current_time.RTC_Hour,current_time.RTC_Min,current_time.RTC_Sec);
-//		UART2_PrintString(buffer);
+		//check SDCARD have default infor
+		create_default_data();
 		if (timer_check_sim900 >= counter_check_sim900)   // 10s kiem tra 1 lan
 		{
 			current_time = RTCGetTime();
-			//			sprintf(buffer, "%d/%d/%d", current_time.RTC_Hour,
-			//					current_time.RTC_Min, current_time.RTC_Sec);
+
 			sprintf(time_gps, "%02d%02d%d,%02d%02d%02d",
 					current_time.RTC_Mday, current_time.RTC_Mon,
 					current_time.RTC_Year % 100, current_time.RTC_Hour,
 					current_time.RTC_Min, current_time.RTC_Sec);
-			//UART2_PrintString(time_gps);
 			start_up_gsm();
 			timer_check_sim900 = 0;
 			if (couter_reset_gps < 100)couter_reset_gps++;
@@ -705,9 +659,6 @@ int main(void) {
 			}
 
 			///END
-
-			//UART3_Sendchar('A');
-			//UART3_PrintString("ket thuc main vao while");
 			if (flag_gprs.status_gprs != ok_status) {
 
 				flag_system.led_check = 1;
@@ -797,20 +748,21 @@ int main(void) {
 //			phoneDrive[i] = NULL;
 
 			}
-			if (flag_system.buzz_accept){
-			if (atoi(speed_gps) * 1.852 >= speed_max && flag_system.gps_detect) // vuot toc do  va co tin hieu GPS
-					{
-				if (atoi(speed_gps) < 80)GPIOSetValue(BUZZER, LOW);
+			if (flag_system.buzz_accept) {
+				if (atoi(speed_gps) * 1.852 >= speed_max
+						&& flag_system.gps_detect) // vuot toc do  va co tin hieu GPS
+						{
+					if (atoi(speed_gps) < 80)
+						GPIOSetValue(BUZZER, LOW);
 
-				else
-					{
-						GPIOSetValue(BUZZER,HIGH );
+					else {
+						GPIOSetValue(BUZZER, HIGH);
 						delay_ms(50);
-						GPIOSetValue(BUZZER,LOW );
+						GPIOSetValue(BUZZER, LOW);
 						delay_ms(50);
 					}
 
-			}
+				}
 			}
 			if (flag_system.send_data || flag_system.change_status) {
 
@@ -850,7 +802,7 @@ int main(void) {
 								//if (connectServer(flash_data_APN_IP.ipServer_save,flash_data_APN_IP.tcpPort_save) == ok_status) {
 								flag_gprs.connect_ok = 1;// ket noi ok
 
-								memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
+
 
 								if(read_basic_infor()==1 ||READ_APN_IP_SPEED()==1) {
 
@@ -864,14 +816,21 @@ int main(void) {
 								if (strcmp(longitude, "_") == 0) {
 									strcpy(longitude,"");
 								}
+								memset(data_gps, gpsLen, NULL);// xoa NULL het GPS data
 								sprintf(data_gps,
 										"$$KHN$%s,%s,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s$\r\n",
-										version,flash_data.id_device, imei, latitude, longitude,
+										version,flash_data.id_device,
+										imei,
+										latitude,
+										longitude,
 										speed_gps, oil_value,
 										flag_system.status_key,
 										flag_system.status_door,
-										flag_system.card_status, flash_data.vin_No, flash_data.phone,
-										flag_system.cold_hot,flag_system.sleep,time_gps); //,gps_time_string);//gps_date_string,
+										flag_system.card_status,
+										flash_data.vin_No,
+										flash_data.phone,
+										flag_system.cold_hot,
+										flag_system.sleep,time_gps); //,gps_time_string);//gps_date_string,
 								//gps_time_string);//time_gps_send);flag_system.sleep
 								flag_gprs.send_gprs_ok =0;///it me
 								if (send_data_gprs(data_gps) != ok_status)// send data
@@ -884,7 +843,7 @@ int main(void) {
 								//if(flag_gprs.send_gprs_ok == 1)UART0_PrintString("AT+CIPSHUT\r");//it me
 								//UART0_PrintString("AT+CIPCLOSE\r");
 
-								resend_gprs = 0;
+								//resend_gprs = 0;
 								flag_gprs.connect_ok = 0;
 							} else {
 								flag_gprs.connect_ok = 0; // ket noi bi loi
@@ -926,7 +885,7 @@ int main(void) {
 				RTCSetTime(local_time); /* Set local time */
 				//sprintf(time_gps_card, "%02d%s%s", a, min_tam, sec_tam);
 
-				memset(data_gps, gpsLen, NULL );
+				memset(data_gps, sizeof(data_gps), NULL );
 				//sprintf(data_gps, "AT+CCLK=\"%s+00\"\r", time_gps);
 				//UART0_PrintString(data_gps);
 				//UART2_PrintString(time_gps);
@@ -940,16 +899,6 @@ int main(void) {
 //		                flag_system.status_door =! door;
 //		                flag_system.status_key =! key;
 
-			for (vitri = 0; vitri < gpsLen; vitri++)
-				data_gps[vitri] = NULL;
-			//$3.13,56,862118024728161,1052.0431,N,10641.1769,E,81.00,0,0,0,0,_,000,0,0,050414,080307
-//		sprintf(data_gps, "<%s;%s;%s;%s;%d;%d>\r\n", time_gps, latitude,
-//				longitude, speed_gps, flag_system.status_key,
-//				flag_system.status_door);
-
-//		sprintf(data_gps, "$3.13,56,%s,%s\r\n", imei,time_gps, latitude,
-//				longitude, speed_gps, flag_system.status_key,
-//				flag_system.status_door);
 
 			if (flag_system.cold_hot == "") {
 				flag_system.cold_hot = "_";
@@ -976,6 +925,7 @@ int main(void) {
 					current_time.RTC_Mon, current_time.RTC_Year % 100);
 			sprintf(time_gps_card, "%02d%02d%02d", current_time.RTC_Hour,
 					current_time.RTC_Min, current_time.RTC_Sec);
+			memset(data_gps, sizeof(data_gps), NULL );
 			sprintf(data_gps,
 					"$%s,56,%s,%s,N,%s,E,%s,%d,%d,%d,%d,%s,%s,%d,%d,%s,%s\r\n",
 					version, imei, latitude, longitude, speed_gps, oil_value,
