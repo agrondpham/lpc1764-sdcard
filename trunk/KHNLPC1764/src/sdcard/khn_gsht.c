@@ -87,24 +87,27 @@ struct traffic_violations_type {
 int WRITE_APN_IP_SPEED(char data[250]) {
 	FRESULT fr;
 
-	f_mount(&Fatfs, "0:", 0);
-	fr = f_mkdir("khnsys");
-	//check if folder can not create(exist or can create)
-	if (fr != FR_OK && fr != FR_EXIST)
-		return 1;
-	//Create file to hold data
-	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "APN");
-	/*Open file to write infor if file does not exist create new file*/
-	fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
-	f_lseek(&file, f_size(&file));
+	fr = f_mount(&Fatfs, "0:", 1);
 	if (fr == FR_OK) {
-		f_puts(data, &file);
-		f_close(&file);
-		return 2;
+		fr = f_mkdir("khnsys");
+		//check if folder can not create(exist or can create)
+		if (fr != FR_OK && fr != FR_EXIST)
+			return 1;
+		//Create file to hold data
+		sprintf(fileName, "0:/khnsys/APN.txt");
+		/*Open file to write infor if file does not exist create new file*/
+		fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
+		f_lseek(&file, f_size(&file));
+		if (fr == FR_OK) {
+			f_puts(data, &file);
+			f_close(&file);
+			return 2;
+		}
 	}
 	return 0;
 
 }
+
 ////END
 /////////////////////Write basic infor
 //How to use
@@ -114,23 +117,57 @@ int WRITE_APN_IP_SPEED(char data[250]) {
 int write_basic_infor(char data[250]) {
 	FRESULT fr;
 
-	f_mount(&Fatfs, "0:", 0);
-	fr = f_mkdir("khnsys");
-	//check if folder can not create(exist or can create)
-	if (fr != FR_OK && fr != FR_EXIST)
-		return 1;
-	//Create file to hold data
-	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "infor");
-	/*Open file to write infor if file does not exist create new file*/
-	fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
-	f_lseek(&file, f_size(&file));
+	fr = f_mount(&Fatfs, "0:", 1);
 	if (fr == FR_OK) {
-		f_puts(data, &file);
-		f_close(&file);
-		return 2;
+		fr = f_mkdir("khnsys");
+		//check if folder can not create(exist or can create)
+		if (fr != FR_OK && fr != FR_EXIST)
+			return 1;
+		//Create file to hold data
+		sprintf(fileName, "0:/khnsys/infor.txt");
+		/*Open file to write infor if file does not exist create new file*/
+		fr = f_open(&file, fileName, FA_WRITE | FA_OPEN_ALWAYS);
+		f_lseek(&file, f_size(&file));
+		if (fr == FR_OK) {
+			f_puts(data, &file);
+			f_close(&file);
+			return 2;
+		}
 	}
 	return 0;
 
+}
+int write_default_APN() {
+	if (WRITE_APN_IP_SPEED("V-INTERNET,NULL,NULL,112.213.94.122,11511,50,\r\n")
+			== 2) {
+		return 1;
+	}
+	return 0;
+}
+int write_default_Infor() {
+	if (write_basic_infor(
+			"CTY TNHH VIEN THONG KHANH HOI, 145A HA HUY GIAP,76X1 2313, 1515  ,NGUYEN VAN A,A557799,15/09/2013,20/18/2017 ,0934131426,\r\n")
+			== 2) {
+		return 1;
+	}
+	return 0;
+}
+int create_default_data() {
+	FRESULT fr;
+	FIL fil;
+	fr = f_mount(&Fatfs, "0:", 1);
+	if (fr == FR_OK) {
+		fr = f_open(&fil, "0:/khnsys/infor.txt", FA_READ);
+		f_close(&file);
+		if (fr != FR_OK && fr != FR_EXIST)
+			write_default_Infor();
+
+		fr = f_open(&fil, "0:/khnsys/APN.txt", FA_READ);
+		f_close(&file);
+		if (fr != FR_OK && fr != FR_EXIST)
+			write_default_APN();
+	}
+	return 0;
 }
 //How to user
 //read_basic_infor();
@@ -145,7 +182,7 @@ int READ_APN_IP_SPEED() {
 	char * dataCollection;
 	char return_data[250];
 	char buffer[250];
-	f_mount(&Fatfs, "0:", 0);
+	f_mount(&Fatfs, "0:", 1);
 	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "APN");
 	fr = f_open(&file, fileName, FA_READ);
 	if (fr == FR_OK) {
@@ -177,9 +214,9 @@ int READ_APN_IP_SPEED() {
 			case 6: //pass
 				strcpy(flash_data_APN_IP.pass_save, dataCollection);
 				break;
-		//	case 7: //pass
-		//		strcpy(flash_data_APN_IP.key_door, dataCollection);
-		//		break;
+				//	case 7: //pass
+				//		strcpy(flash_data_APN_IP.key_door, dataCollection);
+				//		break;
 
 			}
 			dataCollection = strtok(NULL, ",");
@@ -195,7 +232,7 @@ int read_basic_infor() {
 	char * dataCollection;
 	char return_data[250];
 	char buffer[250];
-	f_mount(&Fatfs, "0:", 0);
+	f_mount(&Fatfs, "0:", 1);
 	sprintf(fileName, "0:/%s/%s.txt", "khnsys", "infor");
 	fr = f_open(&file, fileName, FA_READ);
 	if (fr == FR_OK) {
@@ -694,7 +731,8 @@ void KHN_Print(char print_date[20], char print_time[20], char LXLT[50],
 	UART2_PrintString(temp);
 }
 //in 10 lan
-void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_curret[8],  char imei[20]) {
+void KHN_Print_Infor(char print_date[20], char print_time[20],
+		char print_time_curret[8], char imei[20]) {
 //store temp data
 //strcpy(tmp_open,tmp_open);
 //	strcpy(tmp_close,tmp_close);
@@ -709,19 +747,17 @@ void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_cu
 	int z = 0;
 	char print_time_date[7];
 	memset(print_time_date, NULL, sizeof(print_time_date));
-	convertDatetime(print_time_date,print_date);
+	convertDatetime(print_time_date, print_date);
 	char comapre_time[7];
 	memset(comapre_time, NULL, sizeof(comapre_time));
-	convertDatetime(comapre_time,print_time);
+	convertDatetime(comapre_time, print_time);
 
 	char print_time_from[7];
 	memset(print_time_from, NULL, sizeof(print_time_from));
-	convertGetHour(print_time_from,print_time);
+	convertGetHour(print_time_from, print_time);
 	//get data
 	calculate_time(print_time_curret, print_time_from);
 	get_new_from_print_time(print_time_date, comapre_time);
-
-
 
 	UART2_PrintString("--------------------\r\n");
 	sprintf(temp, "BKS: %s\r\n", flash_data.id_device);
@@ -739,7 +775,7 @@ void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_cu
 	UART2_PrintString(temp);
 	UART2_PrintString("--------------------\r\n");
 	int count_violations = 0;
-	for (z = count_data.num_violation; z >= (count_data.num_violation - 11);
+	for (z = count_data.num_violation; z >= (count_data.num_violation - 10);
 			z--) {
 		if (strcmp(violations[z].speed, "") == 0) {
 
@@ -757,28 +793,28 @@ void KHN_Print_Infor(char print_date[20], char print_time[20],char print_time_cu
 }
 
 //convert from dd/mm/yy to ddmmyy
-void convertDatetime( char outdateConvert[6],const char date[20]) {
+void convertDatetime(char outdateConvert[6], const char date[20]) {
 	//char outdateConvert[6];
 	//char dateConvert[6];
 	memset(outdateConvert, 0, sizeof(outdateConvert));
-	outdateConvert[0]=date[0];
-	outdateConvert[1]=date[1];
-	outdateConvert[2]=date[3];
-	outdateConvert[3]=date[4];
-	outdateConvert[4]=date[6];
-	outdateConvert[5]=date[7];
+	outdateConvert[0] = date[0];
+	outdateConvert[1] = date[1];
+	outdateConvert[2] = date[3];
+	outdateConvert[3] = date[4];
+	outdateConvert[4] = date[6];
+	outdateConvert[5] = date[7];
 	return;
 }
-void convertGetHour( char outHour[6],const char time[20]) {
+void convertGetHour(char outHour[6], const char time[20]) {
 	//char outdateConvert[6];
 	//char dateConvert[6];
 	memset(outHour, 0, sizeof(outHour));
-	outHour[0]=time[0];
-	outHour[1]=time[1];
-	outHour[2]='0';
-	outHour[3]='0';
-	outHour[4]='0';
-	outHour[5]='0';
+	outHour[0] = time[0];
+	outHour[1] = time[1];
+	outHour[2] = '0';
+	outHour[3] = '0';
+	outHour[4] = '0';
+	outHour[5] = '0';
 	return;
 }
 //int get_infor_from_sdcard(char data[256], int y, char print_time[6]) {
