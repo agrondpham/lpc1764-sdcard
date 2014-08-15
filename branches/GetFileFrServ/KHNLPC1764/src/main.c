@@ -1,0 +1,608 @@
+//*****************************************************************************
+//   +--+       
+//   | ++----+   
+//   +-++    |  
+//     |     |  
+//   +-+--+  |   
+//   | +--+--+  
+//   +----+    Copyright (c) 2009-11 Code Red Technologies Ltd.
+//
+// UART example project for RDB1768 development board
+//
+// Software License Agreement
+// 
+// The software is owned by Code Red Technologies and/or its suppliers, and is 
+// protected under applicable copyright laws.  All rights are reserved.  Any 
+// use in violation of the foregoing restrictions may subject the user to criminal 
+// sanctions under applicable laws, as well as to civil liability for the breach 
+// of the terms and conditions of this license.
+// 
+// THIS SOFTWARE IS PROVIDED "AS IS".  NO WARRANTIES, WHETHER EXPRESS, IMPLIED
+// OR STATUTORY, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE APPLY TO THIS SOFTWARE.
+// USE OF THIS SOFTWARE FOR COMMERCIAL DEVELOPMENT AND/OR EDUCATION IS SUBJECT
+// TO A CURRENT END USER LICENSE AGREEMENT (COMMERCIAL OR EDUCATIONAL) WITH
+// CODE RED TECHNOLOGIES LTD. 
+//
+//*****************************************************************************
+///
+//
+//ATu <14/04/05,08:57:59;1052.0366;10641.1721;0;0;0>
+//$$KHN$3.13,56,359772037898310,1052.0366,N,10641.1721,E,0,100,0,0,1,CHUA CAP NHAP,000,1,0,14/04/05,08:56:52$
+
+#include "LPC17xx.h"
+#include <cr_section_macros.h>
+#include <NXP/crp.h>
+
+//#include "uart.h"
+//#include "timer.h"
+//#include "rs232.h"
+#include "sdcard/khn_gsht.h"
+#include "sdcard/Fatfs/ff.h"
+#include "sdcard/Fatfs/diskio.h"
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "IAP/iap.h"
+#include "uart/uart.h"
+#include "gpio/gpio.h"
+#include "timer/timer.h"
+#include "gsm/gsm.h"
+
+#include "common.h"
+#include "led/led.h"
+#include "gps/gps.h"
+#include "Tcp/tcp.h"
+
+#include "RTC/rtc.h"
+
+/*	Flash sectors to be used for data storage */
+//#define	DATA_START_SECTOR	0x00018000	/* Start Sector 17 */
+//#define	DATA_END_SECTOR		0x0001FFFF	/* End Sector 17 */
+#define IIR_RLS		0x03
+#define IIR_RDA		0x02
+#define LSR_RDR		0x01
+
+__CRP const unsigned int CRP_WORD = CRP_NO_CRP;
+///////////////////////////////////////
+
+///this is used in main function
+
+#define gsm						 	0
+#define gps 						1
+
+#define connect_error   3
+#define timeLen 				4
+#define ok_status   		2
+#define gsm_bufferLen		200
+#define gps_bufferLen		200
+#define no_send     		0
+#define complete    		0
+#define so_vinLen      	20
+#define ok_status   		2
+#define data_serverLen  200
+#define cstt_error  		0
+#define ciicr_error 		1
+#define counter_check_sim900 10000
+
+extern int co_gps;
+uint8_t rx_gps_index;
+volatile uint32_t send_data_server;
+volatile uint32_t toggle = 0;
+volatile uint32_t couter0 = 0;
+uint8_t data[100];
+uint16_t rx_gsm_index;
+unsigned char resend;
+
+//char phone_1[phoneLen];
+
+char viettel[] = "VNM and VIETTEL";
+char VN_mobile[] = "VN MOBIFONE";
+char VN_vina[] = "VN VINAPHONE";
+char vina[] = "VINAPHONE";
+char mobile[] = "MOBIFONE";
+
+unsigned int interruptTimer_0;
+unsigned int led_counter;
+
+char timeCheck[timeLen];
+void start_up_gsm();
+char gsm_buffer[gsm_bufferLen];
+char gps_buffer[gps_bufferLen];
+char data_server[data_serverLen];
+
+unsigned int pointer_server = 0;
+unsigned char rx_buffer_overflow1;
+unsigned char rx_buffer_overflow0;
+char version[] = "5.00";
+unsigned char resend;
+unsigned int oil_value = 0;
+unsigned int timer_check_sim900 = 0;
+char so_vin[so_vinLen] = "";
+char time_gps_card[8];
+char day_gps_card[8];
+
+char year_str[3];
+char month_str[3];
+char day_str[3];
+char hour_str[3];
+char min_str[3];
+char sec_str[3];
+
+char ten_laixe[ten_laixeLen];
+char so_gplx[so_gplxLen];
+char ngaycap_gplx[ngaycapLen];
+char handen_gplx[handenLen];
+char buffer[buffer_file];
+char tencongty[tencongtyLen];
+char diachi[diachiLen];
+char bien_soxe[bien_soxeLen];
+
+extern volatile uint32_t alarm_on;
+RTCTime local_time, alarm_time, current_time;
+
+///////////////////////////////////////////
+
+struct SYSTEM_FLAG flag_system;
+//struct time_gsm *timeSet;
+
+/*------------------------------------------------------------------------------
+ delays number of tick Systicks (happens every 1 ms)
+ *------------------------------------------------------------------------------*/
+void SysTick_Handler(void) {
+	msTicks++;
+	if (interruptTimer_0 < 1000)
+		interruptTimer_0++;
+	else {
+		interruptTimer_0 = 0;
+		if (timer_gps < counter_gps)
+			timer_gps++;
+		else {
+			timer_gps = 0;
+			flag_system.request_data = 1;
+			flag_system.gps_detect = 0; // moi lan request data thi coi nhu gps_detect=0
+		}
+		if (timer_send_gps < counter_send_gps)
+			timer_send_gps++; // cho nay cai dat thong so thoi gian de kiem tra gps
+		else {
+			timer_send_gps = 0;
+			flag_system.send_data = 1;     // send data o day
+			flag_system.write_data = 1;
+		}
+		if (++timer_read_sms >= 10) {
+			timer_read_sms = 0;
+			flag_modem.read_sms = 1;
+		}
+
+	}
+	if (timer_gprs < counter_timeout) {
+		timer_gprs++;
+		flag_system.timeout_gprs = 0;
+	} else {
+		timer_gprs = 0;
+		flag_system.timeout_gprs = 1;
+	}
+
+	if (timer_check_sms < counter_timeout_sms) {
+		timer_check_sms++;
+		flag_system.timeout_sms = 0;
+	} else
+		flag_system.timeout_sms = 1;
+
+	if (flag_modem.modem == not_connect) {
+
+		if (led_counter < 500)
+			led_counter++;
+		else {
+			led_counter = 0;
+			toggle = ~toggle;
+			GPIOSetValue(LED_STATUS, toggle);
+
+		}
+	} else {
+		if (led_counter < 2000)
+			led_counter++;
+		else {
+			led_counter = 0;
+			toggle = ~toggle;
+			GPIOSetValue(LED_STATUS, toggle);
+
+		}
+	}
+
+	if (timer_check_sim900 < counter_check_sim900)    //
+	{
+		timer_check_sim900++;
+	}
+}
+int n;
+char readData[11];
+void UART2_IRQHandler(void) {
+//	char c;
+//	if((LPC_UART2->LSR & LSR_RDR) != 0){ // Nothing received so just block
+//	c = LPC_UART2->RBR; // Read Receiver buffer register
+//	}
+//	UART2_Sendchar(c);
+	uint8_t IIRValue, LSRValue;
+	uint8_t data;
+	//char readData[11];
+	IIRValue = LPC_UART2->IIR;
+	IIRValue >>= 1; /* skip pending bit in IIR */
+	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
+	if (IIRValue == IIR_RLS) /* Receive Line Status */
+	{
+		LSRValue = LPC_UART2->LSR;
+		if (LSRValue & LSR_RDR) /* Receive Data Ready */
+		{
+			data = LPC_UART2->RBR;
+		}
+	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
+	{
+
+		data = LPC_UART2->RBR;
+		if (data == 0x25) {
+			//UART3_PrintString(readData);
+			//UART2_Sendchar('E');
+			Read232(readData);
+			//UART2_PrintString(readData);
+			n = 0;
+			//memset(readData, 0, sizeof(readData));
+		} else {
+			readData[n] = data;
+			//UART2_Sendchar(data);
+
+			//UART2_PrintString(n);
+			n++;
+		}
+		//UART2_Sendchar(data);
+	}
+
+}
+void UART0_IRQHandler(void) {
+	uint8_t IIRValue, LSRValue;
+	uint8_t data;
+	unsigned char trangthai_gui;
+	IIRValue = LPC_UART0->IIR;
+	IIRValue >>= 1; /* skip pending bit in IIR */
+	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
+	if (IIRValue == IIR_RLS) /* Receive Line Status */
+	{
+		LSRValue = LPC_UART0->LSR;
+		if (LSRValue & LSR_RDR) /* Receive Data Ready */
+		{
+			data = LPC_UART0->RBR;
+			//UART2_Sendchar(temp);
+		}
+	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
+	{
+		//sprintf(tempValue,";%d",flag_gprs.send_gprs_ok);
+		//UART2_PrintString(tempValue);
+
+		data = LPC_UART0->RBR;
+#if _DEBUG==1
+		UART2_Sendchar(data);
+		//UART3_Sendchar(data);
+#endif
+		UART2_PrintString("*");
+		if(isGetFile=1){
+
+		}else
+		if (data == 0x0A) {
+			if (flag_system.start_rx_gsm == 2) {
+				UART2_PrintString("_");
+				rx_buffer0[rx_gsm_index] = NULL;
+				process_gsm_data();
+				rx_gsm_index = 0;
+				flag_system.start_rx_gsm = 0;
+
+			} else if (rx_gsm_index == 0) {
+				UART2_PrintString("?");
+				flag_system.start_rx_gsm = 1;
+
+			} else if (rx_buffer0[0] == '+' && rx_buffer0[1] == 'C'
+					&& rx_buffer0[2] == 'M' && rx_buffer0[3] == 'G'
+					&& rx_buffer0[4] == 'R') {
+				flag_system.start_rx_gsm = 2;
+				UART2_PrintString("|");
+			} else {
+				//UART2_PrintString("_");
+				rx_buffer0[rx_gsm_index] = NULL;
+				if (rx_buffer0[0] != NULL) {
+					process_gsm_data();
+					rx_gsm_index = 0;
+					flag_system.start_rx_gsm = 0;
+				} else {
+					flag_system.start_rx_gsm = 1;
+				}
+
+
+			}
+		}
+		else if (flag_system.start_rx_gsm != 0 && data != 0x0D) {
+			UART2_PrintString("*");
+			rx_buffer0[rx_gsm_index] = data;
+			if (++rx_gsm_index >= gsm_bufferLen) {
+				rx_gsm_index = 0;
+				process_gsm_data();
+				flag_system.start_rx_gsm = 0;
+			}
+		}
+
+	}
+
+}
+
+void UART1_IRQHandler(void) {
+	uint8_t IIRValue, LSRValue;
+	uint8_t data;
+	IIRValue = LPC_UART1->IIR;
+	IIRValue >>= 1; /* skip pending bit in IIR */
+	IIRValue &= 0x07; /* check bit 1~3, interrupt identification */
+	if (IIRValue == IIR_RLS) /* Receive Line Status */
+	{
+		LSRValue = LPC_UART1->LSR;
+		if (LSRValue & LSR_RDR) /* Receive Data Ready */
+		{
+			data = LPC_UART1->RBR;
+			//UART2_Sendchar(temp);
+		}
+	} else if (IIRValue == IIR_RDA) /* Receive Data Available */
+	{
+		data = LPC_UART1->RBR;
+		//UART2_PrintString("?");
+		if (flag_system.request_data) {
+			if (data == '$') {
+				flag_system.start_rx_gps = 1;
+			} else if (data == '*') // && flag_system.start_rx_gps
+					{
+				flag_system.start_rx_gps = 0;
+				rx_buffer1[rx_wr_index1] = NULL;
+
+				if (rx_buffer1[0] == 'G' && rx_buffer1[1] == 'P'
+						&& rx_buffer1[2] == 'R' && rx_buffer1[3] == 'M'
+						&& rx_buffer1[4] == 'C') {
+
+					process_gps_data();
+
+				}
+				del_buffer(gps);
+			} else if (flag_system.start_rx_gps == 1) {
+				rx_buffer1[rx_wr_index1] = data;
+				if (++rx_wr_index1 > RX_BUFFER_SIZE1) {
+					rx_wr_index1 = 0;
+					flag_system.start_rx_gps = 0;
+
+				}
+//               if (++rx_counter1 == RX_BUFFER_SIZE1)
+//                  {
+//                  rx_counter1=0;
+//                  rx_buffer_overflow1=1;
+//                  };
+
+			}
+
+		}
+
+	}
+}
+
+void TIMER0_IRQHandler(void) {
+//
+//    /* Set new timer interrupt, toggle led status and write value to the led port */
+	uint8_t var_key, var_door, var_cold_hot;
+	TIMER0_interrupt();
+//	couter0++;
+//	if (couter0 > 6) {
+//		couter0 = 0;
+//		toggle = ~toggle;
+//		//GPIOSetValue(BUZZER, toggle);
+//		//LPC_TIM0->IR = 1;			/* clear interrupt flag */
+//	}
+
+//    toggle = ~toggle;
+//    GPIOSetValue(BUZZER, toggle);
+//
+
+	var_key = GPIOGetValue(KEY_IN);      //Read the button value
+	var_door = GPIOGetValue(DOOR_IN);
+	var_cold_hot = GPIOGetValue(COL_HOT);
+
+	if (var_key == 0)      //KEY_IN
+			{
+		// GPIOSetValue(BUZZER, HIGH);
+		flag_system.status_key = 1;
+	} else {
+		//GPIOSetValue(BUZZER, LOW);
+		flag_system.status_key = 2;
+	}
+	if (var_door == 0)      //DOOR_IN
+			{
+		//GPIOSetValue(BUZZER, HIGH);
+		flag_system.status_door = 1;
+	} else {
+		//GPIOSetValue(BUZZER, LOW);
+		flag_system.status_door = 2;
+	}
+	if (var_cold_hot == 0)      //DOOR_IN
+			{
+
+		flag_system.cold_hot = 1;
+	} else {
+		//GPIOSetValue(BUZZER, LOW);
+		flag_system.cold_hot = 2;
+	}
+
+}
+
+void TIMER1_IRQHandler(void) {
+//
+//    /* Set new timer interrupt, toggle led status and write value to the led port */
+	TIMER1_interrupt();
+	couter0++;
+	if (couter0 > 6) {
+		couter0 = 0;
+		toggle = ~toggle;
+		//GPIOSetValue(BUZZER, toggle);
+		//LPC_TIM0->IR = 1;			/* clear interrupt flag */
+	}
+//	toggle = ~toggle;
+//	GPIOSetValue(BUZZER, toggle);
+
+//    toggle = ~toggle;
+//    GPIOSetValue(BUZZER, toggle);
+}
+
+void EraseSectors() {
+	if (u32IAP_EraseSectors(17, 17) == IAP_STA_CMD_SUCCESS) {
+		UART3_PrintString("clear successful \r\n");
+	} else {
+		UART3_PrintString("clear unsuccessful \r\n");
+	}
+	if (u32IAP_PrepareSectors(17, 17) == IAP_STA_CMD_SUCCESS)
+		UART3_PrintString("clear end \r\n");
+}
+
+//////END
+
+void upload_info() {
+	unsigned char x, j;
+	//unsigned char phone_2[256];
+	//memcpy(phone_2, (void*) 0x00018000, 256);
+//	delay_ms(100);
+//	for (x = 0; x < phoneLen; x++) {
+//		if (phone_2[x] == NULL || phone_2[x] == 0xFF)
+//			break;
+//		if (phone_2[x] > 0x39 || phone_2[x] < 0x30)
+//			break;
+//		phone_1[x] = phone_2[x];
+//	}
+//	phone_1[x] = NULL;
+//	if (phone_1[0] == NULL || phone_1[0] == 0xF)
+//		sprintf(phone_1, "000");
+////// start phoneDrive
+//	for (j = 0; j < phoneLen; j++) {
+//		if (phone_1[j] == NULL || phone_1[j] == 0xFF)
+//			break;
+//		phoneDrive[j] = phone_1[j];
+//	}
+//	phoneDrive[j] = NULL;
+//	///end
+	create_default_data;
+	READ_APN_IP_SPEED();
+	//delay_ms(1000);
+	sprintf(apn, "%s", flash_data_APN_IP.apn_save);
+	sprintf(userName, "%s", flash_data_APN_IP.userName_save);
+	sprintf(passApn, "%s", flash_data_APN_IP.passWord_save);
+	sprintf(ipServer, "%s", flash_data_APN_IP.ipServer_save);
+	sprintf(tcpPort, "%s", flash_data_APN_IP.tcpPort_save);
+	sprintf(passWord, "%s", flash_data_APN_IP.pass_save);
+	speed_max = atoi(flash_data_APN_IP.speed_save);
+	if (apn[0] == NULL || apn[0] == 0xff) {
+//		sprintf(apn, "v-internet");
+//		sprintf(userName, "");
+//		sprintf(passApn, "");
+		sprintf(apn, "m3-world");
+		sprintf(userName, "mms");
+		sprintf(passApn, "mms");
+	}
+	if (ipServer[0] == NULL || ipServer[0] == 0xff) {
+		//sprintf(ipServer, "112.213.84.16");
+		sprintf(ipServer, "112.213.84.16");
+		//sprintf(ipServer, "112.213.94.122");
+
+		sprintf(tcpPort, "11511");
+	}
+	if (timeCheck[0] == NULL || timeCheck[0] == 0xff)
+		counter_send_gps = 15;		// gui len server
+	flag_system.buzz_accept = 1;
+}
+
+void init_program(void) {
+	TimerInit(0, TIMER0_INTERVAL);
+	TimerInit(1, TIMER1_INTERVAL);
+	enable_timer(0);
+	enable_timer(1);
+	if (SysTick_Config(SystemCoreClock / 1000)) //{ /* Setup SysTick Timer for 1 msec interrupts  */
+			{
+		while (1)
+			; /* Capture error */
+	}
+
+	UART0_Init(9600);
+	UART1_Init(9600);
+	UART2_Init(9600);
+	UART3_Init(9600);
+	KHN_SDCARD_INIT();
+//	LED_Init();
+//	BUZZER_Init();
+//	key_init();
+//	door_init();
+//	col_init();
+//	gsm_on();
+//	gps_init();
+	GPIO_init();
+
+}
+//int main(void) {
+//	int x;
+//	char* dataCollection;
+//	char line[256]="Khanhhoi;0913742108;213432534435;324123412341;0946309067;0913742108;213432534435;324123412341;324123412341";
+//	char* printData;
+//	UART2_Init(9600);
+//	UART2_PrintString("xxxx");
+//	//dataCollection = strtok(line, ";");
+//
+//	get_data_from_flash(line);
+//
+//	UART2_PrintString(flash_data.company);
+//	UART2_PrintString(flash_data.address);
+//}
+
+int main(void) {
+	uint8_t buffer[200];
+
+	uint8_t vitri, counter_init = 0, i;
+	unsigned int couter_reset_gps = 0;
+
+	init_program();
+
+	RTCInit();
+
+//	alarm_time.RTC_Sec = 0;
+//	alarm_time.RTC_Min = 0;
+//	alarm_time.RTC_Hour = 0;
+//	alarm_time.RTC_Mday = 1;
+//	alarm_time.RTC_Wday = 0;
+//	alarm_time.RTC_Yday = 1; /* alarm date 01/01/2007 */
+//	alarm_time.RTC_Mon = 1;
+//	alarm_time.RTC_Year = 2007;
+//	RTCSetAlarm(alarm_time); /* set alarm time */
+
+	NVIC_EnableIRQ(RTC_IRQn);
+
+	GPIOSetValue(RES_GPS, HIGH);
+	GPIOSetValue(GSM_RES, LOW);
+
+	delay_ms(500);
+	GPIOSetValue(RES_GPS, LOW);
+	GPIOSetValue(GSM_RES, HIGH);
+	upload_info();
+
+	RTCStart();
+
+	for (i = 0; i < 5; i++) {
+		flash_led();
+		//flash_gps();
+		delay_ms(1000);
+	}
+	GPIOSetValue(BUZZER, HIGH);
+	delay_ms(50);
+	GPIOSetValue(BUZZER, LOW);
+	flag_modem.flash_coppy = 1;
+	flag_gprs.bit_data_flash_apn = 0;
+	flag_gprs.bit_data_infor = 0;
+	NVIC_DisableIRQ(UART0_IRQn);
+	get_file_from_server();
+	NVIC_EnableIRQ(UART0_IRQn);
+}
+
